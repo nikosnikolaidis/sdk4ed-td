@@ -69,10 +69,10 @@ const CentralAnalysisPanel = props => {
                                         <MDBDropdownMenu color="primary">
                                             <MDBDropdownItem header>Technical Debt</MDBDropdownItem>
                                             <MDBDropdownItem toggle={false} type="button" onClick={(param) => props.toggleChange('isTDAnalysisChecked')}>
-                                                <input type="checkbox" checked={props.myisTDAnalysisChecked}/> TD
+                                                <input type="checkbox" defaultChecked={props.myisTDAnalysisChecked}/> TD
                                             </MDBDropdownItem>
                                             <MDBDropdownItem toggle={false} type="button" onClick={(param) => props.toggleChange('isTDNewCodeAnalysisChecked')}>
-                                                <input type="checkbox" checked={props.myisTDNewCodeAnalysisChecked}/> TD New Code
+                                                <input type="checkbox" defaultChecked={props.myisTDNewCodeAnalysisChecked}/> TD New Code
                                             </MDBDropdownItem>
                                         </MDBDropdownMenu>                          
                                     </MDBDropdown>
@@ -96,7 +96,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>TD Analysis:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconTD}></i> {props.mytdState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconTD}></i> {props.mytdState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -104,7 +104,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>TD New Code Analysis:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconTDNewCode}></i> {props.mytdNewCodeState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconTDNewCode}></i> {props.mytdNewCodeState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -124,7 +124,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Energy Estimation (Static):</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconStaticEnergy}></i> {props.myenergyStaticState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconStaticEnergy}></i> {props.myenergyStaticState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -132,7 +132,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Hotspots Identification:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconHotspotEnergy}></i> {props.myenergyHotspotState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconHotspotEnergy}></i> {props.myenergyHotspotState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -140,7 +140,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Acceleration:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconAccelerationEnergy}></i> {props.myenergyAccelerationState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconAccelerationEnergy}></i> {props.myenergyAccelerationState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -160,7 +160,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Security Analysis:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconSecurity}></i> {props.mysecurityState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconSecurity}></i> {props.mysecurityState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -168,7 +168,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Vulnerability Analysis:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconVulnerability}></i> {props.myvulnerabilityState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconVulnerability}></i> {props.myvulnerabilityState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -176,7 +176,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Optimal Checkpoint:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconOptimalCheckpoint}></i> {props.myoptimalCheckpointState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconOptimalCheckpoint}></i> {props.myoptimalCheckpointState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -196,7 +196,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Code Refactoring:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconTDNewCode}></i> {props.mytdNewCodeState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconTDNewCode}></i> {props.mytdNewCodeState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -204,7 +204,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Design Refactoring:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconDesignRefactoring}></i> {props.mydesignRefactoringState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconDesignRefactoring}></i> {props.mydesignRefactoringState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
                                         </MDBCol>
@@ -212,7 +212,7 @@ const CentralAnalysisPanel = props => {
                                             <MDBCard>
                                                 <MDBCardBody>
                                                     <div align="center" style={{color:'#548235'}}>Architecture Refactoring:</div>
-                                                    <div align="center" style={{color:'#000000'}}><i class={props.myiconArchitectureRefactoring}></i> {props.myarchitectureRefactoringState}</div>
+                                                    <div align="center" style={{color:'#000000'}}><i className={props.myiconArchitectureRefactoring}></i> {props.myarchitectureRefactoringState}</div>
                                                 </MDBCardBody>
                                             </MDBCard>
 										</MDBCol>*/}

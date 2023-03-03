@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 
 import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBIcon, MDBRow, MDBCol, MDBAlert } from 'mdbreact';
 import { createProject } from '../../../apis/projects';
-import history from '../../../history'; 
+import history from '../../../history';
 
 class NewProjectModalForm extends Component {
     constructor(props) {
@@ -32,7 +32,7 @@ class NewProjectModalForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    componentDidMount(){
+    componentDidMount() {
         let token = localStorage.getItem("react-token");
         if (token) {
             var decoded = jwt_decode(token);
@@ -89,17 +89,17 @@ class NewProjectModalForm extends Component {
         }
     }
 
-    changeToolbox = (event) =>{
-        this.setState({toolbox: event.target.value});
+    changeToolbox = (event) => {
+        this.setState({ toolbox: event.target.value });
     }
 
     changeAccess = (event) => {
-        this.setState({access: event.target.value});
+        this.setState({ access: event.target.value });
     }
-    
+
     handleSubmit(event) {
         event.preventDefault();
-        let isPrivateSet = this.state.access.includes('Private') ? true : false; 
+        let isPrivateSet = this.state.access.includes('Private') ? true : false;
         const newProject = {
             name: this.state.nameValue,
             endpoint: this.state.endpointValue,
@@ -136,19 +136,19 @@ class NewProjectModalForm extends Component {
 
 
 
-    renderAlert(status){ 
-        if(status === 200){
+    renderAlert(status) {
+        if (status === 200 || status === 201) {
             // Success, show feedback
             return <MDBAlert color="success">The project was successfully created </MDBAlert>
-        } else if(status === 400){
+        } else if (status === 400) {
             // Show error message
             return <MDBAlert color="danger">The project could not be createed, please try again.</MDBAlert>
         }
-        return null; 
+        return null;
     }
 
     toggle = () => {
-        if(!this.state.modal)
+        if (!this.state.modal)
             history.push('/projects');
 
         this.setState({
@@ -165,12 +165,12 @@ class NewProjectModalForm extends Component {
             passwordValue: '',
             descriptionValue: '',
             responseStatus: null,
-            technicaldebtValue: '{"language":"Java", "typeAnalysis":1,"moveClassRefactoring":false,"extractMethodRefactoring":false}', 
+            technicaldebtValue: '{"language":"Java", "typeAnalysis":1,"moveClassRefactoring":false,"extractMethodRefactoring":false}',
             forecastValue: '',
-            decisionValue: '', 
-            dependabilityValue: '', 
+            decisionValue: '',
+            dependabilityValue: '',
             atdValue: '',
-            energyValue: '', 
+            energyValue: '',
             commonValue: ''
         })
     }
@@ -222,7 +222,7 @@ class NewProjectModalForm extends Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="descriptionInput">Technical Debt toolbox info</label>
-                                <div style={{display: 'none'}}>
+                                <div style={{ display: 'none' }}>
                                     <select id="selectToolbox" onChange={this.changeToolbox} value={this.state.toolbox}>
                                         <option value="Decision Support">Decision Support</option>
                                         <option value="Dependability">Dependability</option>
@@ -232,23 +232,23 @@ class NewProjectModalForm extends Component {
                                         <option value="Architecture Refactoring">Architecture Refactoring</option>
                                     </select>
                                 </div>
-                    
-                                <textarea style={{display: this.state.toolbox === 'Technical Debt' ? 'block' : 'none' }} className="form-control" id="technicaldebtInput" rows="3"
+
+                                <textarea style={{ display: this.state.toolbox === 'Technical Debt' ? 'block' : 'none' }} className="form-control" id="technicaldebtInput" rows="3"
                                     value={this.state.technicaldebtValue} onChange={(e) => { this.handleChange(e, "TECHNICALDEBT") }}></textarea>
 
-                                <textarea style={{display: this.state.toolbox === 'Architecture Refactoring' ? 'block' : 'none' }} className="form-control" id="architectureDebtInput" rows="3"
+                                <textarea style={{ display: this.state.toolbox === 'Architecture Refactoring' ? 'block' : 'none' }} className="form-control" id="architectureDebtInput" rows="3"
                                     value={this.state.atdValue} onChange={(e) => { this.handleChange(e, "ARCHTECHNICALDEBT") }}></textarea>
 
-                                <textarea style={{display: this.state.toolbox === 'Forecaster' ? 'block' : 'none' }} className="form-control" id="forecastInput" rows="3"
+                                <textarea style={{ display: this.state.toolbox === 'Forecaster' ? 'block' : 'none' }} className="form-control" id="forecastInput" rows="3"
                                     value={this.state.forecastValue} onChange={(e) => { this.handleChange(e, "FORECAST") }}></textarea>
 
-                                <textarea style={{display: this.state.toolbox === 'Decision Support' ? 'block' : 'none' }} className="form-control" id="decisionInput" rows="3"
+                                <textarea style={{ display: this.state.toolbox === 'Decision Support' ? 'block' : 'none' }} className="form-control" id="decisionInput" rows="3"
                                     value={this.state.decisionValue} onChange={(e) => { this.handleChange(e, "DECISION") }}></textarea>
 
-                                <textarea style={{display: this.state.toolbox === 'Dependability' ? 'block' : 'none' }} className="form-control" id="dependabilityInput" rows="3"
+                                <textarea style={{ display: this.state.toolbox === 'Dependability' ? 'block' : 'none' }} className="form-control" id="dependabilityInput" rows="3"
                                     value={this.state.dependabilityValue} onChange={(e) => { this.handleChange(e, "DEPENDABILITY") }}></textarea>
 
-                                <textarea style={{display: this.state.toolbox === 'Energy' ? 'block' : 'none' }} className="form-control" id="energyInput" rows="3"
+                                <textarea style={{ display: this.state.toolbox === 'Energy' ? 'block' : 'none' }} className="form-control" id="energyInput" rows="3"
                                     value={this.state.energyValue} onChange={(e) => { this.handleChange(e, "ENERGY") }}></textarea>
                             </div>
                             <div className="form-group">
