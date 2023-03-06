@@ -204,7 +204,7 @@ class NewProjectModalForm extends Component {
                             <div className="form-group">
                                 <MDBRow>
                                     <MDBCol size="6">
-                                        <label htmlFor="usernameInput">Git Username</label>
+                                        <label htmlFor="usernameInput">Git Username / Git AccessToken</label>
                                         <input type="text" className="form-control" id="usernameInput" placeholder="" autoComplete="off"
                                             value={this.state.usernameValue} onChange={(e) => { this.handleChange(e, "USERNAME") }} />
                                     </MDBCol>

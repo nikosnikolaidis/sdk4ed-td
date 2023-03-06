@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 
-let endpoint = process.env.REACT_APP_PROJECT_MANAGEMENT_SERVER_IP + "SDK4ED/" // 'http://160.40.52.130:3001/SDK4ED/'; // 'https://ioswagger20200221094142.azurewebsites.net/MAAXCNET/'; // 
+let endpoint = process.env.REACT_APP_PROJECT_MANAGEMENT_SERVER_IP // 'http://160.40.52.130:3001/SDK4ED/'; // 'https://ioswagger20200221094142.azurewebsites.net/MAAXCNET/'; // 
 
 export const createProject = (newProject) => {
     var url = endpoint + 'ProjectManagement/1.0.0/projects';
@@ -9,6 +9,7 @@ export const createProject = (newProject) => {
         body: JSON.stringify(newProject),
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
     });
 };
@@ -20,6 +21,7 @@ export const editProject = (id, updatedProject) => {
         body: JSON.stringify(updatedProject),
         headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
     });
 };

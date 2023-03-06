@@ -11,7 +11,7 @@ import NewProjectModalForm from '../pages/sections/NewProjectModalForm';
 import {fetchProjects} from '../../apis/projects'; 
 import {
     runNewDependabilityAnalysisData, runNewOptimalCheckpointAnalysisData, runNewEnergyAnalysisData,
-    runNewTDAnalysisData, runNewTDNewCodeAnalysisData, runNewArchitectureRefactoringAnalysisData
+    runNewTDAnalysisData, runNewTDNewCodeAnalysisData, runNewArchitectureRefactoringAnalysisData,runStartNewTDAnalysisData
 } from '../../apis/LiveAnalysisAPIs';
 import EditProjectModalForm from '../pages/sections/EditProjectModalForm'; 
 import DeleteProjectModalForm from '../pages/sections/DeleteProjectModalForm';
@@ -691,14 +691,18 @@ class ProjectList extends React.Component {
                 this.updateStateAnalysis('failed', 'energyAccelerationState', 'iconAccelerationEnergy', analysis_project)
             })
         }*/
-        
+        // console.log(this.state.isTDAnalysisChecked,
+        //     this.state.isTDNewCodeAnalysisChecked,
+        //     tdmoveClassRefactoringInfo,
+        //     tdExtractMethodRefactoringInfo
+        // );
         // Code for fetching TD Analysis data from API
         if(this.state.isTDAnalysisChecked){
             this.updateStateAnalysis('running', 'tdState', 'iconTD', analysis_project)
             if (tdmoveClassRefactoringInfo === true || tdExtractMethodRefactoringInfo === true){
                 this.updateStateAnalysis('running', 'designRefactoringState', 'iconDesignRefactoring', analysis_project)
             }
-            runNewTDAnalysisData(TD_SERVER_IP+'/tdanalysis/execute', tdLanguageInfo, tdTypeAnalysisInfo, urlInfo, usernameInfo, passwordInfo, tdmoveClassRefactoringInfo, tdExtractMethodRefactoringInfo)
+            runStartNewTDAnalysisData(TD_SERVER_IP+'/api/analysis', urlInfo, usernameInfo, passwordInfo)
             .then(resp => {
                 if(resp.status === 200) {
                     console.log("TD Analysis data received")

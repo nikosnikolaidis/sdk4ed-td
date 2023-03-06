@@ -3,7 +3,7 @@ import 'whatwg-fetch';
 // Perform GET call for new Dependability analysis
 export const runNewDependabilityAnalysisData = (url, project_url, user_name, lang, inspection, key) => {
     // Default options are marked with *
-    return fetch(url+'?project='+project_url+'&user_name='+user_name+'&lang='+lang+'&inspection='+inspection, {
+    return fetch(url + '?project=' + project_url + '&user_name=' + user_name + '&lang=' + lang + '&inspection=' + inspection, {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, cors, *same-origin
         //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -30,7 +30,7 @@ export const runNewOptimalCheckpointAnalysisData = (url, optimal_checkpoint_body
 // Perform GET call for new Energy analysis
 export const runNewEnergyAnalysisData = (url, new_project, user_name, token, project_url, type) => {
     // Default options are marked with *
-    return fetch(url+'?new='+new_project+'&user='+user_name+'&token='+token+'&url='+project_url+'&type='+type, {
+    return fetch(url + '?new=' + new_project + '&user=' + user_name + '&token=' + token + '&url=' + project_url + '&type=' + type, {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, cors, *same-origin
         //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -43,7 +43,7 @@ export const runNewEnergyAnalysisData = (url, new_project, user_name, token, pro
 // Perform GET call for new TD analysis
 export const runNewTDAnalysisData = (url, lang, type, project_url, user_name, user_password, move_class_refactoring, extract_method_refactoring) => {
     // Default options are marked with *
-    return fetch(url+'?language='+lang+'&typeAnalysis='+type+'&gitUrl='+project_url+'&gitUsername='+user_name+'&gitPassword='+user_password+'&moveClassRefactoring='+move_class_refactoring+'&extractMethodRefactoring='+extract_method_refactoring, {
+    return fetch(url + '?language=' + lang + '&typeAnalysis=' + type + '&gitUrl=' + project_url + '&gitUsername=' + user_name + '&gitPassword=' + user_password + '&moveClassRefactoring=' + move_class_refactoring + '&extractMethodRefactoring=' + extract_method_refactoring, {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, cors, *same-origin
         //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -56,7 +56,7 @@ export const runNewTDAnalysisData = (url, lang, type, project_url, user_name, us
 // Perform GET call for new TD New Code analysis
 export const runNewTDNewCodeAnalysisData = (url, user_name, user_password, project_url, lang, build_tool) => {
     // Default options are marked with *
-    return fetch(url+'?gitUsername='+user_name+'&gitPassword='+user_password+'&uri='+project_url+'&language='+lang+'&buildTool='+build_tool, {
+    return fetch(url + '?gitUsername=' + user_name + '&gitPassword=' + user_password + '&uri=' + project_url + '&language=' + lang + '&buildTool=' + build_tool, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, cors, *same-origin
         //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -70,17 +70,49 @@ export const runNewTDNewCodeAnalysisData = (url, user_name, user_password, proje
 export const runNewArchitectureRefactoringAnalysisData = (url, lang, project_url, selectedProject) => {
     // Default options are marked with *
     var credentials = null
-    var request = { method: 'GET', mode: 'cors'}
-    if(selectedProject && selectedProject.username){
+    var request = { method: 'GET', mode: 'cors' }
+    if (selectedProject && selectedProject.username) {
         credentials = { username: selectedProject.username, password: selectedProject.password }
         request.method = 'POST'
         request.body = JSON.stringify(credentials)
-        request.headers = {'Content-Type': 'application/json' }
+        request.headers = { 'Content-Type': 'application/json' }
     }
     var params = "";
-    if(selectedProject && selectedProject.archtechdebt){
+    if (selectedProject && selectedProject.archtechdebt) {
         params = '&' + selectedProject.archtechdebt.split("\n").filter(x => x !== "").join("&")
     }
-    url = url+'?language='+lang+'&project='+project_url+params
+    url = url + '?language=' + lang + '&project=' + project_url + params
     return fetch(url, request)
+}
+
+// Perform POST call for new TD analysis
+export const runStartNewTDAnalysisData = (url, project_url, user_name, user_password) => {
+    // Default options are marked with *
+    const requestBody = {
+        "gitUrl": "" + project_url + "",
+        "user": {
+            "urernameOrAccessToken": "" + user_name + "",
+            "password": "" + user_password + ""
+        }
+    };
+
+    // console.log(JSON.stringify(requestBody));
+
+    const myHeaders = {
+        "content-type": "application/json;charset=utf-8",
+        "connection": "keep-alive",
+        "access-control-allow-origin": "*"
+    };
+
+    const requestHeaders = new Headers(myHeaders);
+
+    return fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, cors, *same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        //credentials: 'include', // include, *same-origin, omit
+        headers: requestHeaders,
+        body: JSON.stringify(requestBody)
+    })
+    //.then(response => response.json()); // parses JSON response into native JavaScript objects 
 }
