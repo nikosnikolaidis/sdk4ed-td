@@ -691,11 +691,13 @@ class ProjectList extends React.Component {
                 this.updateStateAnalysis('failed', 'energyAccelerationState', 'iconAccelerationEnergy', analysis_project)
             })
         }*/
+
         // console.log(this.state.isTDAnalysisChecked,
         //     this.state.isTDNewCodeAnalysisChecked,
         //     tdmoveClassRefactoringInfo,
         //     tdExtractMethodRefactoringInfo
         // );
+        
         // Code for fetching TD Analysis data from API
         if(this.state.isTDAnalysisChecked){
             this.updateStateAnalysis('running', 'tdState', 'iconTD', analysis_project)
