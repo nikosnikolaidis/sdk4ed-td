@@ -79,7 +79,7 @@ const InterestPanel = props => {
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Interest Indicators" data={props.interestArtifacts} />
+          <BasicTable title="Interest Indicators" data={props.mycumulativeInterestLineChart} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -89,6 +89,21 @@ const InterestPanel = props => {
 
 
 const PrincipalPanel = props => {
+
+  return (
+    <PagePanel header="Artifact Principal Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="Principal Indicators" data={props.principalArtifacts} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
+const myCumulativeInterestTable = props => {
 
   return (
     <PagePanel header="Artifact Principal Indicators" linkTo="tdanalysis">
@@ -342,6 +357,7 @@ class BasicTable extends React.Component {
 
   render() {
     var data = this.props.data
+    console.log("data: " + data)
     var rows = []
     var uniqueId = 0
     for (var i in data.rows) {
@@ -423,15 +439,27 @@ class TDAnalysisDashPage extends React.Component {
     console.log("Language: " + lag)
 
     this.setState({
-      isLoading: true,
+      isLoading: false,
       myprojectName: projectName,
       language: lag
     });
 
-    // Principal Data
-    var url = TD_TOOLBOX_ENDPOINT + "principalSummary/search?projectID=" + projectName
+
+    var url = TD_TOOLBOX_ENDPOINT + "api/analysis/"
     console.log("test principal api: " + url)
 
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    fetch(url + "reusabilityMetrics?url=" + projectName.toString(), requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+
+    /* // Principal Data
+    
     fetch(url)
       .then(resp => resp.json())
       .then(resp => {
@@ -507,16 +535,20 @@ class TDAnalysisDashPage extends React.Component {
         })
       })
 
-    url = TD_TOOLBOX_ENDPOINT + "cumulativeInterestLineChart/search?projectID=" + projectName + "&language=" + lag
+    */
+
+    url = url + "cumulativeInterest?url=" + projectName.toString()
     fetch(url)
       .then(resp => resp.json())
+      .then(resp => console.log(resp))
       .then(resp => {
         this.setState({
           isLoading: false,
-          cumulativeInterestLineChart: resp.cumulativeInterestLineChart,
+          cumulativeInterestLineChart: resp,
         })
       })
 
+    /*
     url = TD_TOOLBOX_ENDPOINT + "interestRanking/search?projectID=" + projectName + "&language=" + lag
     fetch(url)
       .then(resp => resp.json())
@@ -535,7 +567,7 @@ class TDAnalysisDashPage extends React.Component {
           isLoading: false,
           interestProbabilityRank: resp.interestProbabilityRank,
         })
-      })
+      }) */
   }
 
 
@@ -549,7 +581,9 @@ class TDAnalysisDashPage extends React.Component {
       var selectedProjectSession = JSON.parse(sessionStorage.getItem('selected_project'))
       var selectedProjectURL = selectedProjectSession['endpoint']
       var repoName = (selectedProjectURL.replace('.git', '').split('/'))[selectedProjectURL.split("/").length - 1]
-      this.updateProjectData(repoName)
+      console.log(selectedProjectURL.replace('.git', ''))
+      console.log(repoName)
+      this.updateProjectData(selectedProjectURL.replace('.git', ''))
     }
   }
 
@@ -575,7 +609,7 @@ class TDAnalysisDashPage extends React.Component {
             updateProjectData={this.updateProjectData}
           />
 
-          <TDAnalysisPanel
+          {/* <TDAnalysisPanel
             myprojectName={name}
             updateProjectData={this.updateProjectData}
             interest={interestIndicatorsSummary}
@@ -590,7 +624,7 @@ class TDAnalysisDashPage extends React.Component {
             principal={principalIndicatorsSummary}
             principalArtifacts={principalIndicators}
             radarChartLab={radarChartLabels}
-          />
+          /> */}
 
           <InterestPanel
             interestArtifacts={interestIndicators}
@@ -598,6 +632,10 @@ class TDAnalysisDashPage extends React.Component {
 
           <PrincipalPanel
             principalArtifacts={principalIndicators}
+          />
+
+          <myCumulativeInterestTable
+            interestArtifacts={cumulativeInterestLineChart}
           />
 
         </React.Fragment>
