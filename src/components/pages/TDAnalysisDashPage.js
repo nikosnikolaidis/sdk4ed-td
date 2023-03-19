@@ -79,7 +79,7 @@ const InterestPanel = props => {
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Interest Indicators" data={props.mycumulativeInterestLineChart} />
+          <BasicTable title="Interest Indicators" data={props.interestArtifacts} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -103,14 +103,29 @@ const PrincipalPanel = props => {
 
 }
 
-const myCumulativeInterestTable = props => {
+const CumulativeInterestPanel = props => {
 
   return (
-    <PagePanel header="Artifact Principal Indicators" linkTo="tdanalysis">
+    <PagePanel header="Cumulative Interest Indicators" linkTo="tdanalysis">
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Principal Indicators" data={props.principalArtifacts} />
+          <BasicTable title="Cumulative Interest Indicators" data={props.mycumulativeInterestLineChart} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
+const ReusabillityMetricsPanel = props => {
+
+  return (
+    <PagePanel header="Reusabillity Metrics Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="Cumulative Interest Indicators" data={props.myReusabillityMetrics} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -139,6 +154,7 @@ const TDAnalysisPanel = props => {
 	console.log("After normalize: " +values);
 
 	*/}
+
   const InterestRadarPanel = {
     labels: props.radarChartLab.values,
     datasets: [
@@ -212,7 +228,7 @@ const TDAnalysisPanel = props => {
       color: "#278649",
     }, {
       name: 'Cumulative Interest €',
-      data: props.mycumulativeInterestLineChart.values,
+      data: props.mycumulativeInterestLineChart,
       pointPlacement: 'on',
       color: "#F65E17",
     }],
@@ -347,7 +363,7 @@ class BasicTable extends React.Component {
      * An object that respects as defined here https://mdbootstrap.com/docs/react/tables/additional/
      * It contains the data that will be visualized in the table
      */
-    data: PropTypes.object,
+    data: PropTypes.any,
 
     /**
      * The title of the table.
@@ -356,25 +372,38 @@ class BasicTable extends React.Component {
   }
 
   render() {
-    var data = this.props.data
-    console.log("data: " + data)
-    var rows = []
-    var uniqueId = 0
-    for (var i in data.rows) {
-      var row = data.rows[i]
-      var r = []
-      for (var j in data.columns) {
-        var field = data.columns[j]['field']
-        r.push(<td key={uniqueId++}>{row[field]}</td>)
+
+    var data = JSON.parse(JSON.stringify(this.props.data));
+    // console.log("data: " + JSON.stringify(data));
+
+    const keys = [];
+    const columns = [];
+    const rows = [];
+    if (data.length > 0) {
+      keys.push(Object.keys(data[0]));
+
+      for (let i = 0; i < keys[0].length; i++) {
+        console.log("keys[i]: " + keys[0][i]);
+        let column = {
+          'label': '' + keys[0][i] + '',
+          'field': '' + keys[0][i] + '',
+          'sort': 'asc',
+          'width': 200
+        }
+        columns.push(column);
       }
-      rows.push(<tr key={uniqueId++}>{r}</tr>)
     }
-    var header = []
-    for (var h in data.columns)
-      header.push(<th key={uniqueId++}>{data.columns[h]['label']}</th>)
+    rows.push(data);
+
+    const tableData = {
+      'columns': columns,
+      'rows': rows[0]
+    }
+
+    console.log("tableData:", tableData);
 
     return (
-      <MDBDataTable striped small bordered responsive hover data={data} />
+      <MDBDataTable striped small bordered responsive hover data={tableData} />
     )
   }
 }
@@ -404,13 +433,14 @@ class TDAnalysisDashPage extends React.Component {
       interestLineChart: {},
       principalLineChart: {},
       breakingPointLineChart: {},
-      cumulativeInterestLineChart: {},
+      cumulativeInterestLineChart: [],
       radarChartvalues: {},
       radarChartLabels: {},
       interestRank: {},
       interestProbabilityRank: {},
       principalIndicatorsSummary: {},
       principalIndicators: {},
+      reusabillityMetrics:[]
     }
   }
 
@@ -455,7 +485,15 @@ class TDAnalysisDashPage extends React.Component {
 
     fetch(url + "reusabilityMetrics?url=" + projectName.toString(), requestOptions)
       .then(response => response.json())
-      .then(result => console.log(result))
+      .then(result => {
+        let data = result;
+        console.log("reusabilityMetrics: " + JSON.stringify(data))
+        console.log(result)
+        this.setState({
+          isLoading: false,
+          reusabillityMetrics: data,
+        })
+      })
       .catch(error => console.log('error', error));
 
     /* // Principal Data
@@ -536,12 +574,15 @@ class TDAnalysisDashPage extends React.Component {
       })
 
     */
-
+    this.name = projectName.toString();
     url = url + "cumulativeInterest?url=" + projectName.toString()
     fetch(url)
       .then(resp => resp.json())
-      .then(resp => console.log(resp))
       .then(resp => {
+        let response = resp;
+
+        console.log(response)
+
         this.setState({
           isLoading: false,
           cumulativeInterestLineChart: resp,
@@ -588,7 +629,24 @@ class TDAnalysisDashPage extends React.Component {
   }
 
   render() {
-    const { error, isLoading, name, interestIndicatorsSummary, interestIndicators, interestLineChart, principalLineChart, breakingPointLineChart, cumulativeInterestLineChart, radarChartvalues, radarChartLabels, principalIndicatorsSummary, principalIndicators, interestRank, interestProbabilityRank } = this.state
+    const {
+      error,
+      isLoading,
+      name,
+      interestIndicatorsSummary,
+      interestIndicators,
+      interestLineChart,
+      principalLineChart,
+      breakingPointLineChart,
+      cumulativeInterestLineChart,
+      radarChartvalues,
+      radarChartLabels,
+      principalIndicatorsSummary,
+      principalIndicators,
+      interestRank,
+      interestProbabilityRank,
+      reusabillityMetrics
+    } = this.state
 
     if (error) {
       return (
@@ -609,7 +667,7 @@ class TDAnalysisDashPage extends React.Component {
             updateProjectData={this.updateProjectData}
           />
 
-          {/* <TDAnalysisPanel
+          <TDAnalysisPanel
             myprojectName={name}
             updateProjectData={this.updateProjectData}
             interest={interestIndicatorsSummary}
@@ -624,19 +682,20 @@ class TDAnalysisDashPage extends React.Component {
             principal={principalIndicatorsSummary}
             principalArtifacts={principalIndicators}
             radarChartLab={radarChartLabels}
-          /> */}
-
-          <InterestPanel
-            interestArtifacts={interestIndicators}
+            myReusabillityMetrics={reusabillityMetrics}
           />
 
-          <PrincipalPanel
-            principalArtifacts={principalIndicators}
+          <CumulativeInterestPanel
+            mycumulativeInterestLineChart={cumulativeInterestLineChart}
           />
 
-          <myCumulativeInterestTable
-            interestArtifacts={cumulativeInterestLineChart}
+          <ReusabillityMetricsPanel
+            myReusabillityMetrics={reusabillityMetrics}
           />
+
+          <p>cumulativeInterestLineChart {JSON.stringify(cumulativeInterestLineChart)}</p>
+
+
 
         </React.Fragment>
       )
