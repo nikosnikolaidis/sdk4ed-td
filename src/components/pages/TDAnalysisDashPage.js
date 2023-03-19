@@ -72,7 +72,7 @@ const ProjectPanel = props => {
   )
 }
 
-const InterestPanel = props => {
+/* const InterestPanel = props => {
 
   return (
     <PagePanel header="Artifact Interest Indicators" linkTo="tdanalysis">
@@ -101,7 +101,7 @@ const PrincipalPanel = props => {
     </PagePanel>
   )
 
-}
+} */
 
 const CumulativeInterestPanel = props => {
 
@@ -125,7 +125,37 @@ const ReusabillityMetricsPanel = props => {
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Cumulative Interest Indicators" data={props.myReusabillityMetrics} />
+          <BasicTable title="Reusabillity Metrics Indicators" data={props.myReusabillityMetrics} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
+const NormalizedInterestPanel = props => {
+
+  return (
+    <PagePanel header="Normalized Interest Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="Normalized Interest Indicators" data={props.myNormalizedInterest} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
+const AnalyzedCommitsPanel = props => {
+
+  return (
+    <PagePanel header="Analyzed Commits Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="Analyzed Commits Indicators" data={props.myAnalyzedCommits} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -299,7 +329,7 @@ const TDAnalysisPanel = props => {
 
       </MDBRow>
 
-      <MDBRow className="mb-3">
+      {/* <MDBRow className="mb-3">
         <MDBCol size="12">
           <MDBCardHeader className="sdk4ed-color">Principal Project Summary</MDBCardHeader>
           <MDBRow className="mb-3">
@@ -326,7 +356,7 @@ const TDAnalysisPanel = props => {
             </MDBCol>
           </MDBRow>
         </MDBCol>
-      </MDBRow>
+      </MDBRow> */}
 
       <MDBRow className="mb-6">
         <MDBCol size="12">
@@ -383,7 +413,7 @@ class BasicTable extends React.Component {
       keys.push(Object.keys(data[0]));
 
       for (let i = 0; i < keys[0].length; i++) {
-        console.log("keys[i]: " + keys[0][i]);
+        // console.log("keys[i]: " + keys[0][i]);
         let column = {
           'label': '' + keys[0][i] + '',
           'field': '' + keys[0][i] + '',
@@ -400,7 +430,7 @@ class BasicTable extends React.Component {
       'rows': rows[0]
     }
 
-    console.log("tableData:", tableData);
+    // console.log("tableData:", tableData);
 
     return (
       <MDBDataTable striped small bordered responsive hover data={tableData} />
@@ -425,8 +455,8 @@ class TDAnalysisDashPage extends React.Component {
     super(props);
 
     this.state = {
-      isLoading: false,
-      name: 'Neurasmus',
+      isLoading: true,
+      name: "Dummy Project Title",
       language: 'C',
       interestIndicatorsSummary: {},
       interestIndicators: {},
@@ -440,20 +470,23 @@ class TDAnalysisDashPage extends React.Component {
       interestProbabilityRank: {},
       principalIndicatorsSummary: {},
       principalIndicators: {},
-      reusabillityMetrics:[]
+      reusabillityMetrics: [],
+      normalizedInterest: [],
+      analyzedCommits: []
     }
   }
-
 
   // Update project
   updateProjectData = (projectName) => {
 
-
+    let projectTitle = "Dummy Project Title";
     // This should be change in integration
-    var lag = 'c';
+    let lag = 'c';
 
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
+
+    projectTitle = storedProjectJson.name;
 
     // Fetch TD info from session storage
     if (storedProjectJson['technicaldebt'] !== '') {
@@ -465,30 +498,36 @@ class TDAnalysisDashPage extends React.Component {
 
     lag = lag.toLowerCase();
 
-    console.log("Project Name: " + projectName)
-    console.log("Language: " + lag)
-
     this.setState({
-      isLoading: false,
-      myprojectName: projectName,
+      isLoading: true,
+      name: projectTitle,
       language: lag
     });
 
-
-    var url = TD_TOOLBOX_ENDPOINT + "api/analysis/"
-    console.log("test principal api: " + url)
+    let url = "";
+    let urlPrefix = TD_TOOLBOX_ENDPOINT + "api/analysis/"
 
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
     };
 
-    fetch(url + "reusabilityMetrics?url=" + projectName.toString(), requestOptions)
+    url = urlPrefix + "analyzedCommits?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          analyzedCommits: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    url = urlPrefix + "reusabilityMetrics?url=" + projectName.toString();
+    fetch(url, requestOptions)
       .then(response => response.json())
       .then(result => {
         let data = result;
-        console.log("reusabilityMetrics: " + JSON.stringify(data))
-        console.log(result)
         this.setState({
           isLoading: false,
           reusabillityMetrics: data,
@@ -496,121 +535,29 @@ class TDAnalysisDashPage extends React.Component {
       })
       .catch(error => console.log('error', error));
 
-    /* // Principal Data
-    
-    fetch(url)
+    url = urlPrefix + "cumulativeInterest?url=" + projectName.toString();
+    fetch(url, requestOptions)
       .then(resp => resp.json())
       .then(resp => {
-        this.setState({
-          isLoading: false,
-          name: resp.principalSummary.name,
-          principalIndicatorsSummary: resp.principalSummary,
-        })
-      })
-
-    url = TD_TOOLBOX_ENDPOINT + "principalIndicators/search?projectID=" + projectName
-
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.setState({
-          isLoading: false,
-          principalIndicators: resp.principalIndicators,
-        })
-      })
-
-    // Interest Data
-    url = TD_TOOLBOX_ENDPOINT + "interestSummary/search?projectID=" + projectName + "&language=" + lag
-
-    console.log("test interest api: " + url)
-
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.setState({
-          isLoading: false,
-          interestIndicatorsSummary: resp.interestSummary,
-        })
-      })
-
-    url = TD_TOOLBOX_ENDPOINT + "interestIndicators/search?projectID=" + projectName + "&language=" + lag
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.setState({
-          isLoading: false,
-          interestIndicators: resp.interestIndicators,
-        })
-      })
-
-    url = TD_TOOLBOX_ENDPOINT + "lineChartInterestTD/search?projectID=" + projectName + "&language=" + lag
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.setState({
-          isLoading: false,
-          interestLineChart: resp.lineChartInterestTD,
-        })
-      })
-
-    url = TD_TOOLBOX_ENDPOINT + "lineChartPrincipalTD/search?projectID=" + projectName + "&language=" + lag
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.setState({
-          isLoading: false,
-          principalLineChart: resp.lineChartPrincipalTD,
-        })
-      })
-
-    url = TD_TOOLBOX_ENDPOINT + "lineChartBreakingPointTD/search?projectID=" + projectName + "&language=" + lag
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.setState({
-          isLoading: false,
-          breakingPointLineChart: resp.lineChartBreakingPointTD,
-        })
-      })
-
-    */
-    this.name = projectName.toString();
-    url = url + "cumulativeInterest?url=" + projectName.toString()
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        let response = resp;
-
-        console.log(response)
-
         this.setState({
           isLoading: false,
           cumulativeInterestLineChart: resp,
         })
       })
+      .catch(error => console.log('error', error));
 
-    /*
-    url = TD_TOOLBOX_ENDPOINT + "interestRanking/search?projectID=" + projectName + "&language=" + lag
-    fetch(url)
+    url = urlPrefix + "normalizedInterest?url=" + projectName.toString();
+    fetch(url, requestOptions)
       .then(resp => resp.json())
       .then(resp => {
         this.setState({
           isLoading: false,
-          interestRank: resp.interestRank,
+          normalizedInterest: resp,
         })
       })
+      .catch(error => console.log('error', error));
 
-    url = TD_TOOLBOX_ENDPOINT + "interestProbabilityRanking/search?projectID=" + projectName + "&language=" + lag
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        this.setState({
-          isLoading: false,
-          interestProbabilityRank: resp.interestProbabilityRank,
-        })
-      }) */
   }
-
 
   componentDidMount() {
     if (sessionStorage.getItem('selected_project') === null) {
@@ -622,8 +569,8 @@ class TDAnalysisDashPage extends React.Component {
       var selectedProjectSession = JSON.parse(sessionStorage.getItem('selected_project'))
       var selectedProjectURL = selectedProjectSession['endpoint']
       var repoName = (selectedProjectURL.replace('.git', '').split('/'))[selectedProjectURL.split("/").length - 1]
-      console.log(selectedProjectURL.replace('.git', ''))
-      console.log(repoName)
+      // console.log(selectedProjectURL.replace('.git', ''))
+      // console.log(repoName)
       this.updateProjectData(selectedProjectURL.replace('.git', ''))
     }
   }
@@ -645,7 +592,9 @@ class TDAnalysisDashPage extends React.Component {
       principalIndicators,
       interestRank,
       interestProbabilityRank,
-      reusabillityMetrics
+      reusabillityMetrics,
+      normalizedInterest,
+      analyzedCommits
     } = this.state
 
     if (error) {
@@ -682,7 +631,9 @@ class TDAnalysisDashPage extends React.Component {
             principal={principalIndicatorsSummary}
             principalArtifacts={principalIndicators}
             radarChartLab={radarChartLabels}
-            myReusabillityMetrics={reusabillityMetrics}
+            // myReusabillityMetrics={reusabillityMetrics}
+            // myNormalizedInterest={normalizedInterest}
+            // myAnalyzedCommits={analyzedCommits}
           />
 
           <CumulativeInterestPanel
@@ -693,9 +644,13 @@ class TDAnalysisDashPage extends React.Component {
             myReusabillityMetrics={reusabillityMetrics}
           />
 
-          <p>cumulativeInterestLineChart {JSON.stringify(cumulativeInterestLineChart)}</p>
+          <NormalizedInterestPanel
+            myNormalizedInterest={normalizedInterest}
+          />
 
-
+          <AnalyzedCommitsPanel
+            myAnalyzedCommits={analyzedCommits}
+          />
 
         </React.Fragment>
       )
