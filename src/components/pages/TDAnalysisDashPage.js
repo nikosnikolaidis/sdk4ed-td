@@ -118,14 +118,29 @@ const CumulativeInterestPanel = props => {
 
 }
 
-const ReusabillityMetricsPanel = props => {
+const ProjectReusabillityMetricsPanel = props => {
 
   return (
-    <PagePanel header="Reusabillity Metrics Indicators" linkTo="tdanalysis">
+    <PagePanel header="Project Reusabillity Metrics Indicators" linkTo="tdanalysis">
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Reusabillity Metrics Indicators" data={props.myReusabillityMetrics} />
+          <BasicTable title="Project Reusabillity Metrics Indicators" data={props.myProjectReusabillityMetrics} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
+const FileReusabillityMetricsPanel = props => {
+
+  return (
+    <PagePanel header="File Reusabillity Metrics Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="File Reusabillity Metrics Indicators" data={props.myFileReusabillityMetrics} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -141,6 +156,21 @@ const NormalizedInterestPanel = props => {
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <BasicTable title="Normalized Interest Indicators" data={props.myNormalizedInterest} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
+const InterestPerCommitPanel = props => {
+
+  return (
+    <PagePanel header="Interest Per Commit Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="Interest Per Commit Indicators" data={props.myInterestPerCommit} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -402,9 +432,9 @@ class BasicTable extends React.Component {
   }
 
   render() {
-
+    
     var data = JSON.parse(JSON.stringify(this.props.data));
-    // console.log("data: " + JSON.stringify(data));
+    console.log("data: " + JSON.stringify(data));
 
     const keys = [];
     const columns = [];
@@ -418,7 +448,7 @@ class BasicTable extends React.Component {
           'label': '' + keys[0][i] + '',
           'field': '' + keys[0][i] + '',
           'sort': 'asc',
-          'width': 200
+          'width': 150
         }
         columns.push(column);
       }
@@ -470,8 +500,10 @@ class TDAnalysisDashPage extends React.Component {
       interestProbabilityRank: {},
       principalIndicatorsSummary: {},
       principalIndicators: {},
-      reusabillityMetrics: [],
+      projectReusabillityMetrics: [],
+      fileReusabillityMetrics: [],
       normalizedInterest: [],
+      interestPerCommit: [],
       analyzedCommits: []
     }
   }
@@ -523,14 +555,26 @@ class TDAnalysisDashPage extends React.Component {
       })
       .catch(error => console.log('error', error));
 
-    url = urlPrefix + "reusabilityMetrics?url=" + projectName.toString();
+    url = urlPrefix + "projectReusabilityMetrics?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(response => response.json())
       .then(result => {
         let data = result;
         this.setState({
           isLoading: false,
-          reusabillityMetrics: data,
+          projectReusabillityMetrics: data,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    url = urlPrefix + "fileReusabilityMetrics?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        let data = result;
+        this.setState({
+          isLoading: false,
+          fileReusabillityMetrics: data,
         })
       })
       .catch(error => console.log('error', error));
@@ -553,6 +597,17 @@ class TDAnalysisDashPage extends React.Component {
         this.setState({
           isLoading: false,
           normalizedInterest: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    url = urlPrefix + "interestPerCommitFile?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          interestPerCommit: resp,
         })
       })
       .catch(error => console.log('error', error));
@@ -592,8 +647,10 @@ class TDAnalysisDashPage extends React.Component {
       principalIndicators,
       interestRank,
       interestProbabilityRank,
-      reusabillityMetrics,
+      projectReusabillityMetrics,
+      fileReusabillityMetrics,
       normalizedInterest,
+      interestPerCommit,
       analyzedCommits
     } = this.state
 
@@ -631,17 +688,22 @@ class TDAnalysisDashPage extends React.Component {
             principal={principalIndicatorsSummary}
             principalArtifacts={principalIndicators}
             radarChartLab={radarChartLabels}
-            // myReusabillityMetrics={reusabillityMetrics}
-            // myNormalizedInterest={normalizedInterest}
-            // myAnalyzedCommits={analyzedCommits}
+          />
+
+          <InterestPerCommitPanel
+            myInterestPerCommit={interestPerCommit}
           />
 
           <CumulativeInterestPanel
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
           />
 
-          <ReusabillityMetricsPanel
-            myReusabillityMetrics={reusabillityMetrics}
+          <ProjectReusabillityMetricsPanel
+            myProjectReusabillityMetrics={projectReusabillityMetrics}
+          />
+
+          <FileReusabillityMetricsPanel
+            myFileReusabillityMetrics={fileReusabillityMetrics}
           />
 
           <NormalizedInterestPanel
