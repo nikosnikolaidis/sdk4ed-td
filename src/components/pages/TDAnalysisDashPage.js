@@ -1,4 +1,4 @@
-import { MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow } from "mdbreact";
+import { MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert } from "mdbreact";
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'whatwg-fetch';
@@ -103,6 +103,36 @@ const PrincipalPanel = props => {
 
 } */
 
+const AlertForProjectState = props => {
+  if (props.myProjectState !== undefined) {
+    console.log("STATE = " + props.myProjectState)
+    if (props.myProjectState === 'ABORTED') {
+      return (
+        <Alert color="danger" title="State Alert" autoHide={5000} dismiss>
+          Something went wrong! Analysis was not completed successfully.
+        </Alert>
+      )
+    } else if (props.myProjectState === 'RUNNING') {
+      return (
+        <Alert color="warning" title="State Alert" autoHide={5000} dismiss>
+          Attention the analysis is not finished yet, refresh for new analyzed commits.
+        </Alert>
+      )
+    } else if (props.myProjectState === 'COMPLETED') {
+      return (
+        <Alert color="success" title="State Alert" autoHide={5000} dismiss>
+          Analysis completed successfully, all analyzed commits are shown.
+        </Alert>
+      )
+    }
+  }
+  return (
+    <Alert color="danger" title="State Alert" autoHide={5000} dismiss>
+      Something went wrong! Probably the analysis not started or the project was deleted from the database.
+    </Alert>
+  )
+}
+
 const CumulativeInterestPanel = props => {
 
   return (
@@ -163,6 +193,21 @@ const NormalizedInterestPanel = props => {
 
 }
 
+const HighInterestFilesPanel = props => {
+
+  return (
+    <PagePanel header="High Interest Files Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="High Interest Files Indicators" data={props.myHighInterestFiles} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
 const InterestPerCommitPanel = props => {
 
   return (
@@ -171,6 +216,21 @@ const InterestPerCommitPanel = props => {
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <BasicTable title="Interest Per Commit Indicators" data={props.myInterestPerCommit} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
+}
+
+const FileInterestChangePanel = props => {
+
+  return (
+    <PagePanel header="File Interest Change Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="File Interest Change Indicators" data={props.myFileInterestChange} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -432,7 +492,7 @@ class BasicTable extends React.Component {
   }
 
   render() {
-    
+
     var data = JSON.parse(JSON.stringify(this.props.data));
     console.log("data: " + JSON.stringify(data));
 
@@ -504,6 +564,8 @@ class TDAnalysisDashPage extends React.Component {
       fileReusabillityMetrics: [],
       normalizedInterest: [],
       interestPerCommit: [],
+      highInterestFiles: [],
+      fileInterestChange: [],
       analyzedCommits: []
     }
   }
@@ -612,6 +674,40 @@ class TDAnalysisDashPage extends React.Component {
       })
       .catch(error => console.log('error', error));
 
+    url = urlPrefix + "highInterestFiles?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          highInterestFiles: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    url = urlPrefix + "fileInterestChange?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          fileInterestChange: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    urlPrefix = TD_TOOLBOX_ENDPOINT + "api/project/"
+    url = urlPrefix + "state?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.text())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          projectState: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
   }
 
   componentDidMount() {
@@ -651,7 +747,10 @@ class TDAnalysisDashPage extends React.Component {
       fileReusabillityMetrics,
       normalizedInterest,
       interestPerCommit,
-      analyzedCommits
+      highInterestFiles,
+      fileInterestChange,
+      analyzedCommits,
+      projectState
     } = this.state
 
     if (error) {
@@ -668,6 +767,11 @@ class TDAnalysisDashPage extends React.Component {
     else {
       return (
         <React.Fragment>
+
+          <AlertForProjectState
+            myProjectState={projectState}
+          />
+
           <ProjectPanel
             myprojectName={name}
             updateProjectData={this.updateProjectData}
@@ -694,6 +798,10 @@ class TDAnalysisDashPage extends React.Component {
             myInterestPerCommit={interestPerCommit}
           />
 
+          <HighInterestFilesPanel
+            myHighInterestFiles={highInterestFiles}
+          />
+
           <CumulativeInterestPanel
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
           />
@@ -708,6 +816,10 @@ class TDAnalysisDashPage extends React.Component {
 
           <NormalizedInterestPanel
             myNormalizedInterest={normalizedInterest}
+          />
+
+          <FileInterestChangePanel
+            myFileInterestChange={fileInterestChange}
           />
 
           <AnalyzedCommitsPanel
