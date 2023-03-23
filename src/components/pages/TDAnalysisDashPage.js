@@ -1,6 +1,6 @@
-import { MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert } from "mdbreact";
+import { MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import 'whatwg-fetch';
 import ContentPanel from './sections/ContentPanel';
 import FileExplorer from './sections/FileExplorer';
@@ -115,7 +115,7 @@ const AlertForProjectState = props => {
     } else if (props.myProjectState === 'RUNNING') {
       return (
         <Alert color="warning" title="State Alert" autoHide={5000} dismiss>
-          Attention the analysis is not finished yet, refresh for new analyzed commits.
+          Attention the analysis is in progress, you may need to refresh for new analyzed commits.
         </Alert>
       )
     } else if (props.myProjectState === 'COMPLETED') {
@@ -235,6 +235,91 @@ const FileInterestChangePanel = props => {
       </MDBRow>
     </PagePanel>
   )
+
+}
+
+const InterestChangePanel = props => {
+
+  console.log(props.myAnalyzedCommits[0].sha);
+
+  const [selectedValue, setSelectedValue] = useState('');
+  const [data, setData] = useState([]);
+
+  const handleSelect = async (value) => {
+    let storedProject = sessionStorage.getItem('selected_project');
+    let storedProjectJson = JSON.parse(storedProject);
+    let url = "";
+    let urlPrefix = TD_TOOLBOX_ENDPOINT + "api/analysis/"
+    url = urlPrefix + "interestChange?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
+    setSelectedValue(value);
+    const response = await fetch(url);
+    const json = await response.json();
+    setData(json);
+  };
+
+  const options = [];
+  let option;
+  for (let i = 0; i < props.myAnalyzedCommits.length; i++) {
+    if (props.myAnalyzedCommits[i].revisionCount > 3) {
+      option = {
+        'text': props.myAnalyzedCommits[i].sha,
+        'value': props.myAnalyzedCommits[i].sha
+      }
+      options.push(option);
+    }
+  }
+
+
+  return (
+    <>
+      <MDBDropdown dropright>
+        <MDBDropdownToggle caret color="primary">
+          {selectedValue ? selectedValue : 'Select an option'}
+        </MDBDropdownToggle>
+
+        <MDBDropdownMenu>
+          {options.map((option) => (
+            <MDBDropdownItem key={option.value}
+              onClick={() => {
+                handleSelect(option.value)
+
+              }}>
+              {option.text}
+            </MDBDropdownItem>
+          ))}
+        </MDBDropdownMenu>
+      </MDBDropdown>
+      {data.length > 0 &&
+        <PagePanel header="Interest Change Indicators" linkTo="tdanalysis">
+          <MDBRow className="mb-12">
+            <MDBCol md="12" lg="12" className="mb-12">
+              <BasicTable nesting title="Interest Change Indicators" data={data} hover responsiveSm />
+            </MDBCol>
+          </MDBRow>
+        </PagePanel>
+      }
+    </>
+  );
+
+  // return (
+
+  //   <PagePanel header="Interest Change Indicators" linkTo="tdanalysis">
+
+  //     <MDBSelect
+  //       options={props.myAnalyzedCommits}
+  //       color="primary"
+  //       label="Select an option"
+  //       multiple
+  //       search
+  //     />
+
+  // <MDBRow className="mb-12">
+  //   <MDBCol md="12" lg="12" className="mb-12">
+  //     <BasicTable nesting title="Interest Change Indicators" data={props.myAnalyzedCommits} hover responsiveSm />
+  //   </MDBCol>
+  // </MDBRow>
+  //   </PagePanel>
+  // )
 
 }
 
@@ -824,6 +909,11 @@ class TDAnalysisDashPage extends React.Component {
 
           <AnalyzedCommitsPanel
             myAnalyzedCommits={analyzedCommits}
+          />
+
+          <InterestChangePanel
+            myAnalyzedCommits={analyzedCommits}
+            myprojectName={name}
           />
 
         </React.Fragment>

@@ -91,7 +91,7 @@ export const runStartNewTDAnalysisData = (url, project_url, user_name, user_pass
     const requestBody = {
         "gitUrl": "" + project_url + "",
         "user": {
-            "urernameOrAccessToken": "" + user_name + "",
+            "usernameOrAccessToken": "" + user_name + "",
             "password": "" + user_password + ""
         }
     };
