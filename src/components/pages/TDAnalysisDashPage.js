@@ -242,6 +242,7 @@ const InterestChangePanel = props => {
 
   const [selectedValue, setSelectedValue] = useState('');
   const [data, setData] = useState([]);
+  var errorReturned = false;
 
   const handleSelect = async (value) => {
     let storedProject = sessionStorage.getItem('selected_project');
@@ -250,9 +251,15 @@ const InterestChangePanel = props => {
     let urlPrefix = TD_TOOLBOX_ENDPOINT + "api/analysis/"
     url = urlPrefix + "interestChange?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
     setSelectedValue(value);
-    const response = await fetch(url);
-    const json = await response.json();
-    setData(json);
+    const response = await fetch(url).then(resp => {
+      return resp;
+    }).catch(e => console.error("error: " + e));
+    if (response) {
+      const json = await response.json();
+      setData(json);
+    } else {
+      errorReturned = true;
+    }
   };
 
   const options = [];
@@ -269,22 +276,25 @@ const InterestChangePanel = props => {
 
   return (
     <>
-      <MDBDropdown dropright>
-        <MDBDropdownToggle caret color="primary">
-          {selectedValue ? selectedValue : 'Select an option'}
-        </MDBDropdownToggle>
+      <Alert color="info">Please choose a commit sha from the dropdown below. (First option is the latest analyzed commit)
+        <MDBDropdown dropright>
+          <MDBDropdownToggle caret color="primary">
+            {selectedValue ? selectedValue : 'Select an option'}
+          </MDBDropdownToggle>
 
-        <MDBDropdownMenu>
-          {options.map((option) => (
-            <MDBDropdownItem key={option.value}
-              onClick={() => {
-                handleSelect(option.value)
-              }}>
-              {option.text}
-            </MDBDropdownItem>
-          ))}
-        </MDBDropdownMenu>
-      </MDBDropdown>
+          <MDBDropdownMenu>
+            {options.map((option) => (
+              <MDBDropdownItem key={option.value}
+                onClick={() => {
+                  handleSelect(option.value)
+                }}>
+                {option.text}
+              </MDBDropdownItem>
+            ))}
+          </MDBDropdownMenu>
+        </MDBDropdown>
+      </Alert>
+
       {data.length > 0 &&
         <PagePanel header="Interest Change Indicators" linkTo="tdanalysis">
           <MDBRow className="mb-12">
@@ -293,6 +303,18 @@ const InterestChangePanel = props => {
             </MDBCol>
           </MDBRow>
         </PagePanel>
+      }
+
+      {data.length === 0 &&
+        <Alert color="warning">
+          Nothing returned, there is no interest change for this commit!
+        </Alert>
+      }
+
+      {errorReturned &&
+        <Alert color="danger">
+          Something went wrong with the server, propably cannot calculate interest change for this commit!
+        </Alert>
       }
     </>
   );
