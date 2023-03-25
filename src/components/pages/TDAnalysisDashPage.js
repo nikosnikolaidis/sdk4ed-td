@@ -240,8 +240,6 @@ const FileInterestChangePanel = props => {
 
 const InterestChangePanel = props => {
 
-  console.log(props.myAnalyzedCommits[0].sha);
-
   const [selectedValue, setSelectedValue] = useState('');
   const [data, setData] = useState([]);
 
@@ -269,7 +267,6 @@ const InterestChangePanel = props => {
     }
   }
 
-
   return (
     <>
       <MDBDropdown dropright>
@@ -282,7 +279,6 @@ const InterestChangePanel = props => {
             <MDBDropdownItem key={option.value}
               onClick={() => {
                 handleSelect(option.value)
-
               }}>
               {option.text}
             </MDBDropdownItem>
@@ -300,26 +296,6 @@ const InterestChangePanel = props => {
       }
     </>
   );
-
-  // return (
-
-  //   <PagePanel header="Interest Change Indicators" linkTo="tdanalysis">
-
-  //     <MDBSelect
-  //       options={props.myAnalyzedCommits}
-  //       color="primary"
-  //       label="Select an option"
-  //       multiple
-  //       search
-  //     />
-
-  // <MDBRow className="mb-12">
-  //   <MDBCol md="12" lg="12" className="mb-12">
-  //     <BasicTable nesting title="Interest Change Indicators" data={props.myAnalyzedCommits} hover responsiveSm />
-  //   </MDBCol>
-  // </MDBRow>
-  //   </PagePanel>
-  // )
 
 }
 
@@ -428,7 +404,7 @@ const TDAnalysisPanel = props => {
       color: "#3AC5E7",
     }, {
       name: 'Breaking Point',
-      data: props.mybreakingpointLineChart.values,
+      data: props.myAnalyzedCommits,
       pointPlacement: 'on',
       color: "#278649",
     }, {
@@ -702,6 +678,8 @@ class TDAnalysisDashPage extends React.Component {
       })
       .catch(error => console.log('error', error));
 
+    // ---------------------------------------------------------------------------------------------------------- //
+
     url = urlPrefix + "projectReusabilityMetrics?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(response => response.json())
@@ -713,6 +691,8 @@ class TDAnalysisDashPage extends React.Component {
         })
       })
       .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
 
     url = urlPrefix + "fileReusabilityMetrics?url=" + projectName.toString();
     fetch(url, requestOptions)
@@ -726,6 +706,8 @@ class TDAnalysisDashPage extends React.Component {
       })
       .catch(error => console.log('error', error));
 
+    // ---------------------------------------------------------------------------------------------------------- //
+
     url = urlPrefix + "cumulativeInterest?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.json())
@@ -736,6 +718,8 @@ class TDAnalysisDashPage extends React.Component {
         })
       })
       .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
 
     url = urlPrefix + "normalizedInterest?url=" + projectName.toString();
     fetch(url, requestOptions)
@@ -748,6 +732,8 @@ class TDAnalysisDashPage extends React.Component {
       })
       .catch(error => console.log('error', error));
 
+    // ---------------------------------------------------------------------------------------------------------- //
+
     url = urlPrefix + "interestPerCommitFile?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.json())
@@ -758,6 +744,8 @@ class TDAnalysisDashPage extends React.Component {
         })
       })
       .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
 
     url = urlPrefix + "highInterestFiles?url=" + projectName.toString();
     fetch(url, requestOptions)
@@ -770,6 +758,8 @@ class TDAnalysisDashPage extends React.Component {
       })
       .catch(error => console.log('error', error));
 
+    // ---------------------------------------------------------------------------------------------------------- //
+
     url = urlPrefix + "fileInterestChange?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.json())
@@ -780,6 +770,8 @@ class TDAnalysisDashPage extends React.Component {
         })
       })
       .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
 
     urlPrefix = TD_TOOLBOX_ENDPOINT + "api/project/"
     url = urlPrefix + "state?url=" + projectName.toString();

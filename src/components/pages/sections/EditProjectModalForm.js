@@ -60,51 +60,51 @@ class EditProjectModalForm extends Component {
                 this.setState({ sdk4edUser: decoded.email });
             }
 
+            if (this.props.id !== undefined) {
+                fetchSingleProject(this.props.id)
+                    .then(resp => {
+                        return resp.json()
+                    })
+                    .then(resp => {
+                        this.setState({
+                            idValue: resp.id,
+                            nameValue: resp.name,
+                            usernameValue: resp.username,
+                            passwordValue: resp.password,
+                            descriptionValue: resp.description,
+                            endpointValue: resp.endpoint,
+                            timestampValue: resp.timestamp,
+                            technicaldebtValue: resp.technicaldebt,
+                            forecastValue: resp.forecaster,
+                            decisionValue: resp.decisionsupport,
+                            dependabilityValue: resp.dependability,
+                            energyValue: resp.energy,
+                            atdValue: resp.archtechdebt,
+                            commonValue: resp.common,
+                            private: resp.private
+                        });
 
-            fetchSingleProject(this.props.id)
-                .then(resp => {
-                    return resp.json()
-                })
-                .then(resp => {
-                    this.setState({
-                        idValue: resp.id,
-                        nameValue: resp.name,
-                        usernameValue: resp.username,
-                        passwordValue: resp.password,
-                        descriptionValue: resp.description,
-                        endpointValue: resp.endpoint,
-                        timestampValue: resp.timestamp,
-                        technicaldebtValue: resp.technicaldebt,
-                        forecastValue: resp.forecaster,
-                        decisionValue: resp.decisionsupport,
-                        dependabilityValue: resp.dependability,
-                        energyValue: resp.energy,
-                        atdValue: resp.archtechdebt,
-                        commonValue: resp.common,
-                        private: resp.private
+                        if (resp.private && (resp.sdk4edRoles && resp.sdk4edRoles.length > 0)) {
+                            this.setState({ access: 'Private (company)' });
+                        } else if (resp.private && (resp.sdk4edRoles && resp.sdk4edRoles.length == 0)) {
+                            this.setState({ access: 'Private (Only me)' });
+                        } else {
+                            this.setState({ access: 'Public' });
+                        }
+
+                        if (this.state.sdk4edUser == resp.sdk4edUser) {
+                            this.setState({ buttonText: 'Edit' });
+                        } else if (this.state.isAdmin && resp.private) {
+                            this.setState({ buttonText: 'Edit' });
+                        } else if (this.state.isAdmin && !resp.private) {
+                            this.setState({ buttonText: 'Edit' });
+                        } else if (!this.state.isAdmin && !resp.private) {
+                            this.setState({ buttonText: 'Edit' });
+                        } else if (!this.state.isAdmin && resp.private) {
+                            this.setState({ buttonText: 'Details' });
+                        }
                     });
-
-                    if (resp.private && (resp.sdk4edRoles && resp.sdk4edRoles.length > 0)) {
-                        this.setState({ access: 'Private (company)' });
-                    } else if (resp.private && (resp.sdk4edRoles && resp.sdk4edRoles.length == 0)) {
-                        this.setState({ access: 'Private (Only me)' });
-                    } else {
-                        this.setState({ access: 'Public' });
-                    }
-
-                    if (this.state.sdk4edUser == resp.sdk4edUser) {
-                        this.setState({ buttonText: 'Edit' });
-                    } else if (this.state.isAdmin && resp.private) {
-                        this.setState({ buttonText: 'Edit' });
-                    } else if (this.state.isAdmin && !resp.private) {
-                        this.setState({ buttonText: 'Edit' });
-                    } else if (!this.state.isAdmin && !resp.private) {
-                        this.setState({ buttonText: 'Edit' });
-                    } else if (!this.state.isAdmin && resp.private) {
-                        this.setState({ buttonText: 'Details' });
-                    }
-                });
-
+            }
         }
     }
 
