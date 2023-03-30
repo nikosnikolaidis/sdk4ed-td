@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import jwt_decode from "jwt-decode";
-
 import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBIcon, MDBRow, MDBCol, MDBAlert } from 'mdbreact';
 import { createProject } from '../../../apis/projects';
 import history from '../../../history';
@@ -17,13 +16,13 @@ class NewProjectModalForm extends Component {
             passwordValue: '',
             descriptionValue: '',
             responseStatus: null,
-            technicaldebtValue: '{"language":"Java", "typeAnalysis":1,"moveClassRefactoring":false,"extractMethodRefactoring":false}',
-            atdValue: '',
-            forecastValue: '',
-            decisionValue: '',
-            dependabilityValue: '',
-            energyValue: '',
-            commonValue: '',
+            // technicaldebtValue: '{"language":"Java", "typeAnalysis":1,"moveClassRefactoring":false,"extractMethodRefactoring":false}',
+            // atdValue: '',
+            // forecastValue: '',
+            // decisionValue: '',
+            // dependabilityValue: '',
+            // energyValue: '',
+            // commonValue: '',
             sdk4edUser: '',
             sdk4edRoles: [],
             access: 'Public'
@@ -63,27 +62,27 @@ class NewProjectModalForm extends Component {
             case 'DESCRIPTION':
                 this.setState({ descriptionValue: event.target.value });
                 break;
-            case 'ARCHTECHNICALDEBT':
-                this.setState({ atdValue: event.target.value });
-                break;
-            case 'TECHNICALDEBT':
-                this.setState({ technicaldebtValue: event.target.value });
-                break;
-            case 'FORECAST':
-                this.setState({ forecastValue: event.target.value });
-                break;
-            case 'DECISION':
-                this.setState({ decisionValue: event.target.value });
-                break;
-            case 'DEPENDABILITY':
-                this.setState({ dependabilityValue: event.target.value });
-                break;
-            case 'ENERGY':
-                this.setState({ energyValue: event.target.value });
-                break;
-            case 'COMMON':
-                this.setState({ commonValue: event.target.value });
-                break;
+            // case 'ARCHTECHNICALDEBT':
+            //     this.setState({ atdValue: event.target.value });
+            //     break;
+            // case 'TECHNICALDEBT':
+            //     this.setState({ technicaldebtValue: event.target.value });
+            //     break;
+            // case 'FORECAST':
+            //     this.setState({ forecastValue: event.target.value });
+            //     break;
+            // case 'DECISION':
+            //     this.setState({ decisionValue: event.target.value });
+            //     break;
+            // case 'DEPENDABILITY':
+            //     this.setState({ dependabilityValue: event.target.value });
+            //     break;
+            // case 'ENERGY':
+            //     this.setState({ energyValue: event.target.value });
+            //     break;
+            // case 'COMMON':
+            //     this.setState({ commonValue: event.target.value });
+            //     break;
             default:
                 break;
         }
@@ -107,13 +106,13 @@ class NewProjectModalForm extends Component {
             password: this.state.passwordValue,
             description: this.state.descriptionValue,
             timestamp: new Date(),
-            technicaldebt: this.state.technicaldebtValue,
-            forecaster: this.state.forecastValue,
-            archtechdebt: this.state.atdValue,
-            decisionsupport: this.state.decisionValue,
-            dependability: this.state.dependabilityValue,
-            energy: this.state.energyValue,
-            common: this.state.commonValue,
+            // technicaldebt: this.state.technicaldebtValue,
+            // forecaster: this.state.forecastValue,
+            // archtechdebt: this.state.atdValue,
+            // decisionsupport: this.state.decisionValue,
+            // dependability: this.state.dependabilityValue,
+            // energy: this.state.energyValue,
+            // common: this.state.commonValue,
             private: isPrivateSet,
             sdk4edUser: this.state.sdk4edUser,
             sdk4edRoles: this.state.access.includes('company') ? this.state.sdk4edRoles : []
@@ -142,7 +141,7 @@ class NewProjectModalForm extends Component {
             return <MDBAlert color="success">The project was successfully created </MDBAlert>
         } else if (status === 400) {
             // Show error message
-            return <MDBAlert color="danger">The project could not be createed, please try again.</MDBAlert>
+            return <MDBAlert color="danger">The project could not be created, please try again.</MDBAlert>
         }
         return null;
     }
@@ -165,13 +164,13 @@ class NewProjectModalForm extends Component {
             passwordValue: '',
             descriptionValue: '',
             responseStatus: null,
-            technicaldebtValue: '{"language":"Java", "typeAnalysis":1,"moveClassRefactoring":false,"extractMethodRefactoring":false}',
-            forecastValue: '',
-            decisionValue: '',
-            dependabilityValue: '',
-            atdValue: '',
-            energyValue: '',
-            commonValue: ''
+            // technicaldebtValue: '{"language":"Java", "typeAnalysis":1,"moveClassRefactoring":false,"extractMethodRefactoring":false}',
+            // forecastValue: '',
+            // decisionValue: '',
+            // dependabilityValue: '',
+            // atdValue: '',
+            // energyValue: '',
+            // commonValue: ''
         })
     }
 
@@ -220,7 +219,7 @@ class NewProjectModalForm extends Component {
                                 <textarea className="form-control" id="descriptionInput" rows="3"
                                     value={this.state.descriptionValue} onChange={(e) => { this.handleChange(e, "DESCRIPTION") }}></textarea>
                             </div>
-                            <div className="form-group">
+                            {/* <div className="form-group">
                                 <label htmlFor="descriptionInput">Technical Debt toolbox info</label>
                                 <div style={{ display: 'none' }}>
                                     <select id="selectToolbox" onChange={this.changeToolbox} value={this.state.toolbox}>
@@ -255,7 +254,7 @@ class NewProjectModalForm extends Component {
                                 <label htmlFor="descriptionInput">Extra info common (for all toolboxes)</label>
                                 <textarea className="form-control" id="technicaldebtInput" rows="3"
                                     value={this.state.commonValue} onChange={(e) => { this.handleChange(e, "COMMON") }}></textarea>
-                            </div>
+                            </div> */}
                         </form>
                         <div>
                             {this.renderAlert(this.state.responseStatus)}

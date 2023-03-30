@@ -1,6 +1,7 @@
 import 'whatwg-fetch';
 
 let endpoint = process.env.REACT_APP_PROJECT_MANAGEMENT_SERVER_IP // 'http://160.40.52.130:3001/SDK4ED/'; // 'https://ioswagger20200221094142.azurewebsites.net/MAAXCNET/'; // 
+let tdendpoint = process.env.REACT_APP_TD_TOOL_ENDPOINT
 
 export const createProject = (newProject) => {
     var url = endpoint + 'ProjectManagement/1.0.0/projects';
@@ -50,7 +51,20 @@ export const fetchSingleProject = (projectId) => {
 
 export const deleteProject = (projectId) => {
     var url = endpoint + `ProjectManagement/1.0.0/projects/${projectId}`;
+    deleteProjectFromServicedMetricsCalculator();
     return fetch(url, {
         method: 'DELETE'
     });
+
 };
+
+const deleteProjectFromServicedMetricsCalculator = () => {
+    let storedProject = sessionStorage.getItem('selected_project');
+    let storedProjectJson = JSON.parse(storedProject);
+    let url = "";
+    let urlPrefix = tdendpoint + "api/project/";
+    url = urlPrefix + "url?url=" + storedProjectJson.endpoint.toString();
+    fetch(url, {
+        method: 'DELETE'
+    })
+}

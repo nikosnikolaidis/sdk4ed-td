@@ -1,6 +1,5 @@
 import React from 'react';
 import jwt_decode from "jwt-decode";
-
 import { MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter, MDBAlert } from 'mdbreact';
 import { deleteProject, fetchSingleProject } from '../../../apis/projects';
 import history from '../../../history';
@@ -20,12 +19,15 @@ class DeleteProjectModalForm extends React.Component {
     }
 
     toggle = () => {
-        if (!this.state.modal)
+        console.log("delete state modal = " + this.state.modal)
+        if (!this.state.modal) {
             history.push('/projects');
+        }
 
         this.setState({
             modal: !this.state.modal
         });
+        console.log("delete state modal = " + this.state.modal)
     }
 
     componentDidMount() {

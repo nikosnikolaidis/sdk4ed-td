@@ -49,21 +49,6 @@ const ProjectPanel = props => {
               <MDBCol>
                 <h4 style={{ color: '#548235' }}>{props.myprojectName}</h4>
               </MDBCol>
-              {/*
-                <MDBDropdown>
-                    <MDBDropdownToggle caret className="white-text" color="  light-green darken-4">
-                        Select Project
-                    </MDBDropdownToggle>
-                    <MDBDropdownMenu basic>
-                        <MDBDropdownItem onClick={(param) => props.updateProjectData('HolisunArassistance')}>Holisun Arassistance</MDBDropdownItem>
-                        <MDBDropdownItem onClick={(param) => props.updateProjectData('Airbus')}>Airbus</MDBDropdownItem>
-                        <MDBDropdownItem onClick={(param) => props.updateProjectData('Neurasmus')}>Neurasmus</MDBDropdownItem>
-                    </MDBDropdownMenu>
-
-<MDBBtn className="white-text" color=" light-green darken-4" onClick={(param) => props.newAnalysis(props.myprojectName)}><MDBIcon icon="sync-alt" className="mr-1" size="lg"/>New Analysis</MDBBtn>
-                </MDBDropdown>
-                  	*/}
-
             </MDBFormInline>
           </MDBCardBody>
         </MDBCard>
@@ -71,37 +56,6 @@ const ProjectPanel = props => {
     </MDBRow>
   )
 }
-
-/* const InterestPanel = props => {
-
-  return (
-    <PagePanel header="Artifact Interest Indicators" linkTo="tdanalysis">
-
-      <MDBRow className="mb-12">
-        <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Interest Indicators" data={props.interestArtifacts} />
-        </MDBCol>
-      </MDBRow>
-    </PagePanel>
-  )
-
-}
-
-
-const PrincipalPanel = props => {
-
-  return (
-    <PagePanel header="Artifact Principal Indicators" linkTo="tdanalysis">
-
-      <MDBRow className="mb-12">
-        <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Principal Indicators" data={props.principalArtifacts} />
-        </MDBCol>
-      </MDBRow>
-    </PagePanel>
-  )
-
-} */
 
 const AlertForProjectState = props => {
   if (props.myProjectState !== undefined) {
@@ -131,6 +85,21 @@ const AlertForProjectState = props => {
       Something went wrong! Probably the analysis not started or the project was deleted from the database.
     </Alert>
   )
+}
+
+const AllFileMetricsAndInterestPanel = props => {
+
+  return (
+    <PagePanel header="All File Metrics And Interest Indicators" linkTo="tdanalysis">
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title="All File Metrics And Interest Indicators" data={props.myAllFileMetricsAndInterest} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+
 }
 
 const CumulativeInterestPanel = props => {
@@ -413,17 +382,11 @@ const TDAnalysisPanel = props => {
     legend: {
       align: 'right'
     },
-
     series: [{
       name: 'Interest €',
       data: props.myinterestLineChart.values,
       pointPlacement: 'on',
       color: "#C70039",
-    }, {
-      name: 'Principal €',
-      data: props.myprincipalLineChart.values,
-      pointPlacement: 'on',
-      color: "#3AC5E7",
     }, {
       name: 'Breaking Point',
       data: props.myAnalyzedCommits,
@@ -431,7 +394,7 @@ const TDAnalysisPanel = props => {
       color: "#278649",
     }, {
       name: 'Cumulative Interest €',
-      data: props.mycumulativeInterestLineChart,
+      data: props.mycumulativeInterestLineChart.map(x => x.interestEu),
       pointPlacement: 'on',
       color: "#F65E17",
     }],
@@ -462,33 +425,6 @@ const TDAnalysisPanel = props => {
   return (
     <PagePanel header="Technical Debt Management Summary" linkTo="tdanalysis">
 
-      {/*
-   <MDBRow className="mb-4">
-            <MDBCol md="12" lg="12" className="mb-12">
-                <MDBCard className="mb-12">
-                <MDBCardHeader className="sdk4ed-color">Project </MDBCardHeader>
-                <MDBCardBody>
-                    <MDBFormInline className="md-form m-0">
-                        <MDBDropdown>
-                            <MDBDropdownToggle caret className="white-text" color="  light-green darken-4">
-                                Select Project
-                            </MDBDropdownToggle>
-                            <MDBDropdownMenu basic>
-                                <MDBDropdownItem onClick={(param) => props.updateProjectData('HolisunArassistance')}>Holisun Arassistance</MDBDropdownItem>
-                                <MDBDropdownItem onClick={(param) => props.updateProjectData('Airbus')}>Airbus</MDBDropdownItem>
-                                <MDBDropdownItem onClick={(param) => props.updateProjectData('Neurasmus')}>Neurasmus</MDBDropdownItem>
-                            </MDBDropdownMenu>
-
-<MDBBtn className="white-text" color="  light-green darken-4" onClick={(param) => props.newAnalysis(props.myprojectName)}><MDBIcon icon="sync-alt" className="mr-1" size="lg"/>New Analysis</MDBBtn>
-
-                        </MDBDropdown>
-                        <h4 style={{color:'#548235'}}>{props.myprojectName}</h4>
-                    </MDBFormInline>
-                </MDBCardBody>
-                </MDBCard>
-            </MDBCol>
-      </MDBRow>
-*/}
       <MDBRow className="mb-6">
 
         <MDBCol>
@@ -502,35 +438,6 @@ const TDAnalysisPanel = props => {
 
       </MDBRow>
 
-      {/* <MDBRow className="mb-3">
-        <MDBCol size="12">
-          <MDBCardHeader className="sdk4ed-color">Principal Project Summary</MDBCardHeader>
-          <MDBRow className="mb-3">
-            <MDBCol>
-              <CountCard title="TD IN MINUTES" value={props.principal.tdInMinutes} icon="clock" />
-            </MDBCol>
-            <MDBCol>
-              <CountCard title="TD IN CURRENCY (€)" color="#33691e light-green darken-4" value={parseFloat(props.principal.tdInCurrency).toFixed(2)} icon="euro-sign" />
-            </MDBCol>
-            <MDBCol>
-              <CountCard title="BUGS" color="#33691e light-green darken-4" value={props.principal.bugs} icon="bug" />
-            </MDBCol>
-          </MDBRow>
-
-          <MDBRow className="mb-3">
-            <MDBCol>
-              <CountCard title="VULNERABILITIES" color="#33691e light-green darken-4" value={props.principal.vulnerabilities} icon="lock-open" />
-            </MDBCol>
-            <MDBCol>
-              <CountCard title="CODE SMELLS" color="#33691e light-green darken-4" value={props.principal.codeSmells} icon="compress-arrows-alt" />
-            </MDBCol>
-            <MDBCol>
-              <CountCard title="DUPLICATIONS " color="#33691e light-green darken-4" value={props.principal.duplCode} icon="copy" />
-            </MDBCol>
-          </MDBRow>
-        </MDBCol>
-      </MDBRow> */}
-
       <MDBRow className="mb-6">
         <MDBCol size="12">
           <MDBCardHeader className="sdk4ed-color">Interest Project Summary</MDBCardHeader>
@@ -539,7 +446,8 @@ const TDAnalysisPanel = props => {
               <CountCard title="BREAKING POINT (version)" color="#33691e light-green darken-4" value={parseFloat(Math.round(props.interest.breakingPoint)).toFixed(2)} icon="hat-wizard" />
             </MDBCol>
             <MDBCol>
-              <CountCard title="TOTAL INTEREST (€)" color="#33691e light-green darken-4" value={parseFloat(props.interest.totalInterest).toFixed(2)} icon="euro-sign" />
+              <CountCard title="TOTAL INTEREST (€)" color="#33691e light-green darken-4" value={parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestEu)
+                .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2)} icon="euro-sign" />
             </MDBCol>
             <MDBCol>
               <CountCard title="INTEREST PROBABILITY (%)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interest.interestProbability).toFixed(2)} icon="percent" />
@@ -577,7 +485,7 @@ class BasicTable extends React.Component {
   render() {
 
     var data = JSON.parse(JSON.stringify(this.props.data));
-    console.log("data: " + JSON.stringify(data));
+    console.log(this.props.title + " : " + JSON.stringify(data));
 
     const keys = [];
     const columns = [];
@@ -649,7 +557,8 @@ class TDAnalysisDashPage extends React.Component {
       interestPerCommit: [],
       highInterestFiles: [],
       fileInterestChange: [],
-      analyzedCommits: []
+      analyzedCommits: [],
+      allFileMetricsAndInterest: []
     }
   }
 
@@ -795,6 +704,19 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
+    url = urlPrefix + "allFileMetricsAndInterest?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          allFileMetricsAndInterest: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+
     urlPrefix = TD_TOOLBOX_ENDPOINT + "api/project/"
     url = urlPrefix + "state?url=" + projectName.toString();
     fetch(url, requestOptions)
@@ -849,6 +771,7 @@ class TDAnalysisDashPage extends React.Component {
       highInterestFiles,
       fileInterestChange,
       analyzedCommits,
+      allFileMetricsAndInterest,
       projectState
     } = this.state
 
@@ -885,12 +808,17 @@ class TDAnalysisDashPage extends React.Component {
             myprincipalLineChart={principalLineChart}
             mybreakingpointLineChart={breakingPointLineChart}
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
+            myAllFileMetricsAndInterest={allFileMetricsAndInterest}
             radarChartVal={radarChartvalues}
             interestProbabilityRank={interestProbabilityRank}
             interestRank={interestRank}
             principal={principalIndicatorsSummary}
             principalArtifacts={principalIndicators}
             radarChartLab={radarChartLabels}
+          />
+
+          <AllFileMetricsAndInterestPanel
+            myAllFileMetricsAndInterest={allFileMetricsAndInterest}
           />
 
           <InterestPerCommitPanel
