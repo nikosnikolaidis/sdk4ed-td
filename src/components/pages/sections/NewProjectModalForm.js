@@ -147,12 +147,13 @@ class NewProjectModalForm extends Component {
     }
 
     toggle = () => {
-        if (!this.state.modal)
-            history.push('/projects');
 
         this.setState({
             modal: !this.state.modal
         });
+
+        if (this.state.modal)
+            history.push('/projects');
     }
 
     clearForm = () => {
@@ -268,22 +269,25 @@ class NewProjectModalForm extends Component {
     render() {
         return (
             <MDBContainer>
+
                 {/* BUTTON */}
-                <MDBBtn className="white-text" color="  light-green darken-4" onClick={this.clearForm}>
+                <MDBBtn className="white-text" color="light-green darken-2" onClick={this.clearForm}>
                     <MDBIcon icon="plus" className="mr-1" size="lg" />New Project
                 </MDBBtn>
+
                 {/* MODAL */}
-                <MDBModal isOpen={this.state.modal} toggle={this.toggle}    >
-                    <MDBModalHeader toggle={this.toggle}>Create New Project</MDBModalHeader>
+                <MDBModal className="black-text" isOpen={this.state.modal} toggle={this.toggle}>
+                    <MDBModalHeader className="light-green darken-4 white-text" toggle={this.toggle}>Create New Project</MDBModalHeader>
                     <MDBModalBody>
                         {this.renderForm()}
                     </MDBModalBody>
                     <MDBModalFooter>
                         <MDBBtn color="blue-grey" onClick={this.toggle}>Cancel</MDBBtn>
-                        <MDBBtn className="white-text" color="  light-green darken-4" onClick={this.handleSubmit}>Save changes</MDBBtn>
+                        <MDBBtn className="white-text darken-4 light-green" onClick={this.handleSubmit}>Save changes</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>
+
         );
     }
 }

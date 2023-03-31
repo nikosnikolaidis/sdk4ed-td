@@ -16,18 +16,21 @@ class DeleteProjectModalForm extends React.Component {
             deleteAccess: false,
             isAdmin: false
         };
+
+        this.toggle = this.toggle.bind(this);
     }
 
     toggle = () => {
         console.log("delete state modal = " + this.state.modal)
-        if (!this.state.modal) {
-            history.push('/projects');
-        }
 
         this.setState({
             modal: !this.state.modal
         });
         console.log("delete state modal = " + this.state.modal)
+
+        if (this.state.modal) {
+            history.push('/projects');
+        }
     }
 
     componentDidMount() {
@@ -117,13 +120,14 @@ class DeleteProjectModalForm extends React.Component {
     render() {
         return (
             <span>
-                <MDBBtn className="white-text" size="sm" color="red darken-4" onClick={this.toggle} disabled={!this.state.deleteAccess}>
+                {console.log("render delete modal state = " + this.state.modal)}
+                <MDBBtn className="white-text" size="sm" color="red darken-4" onClick={() => this.toggle()} disabled={!this.state.deleteAccess}>
                     Delete
                 </MDBBtn>
 
                 {/* MODAL */}
-                <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
-                    <MDBModalHeader toggle={this.toggle}>Delete Project
+                <MDBModal isOpen={this.state.modal} toggle={() => this.toggle()}>
+                    <MDBModalHeader toggle={() => this.toggle()}>Delete Project
                     </MDBModalHeader>
                     <MDBModalBody>
                         {this.renderConfirmMessage()}
@@ -132,7 +136,7 @@ class DeleteProjectModalForm extends React.Component {
                         </div>
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="blue-grey" onClick={this.toggle}>Cancel</MDBBtn>
+                        <MDBBtn color="blue-grey" onClick={() => this.toggle()}>Cancel</MDBBtn>
                         <MDBBtn className="white-text" color="red darken-4" onClick={this.handleSubmit}>Delete</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>

@@ -29,10 +29,10 @@ const ProjectsPanel = props => {
         <MDBRow className="mb-4">
             <MDBCol md="12" lg="12" className="mb-12">
                 <MDBCard className="xmb-12" >
-                    <MDBCardHeader className="sdk4ed-color">Projects</MDBCardHeader>
-                    <MDBCardBody>
+                    <MDBCardHeader className="sdk4ed-color">
+                        <h2 className="pull-center">Projects</h2>
                         <MDBRow>
-                            <MDBCol md="8" className="pull-left">
+                            <MDBCol md="100" className="pull-left">
                                 <NewProjectModalForm updateList={props.getProjectList} />
                             </MDBCol>
                             {/* TODO */}
@@ -43,6 +43,8 @@ const ProjectsPanel = props => {
                                 </MDBContainer>
                             </MDBCol> */}
                         </MDBRow>
+                    </MDBCardHeader>
+                    <MDBCardBody>
                         <div>
                             {props.renderProjectItem(props.myprojects, props.myselectedProjectId)}
                         </div>
@@ -69,10 +71,10 @@ const CentralAnalysisPanel = props => {
                                         <MDBDropdownMenu color="primary">
                                             <MDBDropdownItem header>Technical Debt</MDBDropdownItem>
                                             <MDBDropdownItem toggle={false} type="button" onClick={(param) => props.toggleChange('isTDAnalysisChecked')}>
-                                                <input type="checkbox" defaultChecked={props.myisTDAnalysisChecked} /> TD
+                                                <input type="checkbox" checked={props.myisTDAnalysisChecked} /> TD Analysis
                                             </MDBDropdownItem>
                                             <MDBDropdownItem toggle={false} type="button" onClick={(param) => props.toggleChange('isTDNewCodeAnalysisChecked')}>
-                                                <input type="checkbox" defaultChecked={props.myisTDNewCodeAnalysisChecked} /> TD New Code
+                                                <input type="checkbox" checked={props.myisTDNewCodeAnalysisChecked} /> TD New Code
                                             </MDBDropdownItem>
                                         </MDBDropdownMenu>
                                     </MDBDropdown>
