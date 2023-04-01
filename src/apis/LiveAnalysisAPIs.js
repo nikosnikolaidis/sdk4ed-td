@@ -88,13 +88,20 @@ export const runNewArchitectureRefactoringAnalysisData = (url, lang, project_url
 // Perform POST call for new TD analysis
 export const runStartNewTDAnalysisData = (url, project_url, user_name, user_password) => {
     // Default options are marked with *
-    const requestBody = {
-        "gitUrl": "" + project_url + "",
-        "user": {
-            "usernameOrAccessToken": "" + user_name + "",
-            "password": "" + user_password + ""
-        }
-    };
+    let requestBody;
+    if (user_name.toString().trim() === "" || user_password.toString().trim() === "") {
+        requestBody = {
+            "gitUrl": "" + project_url + ""
+        };
+    } else {
+        requestBody = {
+            "gitUrl": "" + project_url + "",
+            "user": {
+                "username": "" + user_name + "",
+                "passwordOrAccessToken": "" + user_password + ""
+            }
+        };
+    }
 
     // console.log(JSON.stringify(requestBody));
 

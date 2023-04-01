@@ -525,50 +525,50 @@ class ProjectList extends React.Component {
             base64Header = { 'Authorization': 'Basic ' + btoa(usernameInfo + ':' + passwordInfo) }
         }
         let languageInfo = ''
-        if (storedProjectJson['common'] !== '') {
-            let commonInfo = JSON.parse(storedProjectJson['common']);
-            if ('language' in commonInfo) {
-                languageInfo = commonInfo['language']
-            }
-        }
+        // if (storedProjectJson['common'] !== '') {
+        //     let commonInfo = JSON.parse(storedProjectJson['common']);
+        //     if ('language' in commonInfo) {
+        //         languageInfo = commonInfo['language']
+        //     }
+        // }
         // Fetch TD info from session storage
-        let tdLanguageInfo = ''
-        let tdTypeAnalysisInfo = ''
+        // let tdLanguageInfo = ''
+        // let tdTypeAnalysisInfo = ''
         let tdmoveClassRefactoringInfo = ''
         let tdExtractMethodRefactoringInfo = ''
         let tdBuildToolInfo = ''
-        if (storedProjectJson['technicaldebt'] !== '') {
-            let tdInfo = JSON.parse(storedProjectJson['technicaldebt']);
-            if ('language' in tdInfo) {
-                tdLanguageInfo = tdInfo['language']
-            }
-            if ('typeAnalysis' in tdInfo) {
-                tdTypeAnalysisInfo = tdInfo['typeAnalysis']
-            }
-            if ('moveClassRefactoring' in tdInfo) {
-                tdmoveClassRefactoringInfo = tdInfo['moveClassRefactoring']
-            }
-            if ('extractMethodRefactoring' in tdInfo) {
-                tdExtractMethodRefactoringInfo = tdInfo['extractMethodRefactoring']
-            }
-            if ('buildTool' in tdInfo) {
-                tdBuildToolInfo = tdInfo['buildTool']
-            }
-        }
+        // if (storedProjectJson['technicaldebt'] !== '') {
+        //     let tdInfo = JSON.parse(storedProjectJson['technicaldebt']);
+        //     if ('language' in tdInfo) {
+        //         tdLanguageInfo = tdInfo['language']
+        //     }
+        //     if ('typeAnalysis' in tdInfo) {
+        //         tdTypeAnalysisInfo = tdInfo['typeAnalysis']
+        //     }
+        //     if ('moveClassRefactoring' in tdInfo) {
+        //         tdmoveClassRefactoringInfo = tdInfo['moveClassRefactoring']
+        //     }
+        //     if ('extractMethodRefactoring' in tdInfo) {
+        //         tdExtractMethodRefactoringInfo = tdInfo['extractMethodRefactoring']
+        //     }
+        //     if ('buildTool' in tdInfo) {
+        //         tdBuildToolInfo = tdInfo['buildTool']
+        //     }
+        // }
         // Fetch Dependability info from session storage
-        let optimalCheckpointInfo = ''
-        let securityHistoricalAnalysisInfo = false
-        if (storedProjectJson['dependability'] !== '') {
-            let dependabilityInfo = JSON.parse(storedProjectJson['dependability']);
-            if ('optimal_checkpoint' in dependabilityInfo) {
-                optimalCheckpointInfo = dependabilityInfo['optimal_checkpoint']
-            }
-            if ('security_assessment' in dependabilityInfo) {
-                if ('historical_analysis' in dependabilityInfo['security_assessment']) {
-                    securityHistoricalAnalysisInfo = dependabilityInfo['security_assessment']['historical_analysis']
-                }
-            }
-        }
+        // let optimalCheckpointInfo = ''
+        // let securityHistoricalAnalysisInfo = false
+        // if (storedProjectJson['dependability'] !== '') {
+        //     let dependabilityInfo = JSON.parse(storedProjectJson['dependability']);
+        //     if ('optimal_checkpoint' in dependabilityInfo) {
+        //         optimalCheckpointInfo = dependabilityInfo['optimal_checkpoint']
+        //     }
+        //     if ('security_assessment' in dependabilityInfo) {
+        //         if ('historical_analysis' in dependabilityInfo['security_assessment']) {
+        //             securityHistoricalAnalysisInfo = dependabilityInfo['security_assessment']['historical_analysis']
+        //         }
+        //     }
+        // }
 
         // Reset analysis
         this.resetStateAnalysis(idInfo, nameInfo)

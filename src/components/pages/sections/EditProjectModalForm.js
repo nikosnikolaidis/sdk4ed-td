@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import jwt_decode from "jwt-decode";
-
 import {
     MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter,
     MDBIcon, MDBRow, MDBCol, MDBAlert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu,
@@ -26,11 +25,11 @@ class EditProjectModalForm extends Component {
             timestampValue: null,
             responseStatus: null,
             technicaldebtValue: '',
-            forecastValue: '',
-            decisionValue: '',
-            dependabilityValue: '',
-            energyValue: '',
-            commonValue: '',
+            // forecastValue: '',
+            // decisionValue: '',
+            // dependabilityValue: '',
+            // energyValue: '',
+            // commonValue: '',
             sdk4edUser: '',
             sdk4edRoles: [],
             access: 'Public',
@@ -41,8 +40,6 @@ class EditProjectModalForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-
-
 
     componentDidMount() {
         let token = localStorage.getItem("react-token");
@@ -75,13 +72,13 @@ class EditProjectModalForm extends Component {
                             endpointValue: resp.endpoint,
                             timestampValue: resp.timestamp,
                             technicaldebtValue: resp.technicaldebt,
-                            forecastValue: resp.forecaster,
-                            decisionValue: resp.decisionsupport,
-                            dependabilityValue: resp.dependability,
-                            energyValue: resp.energy,
-                            atdValue: resp.archtechdebt,
-                            commonValue: resp.common,
-                            private: resp.private
+                            // forecastValue: resp.forecaster,
+                            // decisionValue: resp.decisionsupport,
+                            // dependabilityValue: resp.dependability,
+                            // energyValue: resp.energy,
+                            // atdValue: resp.archtechdebt,
+                            // commonValue: resp.common,
+                            private: resp.private,
                         });
 
                         if (resp.private && (resp.sdk4edRoles && resp.sdk4edRoles.length > 0)) {
@@ -108,6 +105,14 @@ class EditProjectModalForm extends Component {
         }
     }
 
+    validateFields = () => {
+        const { usernameValue, passwordValue } = this.state;
+        if (usernameValue && passwordValue) {
+            return true;
+        }
+        return false;
+    };
+
     handleChange(event, input) {
         switch (input) {
             case 'NAME':
@@ -128,26 +133,29 @@ class EditProjectModalForm extends Component {
             case 'TECHNICALDEBT':
                 this.setState({ technicaldebtValue: event.target.value });
                 break;
-            case 'ARCHTECHNICALDEBT':
-                this.setState({ atdValue: event.target.value });
-                break;
-            case 'FORECAST':
-                this.setState({ forecastValue: event.target.value });
-                break;
-            case 'DECISION':
-                this.setState({ decisionValue: event.target.value });
-                break;
-            case 'DEPENDABILITY':
-                this.setState({ dependabilityValue: event.target.value });
-                break;
-            case 'ENERGY':
-                this.setState({ energyValue: event.target.value });
-                break;
-            case 'COMMON':
-                this.setState({ commonValue: event.target.value });
-                break;
+            // case 'ARCHTECHNICALDEBT':
+            //     this.setState({ atdValue: event.target.value });
+            //     break;
+            // case 'FORECAST':
+            //     this.setState({ forecastValue: event.target.value });
+            //     break;
+            // case 'DECISION':
+            //     this.setState({ decisionValue: event.target.value });
+            //     break;
+            // case 'DEPENDABILITY':
+            //     this.setState({ dependabilityValue: event.target.value });
+            //     break;
+            // case 'ENERGY':
+            //     this.setState({ energyValue: event.target.value });
+            //     break;
+            // case 'COMMON':
+            //     this.setState({ commonValue: event.target.value });
+            //     break;
             default:
                 break;
+        }
+        if (!this.validateFields()) {
+            this.setState({ isSaveDisabled: false })
         }
     }
 
@@ -171,12 +179,12 @@ class EditProjectModalForm extends Component {
             description: this.state.descriptionValue,
             timestamp: new Date(),
             technicaldebt: this.state.technicaldebtValue,
-            forecaster: this.state.forecastValue,
-            archtechdebt: this.state.atdValue,
-            decisionsupport: this.state.decisionValue,
-            dependability: this.state.dependabilityValue,
-            energy: this.state.energyValue,
-            common: this.state.commonValue,
+            // forecaster: this.state.forecastValue,
+            // archtechdebt: this.state.atdValue,
+            // decisionsupport: this.state.decisionValue,
+            // dependability: this.state.dependabilityValue,
+            // energy: this.state.energyValue,
+            // common: this.state.commonValue,
             private: isPrivateSet,
             sdk4edUser: this.state.sdk4edUser,
             sdk4edRoles: this.state.access.includes('company') ? this.state.sdk4edRoles : []
@@ -208,12 +216,16 @@ class EditProjectModalForm extends Component {
 
     toggle = () => {
         this.setState({ responseStatus: null });
-        if (!this.state.modal)
-            history.push('/projects');
 
         this.setState({
             modal: !this.state.modal
         });
+
+        if (this.state.modal) {
+            history.push('/');
+            window.location.reload();
+        }
+
     }
 
     renderForm() {
@@ -246,12 +258,12 @@ class EditProjectModalForm extends Component {
                             <div className="form-group">
                                 <MDBRow>
                                     <MDBCol size="6">
-                                        <label htmlFor="usernameInput">Git Username / Git AccessToken</label>
+                                        <label htmlFor="usernameInput">Git Username</label>
                                         <input type="text" className="form-control" id="usernameInput" placeholder="" autoComplete="off"
                                             value={this.state.usernameValue} onChange={(e) => { this.handleChange(e, "USERNAME") }} readOnly={this.state.buttonText != 'Edit'} />
                                     </MDBCol>
                                     <MDBCol size="6">
-                                        <label htmlFor="passwordInput">Git Password</label>
+                                        <label htmlFor="passwordInput">Git Password / Git AccessToken</label>
                                         <input type="password" className="form-control" id="passwordInput" placeholder="" autoComplete="off"
                                             value={this.state.passwordValue} onChange={(e) => { this.handleChange(e, "PASSWORD") }} readOnly={this.state.buttonText != 'Edit'} />
                                     </MDBCol>
@@ -262,7 +274,7 @@ class EditProjectModalForm extends Component {
                                 <textarea className="form-control" id="descriptionInput" rows="6"
                                     value={this.state.descriptionValue} onChange={(e) => { this.handleChange(e, "DESCRIPTION") }} readOnly={this.state.buttonText != 'Edit'}></textarea>
                             </div>
-                            <div className="form-group">
+                            {/* <div className="form-group">
                                 <label htmlFor="descriptionInput">Technical Debt toolbox info</label>
                                 <div style={{ display: 'none' }}>
                                     <select id="selectToolbox" onChange={this.changeToolbox} value={this.state.toolbox} disabled={this.state.buttonText != 'Edit'}>
@@ -297,7 +309,7 @@ class EditProjectModalForm extends Component {
                                 <label htmlFor="descriptionInput">Extra info common (for all toolboxes)</label>
                                 <textarea className="form-control" id="commonInput" rows="3"
                                     value={this.state.commonValue} onChange={(e) => { this.handleChange(e, "COMMON") }} readOnly={this.state.buttonText != 'Edit'}></textarea>
-                            </div>
+                            </div> */}
 
                             <p style={{ fontSize: '8pt' }}>Last modified: {this.state.timestampValue ? new Date(this.state.timestampValue).toLocaleString() : null}</p>
                         </form>
@@ -311,6 +323,10 @@ class EditProjectModalForm extends Component {
     }
 
     render() {
+        const { private: isPrivate } = this.state;
+        const { usernameValue, passwordValue } = this.state;
+        const isSaveDisabled = ((isPrivate && (!usernameValue || !passwordValue)) || (this.state.buttonText != 'Edit'));
+
         return (
             <span>
                 <MDBBtn className="white-text" size="sm" color="warning" onClick={this.toggle}>
@@ -319,7 +335,7 @@ class EditProjectModalForm extends Component {
 
                 {/* MODAL */}
                 <MDBModal isOpen={this.state.modal} toggle={this.toggle}>
-                    <MDBModalHeader toggle={this.toggle}>Edit Project
+                    <MDBModalHeader className="light-green darken-4 white-text" toggle={this.toggle}>Edit Project
                     </MDBModalHeader>
                     <small style={{ padding: '0px 30px', textAlign: 'right', color: '#c0c0c0' }}>Id:{this.state.idValue}</small>
                     <MDBModalBody>
@@ -327,7 +343,7 @@ class EditProjectModalForm extends Component {
                     </MDBModalBody>
                     <MDBModalFooter>
                         <MDBBtn color="blue-grey" onClick={this.toggle} >Cancel</MDBBtn>
-                        <MDBBtn className="white-text" color="  light-green darken-4" onClick={this.handleSubmit} disabled={this.state.buttonText != 'Edit'}>Save changes</MDBBtn>
+                        <MDBBtn className="white-text darken-4 light-green" onClick={this.handleSubmit} disabled={isSaveDisabled}>Save changes</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </span>

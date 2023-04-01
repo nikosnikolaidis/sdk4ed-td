@@ -21,15 +21,12 @@ class DeleteProjectModalForm extends React.Component {
     }
 
     toggle = () => {
-        console.log("delete state modal = " + this.state.modal)
-
         this.setState({
             modal: !this.state.modal
         });
-        console.log("delete state modal = " + this.state.modal)
 
         if (this.state.modal) {
-            history.push('/projects');
+            history.push('/');
         }
     }
 
@@ -70,6 +67,8 @@ class DeleteProjectModalForm extends React.Component {
                         }
                     });
             } else {
+                // console.log('IS ADMIN: ' + this.props.project.name, this.state.isAdmin ); 
+                // console.log('IS PRIVATE ' + this.props.project.name, this.props.project.private );
                 if (this.state.sdk4edUser == this.props.project.sdk4edUser) {
                     this.setState({ deleteAccess: true });
                 } else if (this.state.isAdmin && this.props.project.private) {

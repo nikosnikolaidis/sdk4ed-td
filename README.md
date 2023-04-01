@@ -49,3 +49,9 @@ In case you are on Linux and you have issue with seeing the updates you make in 
 ./file-limit.sh
 ```
 from the main project directory.
+
+
+Docker Compose build
+```
+docker-compose -f ./docker-compose.yml -p sdk4ed up --always-recreate-deps --force-recreate --build
+```

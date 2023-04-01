@@ -538,7 +538,7 @@ class TDAnalysisDashPage extends React.Component {
     this.state = {
       isLoading: true,
       name: "Dummy Project Title",
-      language: 'C',
+      // language: 'C',
       interestIndicatorsSummary: {},
       interestIndicators: {},
       interestLineChart: {},
@@ -567,7 +567,7 @@ class TDAnalysisDashPage extends React.Component {
 
     let projectTitle = "Dummy Project Title";
     // This should be change in integration
-    let lag = 'c';
+    // let lag = 'c';
 
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
@@ -575,19 +575,19 @@ class TDAnalysisDashPage extends React.Component {
     projectTitle = storedProjectJson.name;
 
     // Fetch TD info from session storage
-    if (storedProjectJson['technicaldebt'] !== '') {
-      let tdInfo = JSON.parse(storedProjectJson['technicaldebt']);
-      if ('language' in tdInfo) {
-        lag = tdInfo['language']
-      }
-    }
+    // if (storedProjectJson['technicaldebt'] !== '') {
+    //   let tdInfo = JSON.parse(storedProjectJson['technicaldebt']);
+    //   if ('language' in tdInfo) {
+    //     lag = tdInfo['language']
+    //   }
+    // }
 
-    lag = lag.toLowerCase();
+    // lag = lag.toLowerCase();
 
     this.setState({
       isLoading: true,
       name: projectTitle,
-      language: lag
+      // language: lag
     });
 
     let url = "";

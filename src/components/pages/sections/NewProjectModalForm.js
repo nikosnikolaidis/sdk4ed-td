@@ -54,9 +54,11 @@ class NewProjectModalForm extends Component {
                 this.setState({ endpointValue: event.target.value });
                 break;
             case 'USERNAME':
+                console.log("usernameValue.length" + this.state.usernameValue.length)
                 this.setState({ usernameValue: event.target.value });
                 break;
             case 'PASSWORD':
+                console.log("passwordValue.length" + this.state.passwordValue.length)
                 this.setState({ passwordValue: event.target.value });
                 break;
             case 'DESCRIPTION':
@@ -85,6 +87,10 @@ class NewProjectModalForm extends Component {
             //     break;
             default:
                 break;
+        }
+        console.log("usernameValue.length" + this.state.usernameValue.length + " passwordValue.length" + this.state.passwordValue.length)
+        if (this.state.usernameValue.length > 0 && this.state.passwordValue.length === 0) {
+            
         }
     }
 
@@ -153,7 +159,7 @@ class NewProjectModalForm extends Component {
         });
 
         if (this.state.modal)
-            history.push('/projects');
+            history.push('/');
     }
 
     clearForm = () => {
@@ -204,12 +210,12 @@ class NewProjectModalForm extends Component {
                             <div className="form-group">
                                 <MDBRow>
                                     <MDBCol size="6">
-                                        <label htmlFor="usernameInput">Git Username / Git AccessToken</label>
+                                        <label htmlFor="usernameInput">Git Username</label>
                                         <input type="text" className="form-control" id="usernameInput" placeholder="" autoComplete="off"
                                             value={this.state.usernameValue} onChange={(e) => { this.handleChange(e, "USERNAME") }} />
                                     </MDBCol>
                                     <MDBCol size="6">
-                                        <label htmlFor="passwordInput">Git Password</label>
+                                        <label htmlFor="passwordInput">Git Password / Git AccessToken</label>
                                         <input type="password" className="form-control" id="passwordInput" placeholder="" autoComplete="off"
                                             value={this.state.passwordValue} onChange={(e) => { this.handleChange(e, "PASSWORD") }} />
                                     </MDBCol>
@@ -267,6 +273,11 @@ class NewProjectModalForm extends Component {
     }
 
     render() {
+
+        let isPrivate = this.state.access.includes('Private') ? true : false;
+        const { usernameValue, passwordValue } = this.state;
+        const isSaveDisabled = ((isPrivate && (!usernameValue || !passwordValue)));
+
         return (
             <MDBContainer>
 
@@ -283,7 +294,7 @@ class NewProjectModalForm extends Component {
                     </MDBModalBody>
                     <MDBModalFooter>
                         <MDBBtn color="blue-grey" onClick={this.toggle}>Cancel</MDBBtn>
-                        <MDBBtn className="white-text darken-4 light-green" onClick={this.handleSubmit}>Save changes</MDBBtn>
+                        <MDBBtn className="white-text darken-4 light-green" onClick={this.handleSubmit} disabled={isSaveDisabled}>Save changes</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>
