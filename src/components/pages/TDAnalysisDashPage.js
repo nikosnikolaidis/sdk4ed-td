@@ -1,4 +1,4 @@
-import { MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
+import { MDBCollapse, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import 'whatwg-fetch';
@@ -89,14 +89,78 @@ const AlertForProjectState = props => {
 
 const AllFileMetricsAndInterestPanel = props => {
 
+  const [selectedValue, setSelectedValue] = useState('');
+  const [data, setData] = useState([]);
+  var errorReturned = false;
+
+  const handleSelect = async (value) => {
+    let storedProject = sessionStorage.getItem('selected_project');
+    let storedProjectJson = JSON.parse(storedProject);
+    let url = "";
+    let urlPrefix = TD_TOOLBOX_ENDPOINT + "api/analysis/"
+    url = urlPrefix + "allFileMetricsAndInterest?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
+    setSelectedValue(value);
+    const response = await fetch(url).then(resp => {
+      return resp;
+    }).catch(e => console.error("error: " + e));
+    if (response) {
+      const json = await response.json();
+      setData(json);
+    } else {
+      errorReturned = true;
+    }
+  };
+
+  const options = [];
+  let option;
+  for (let i = 0; i < props.myAnalyzedCommits.length; i++) {
+    // if (props.myAnalyzedCommits[i].revisionCount > 3) {
+    option = {
+      'text': props.myAnalyzedCommits[i].revisionCount,
+      'value': props.myAnalyzedCommits[i].sha
+    }
+    options.push(option);
+    // }
+  }
+
   return (
     <PagePanel header="All File Metrics And Interest Indicators" linkTo="tdanalysis">
+      <Alert color="info">
+        Please choose a commit from the dropdown below. (First option is the latest analyzed commit)
+        <MDBDropdown dropright>
+          <MDBDropdownToggle caret color="primary" >
+            {selectedValue ? selectedValue : 'Select an option'}
+          </MDBDropdownToggle>
+          <MDBDropdownMenu>
+            {options.map((option) => (
+              <MDBDropdownItem key={option.value}
+                onClick={() => {
+                  handleSelect(option.value)
+                }}>
+                {option.text}
+              </MDBDropdownItem>
+            ))}
+          </MDBDropdownMenu>
+        </MDBDropdown>
+      </Alert>
+      {/* // ---------------------------------------------------------------------------------------------------------- // */}
 
-      <MDBRow className="mb-12">
-        <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="All File Metrics And Interest Indicators" data={props.myAllFileMetricsAndInterest} />
-        </MDBCol>
-      </MDBRow>
+      {data.length == 0 &&
+        <MDBRow className="mb-12">
+          <MDBCol md="12" lg="12" className="mb-12">
+            <BasicTable title="All File Metrics And Interest Indicators" data={props.myAllFileMetricsAndInterest} />
+          </MDBCol>
+        </MDBRow>
+      }
+
+      {data.length > 0 &&
+        <MDBRow className="mb-12">
+          <MDBCol md="12" lg="12" className="mb-12">
+            <BasicTable title="All File Metrics And Interest Indicators" data={data} />
+          </MDBCol>
+        </MDBRow>
+      }
+
     </PagePanel>
   )
 
@@ -818,6 +882,7 @@ class TDAnalysisDashPage extends React.Component {
           />
 
           <AllFileMetricsAndInterestPanel
+            myAnalyzedCommits={analyzedCommits}
             myAllFileMetricsAndInterest={allFileMetricsAndInterest}
           />
 
