@@ -1,4 +1,4 @@
-import { MDBCollapse, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
+import { MDBCollapse, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBBtn } from "mdbreact";
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import 'whatwg-fetch';
@@ -127,21 +127,29 @@ const AllFileMetricsAndInterestPanel = props => {
     <PagePanel header="All File Metrics And Interest Indicators" linkTo="tdanalysis">
       <Alert color="info">
         Please choose a commit from the dropdown below. (First option is the latest analyzed commit)
-        <MDBDropdown dropright>
-          <MDBDropdownToggle caret color="primary" >
-            {selectedValue ? selectedValue : 'Select an option'}
-          </MDBDropdownToggle>
-          <MDBDropdownMenu>
-            {options.map((option) => (
-              <MDBDropdownItem key={option.value}
-                onClick={() => {
-                  handleSelect(option.value)
-                }}>
-                {option.text}
-              </MDBDropdownItem>
-            ))}
-          </MDBDropdownMenu>
-        </MDBDropdown>
+        <MDBRow className="mb-12">
+            <MDBBtn outline className='mx-2' color='info' onClick={() => {
+              handleSelect('');
+              setData({});
+            }}>Clear</MDBBtn>
+
+            <MDBDropdown dropright>
+              <MDBDropdownToggle caret color="primary" >
+                {selectedValue ? selectedValue : 'Select an option'}
+              </MDBDropdownToggle>
+              <MDBDropdownMenu>
+                {options.map((option) => (
+                  <MDBDropdownItem key={option.value}
+                    onClick={() => {
+                      handleSelect(option.value)
+                    }}>
+                    {option.text}
+                  </MDBDropdownItem>
+                ))}
+              </MDBDropdownMenu>
+            </MDBDropdown>
+
+        </MDBRow>
       </Alert>
       {/* // ---------------------------------------------------------------------------------------------------------- // */}
 
