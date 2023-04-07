@@ -11,7 +11,7 @@ import { CountCard } from './sections/StatusCards';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_ENDPOINT;
+const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT;
 
 // This the value we multiple td in minutes to get td in currency, is the hour wage of software engineering
 const wage = 37.50
@@ -114,13 +114,11 @@ const AllFileMetricsAndInterestPanel = props => {
   const options = [];
   let option;
   for (let i = 0; i < props.myAnalyzedCommits.length; i++) {
-    // if (props.myAnalyzedCommits[i].revisionCount > 3) {
     option = {
       'text': props.myAnalyzedCommits[i].revisionCount,
       'value': props.myAnalyzedCommits[i].sha
     }
     options.push(option);
-    // }
   }
 
   return (

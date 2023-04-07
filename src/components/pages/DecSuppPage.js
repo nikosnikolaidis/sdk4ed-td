@@ -53,7 +53,7 @@ that are going to be hit with the project info.
 */
 const en_ep = process.env.REACT_APP_ENERGY_TOOLBOX_ENDPOINT
 var endP1 = en_ep + '/analysis?type=full&new=&'
-const endP2 = process.env.REACT_APP_TD_TOOL_ENDPOINT
+const endP2 = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT
 const endP3 = process.env.REACT_APP_DEPENDABILITY_TOOL_SERVER_IP + '/DependabilityToolbox/DependabilityDatabase?analysis_type=securityAssessment&'
 
 //Below the DB endpoint and API for invoking the LUT is declared.

@@ -13,7 +13,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 // SELECT sum(principal), sum(interest) FROM `analyjed_jar_project_classes` WHERE project_name='Holisun Arassistance' GROUP by version
 
-const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_ENDPOINT // Update inside .env file
+const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT // Update inside .env file
 
 
 // Styling options for RadarChart - Edit only for styling modifications

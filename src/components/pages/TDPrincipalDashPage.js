@@ -15,7 +15,7 @@ import { MDBCard, MDBCardBody, MDBDataTable, MDBCardHeader, MDBContainer, MDBDro
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_ENDPOINT;
+const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_PRINCIPAL_ENDPOINT;
 
 // This the value we multiple td in minutes to get td in currency, is the hour wage of software engineering
 const wage = 40

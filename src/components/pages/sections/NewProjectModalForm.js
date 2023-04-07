@@ -22,7 +22,7 @@ class NewProjectModalForm extends Component {
             // decisionValue: '',
             // dependabilityValue: '',
             // energyValue: '',
-            // commonValue: '',
+            commonValue: '',
             sdk4edUser: '',
             sdk4edRoles: [],
             access: 'Public'
@@ -54,11 +54,9 @@ class NewProjectModalForm extends Component {
                 this.setState({ endpointValue: event.target.value });
                 break;
             case 'USERNAME':
-                console.log("usernameValue.length" + this.state.usernameValue.length)
                 this.setState({ usernameValue: event.target.value });
                 break;
             case 'PASSWORD':
-                console.log("passwordValue.length" + this.state.passwordValue.length)
                 this.setState({ passwordValue: event.target.value });
                 break;
             case 'DESCRIPTION':
@@ -81,16 +79,12 @@ class NewProjectModalForm extends Component {
             //     break;
             // case 'ENERGY':
             //     this.setState({ energyValue: event.target.value });
-            //     break;
-            // case 'COMMON':
-            //     this.setState({ commonValue: event.target.value });
-            //     break;
+            // break;
+            case 'COMMON':
+                this.setState({ commonValue: event.target.value });
+                break;
             default:
                 break;
-        }
-        console.log("usernameValue.length" + this.state.usernameValue.length + " passwordValue.length" + this.state.passwordValue.length)
-        if (this.state.usernameValue.length > 0 && this.state.passwordValue.length === 0) {
-            
         }
     }
 
@@ -102,9 +96,14 @@ class NewProjectModalForm extends Component {
         this.setState({ access: event.target.value });
     }
 
+    changeLanguage = (event) => {
+        this.setState({ commonValue: event.target.value });
+    }
+
     handleSubmit(event) {
         event.preventDefault();
         let isPrivateSet = this.state.access.includes('Private') ? true : false;
+        console.log("this.state.commonValue:" + this.state.commonValue);
         const newProject = {
             name: this.state.nameValue,
             endpoint: this.state.endpointValue,
@@ -118,7 +117,7 @@ class NewProjectModalForm extends Component {
             // decisionsupport: this.state.decisionValue,
             // dependability: this.state.dependabilityValue,
             // energy: this.state.energyValue,
-            // common: this.state.commonValue,
+            common: this.state.commonValue,
             private: isPrivateSet,
             sdk4edUser: this.state.sdk4edUser,
             sdk4edRoles: this.state.access.includes('company') ? this.state.sdk4edRoles : []
@@ -177,7 +176,7 @@ class NewProjectModalForm extends Component {
             // dependabilityValue: '',
             // atdValue: '',
             // energyValue: '',
-            // commonValue: ''
+            commonValue: ''
         })
     }
 
@@ -256,12 +255,17 @@ class NewProjectModalForm extends Component {
 
                                 <textarea style={{ display: this.state.toolbox === 'Energy' ? 'block' : 'none' }} className="form-control" id="energyInput" rows="3"
                                     value={this.state.energyValue} onChange={(e) => { this.handleChange(e, "ENERGY") }}></textarea>
-                            </div>
+                            </div>*/}
                             <div className="form-group">
                                 <label htmlFor="descriptionInput">Extra info common (for all toolboxes)</label>
-                                <textarea className="form-control" id="technicaldebtInput" rows="3"
-                                    value={this.state.commonValue} onChange={(e) => { this.handleChange(e, "COMMON") }}></textarea>
-                            </div> */}
+                                <div>
+                                    <label htmlFor="selectLanguageSelect" style={{ paddingRight: '15px' }}>Language: </label>
+                                    <select id="selectLanguage" onChange={this.changeLanguage} value={this.state.commonValue}>
+                                        <option value={'{"language":"Java"}'}>Java</option>
+                                        <option value={'{"language":"C"}'}>C</option>
+                                    </select>
+                                </div>
+                            </div>
                         </form>
                         <div>
                             {this.renderAlert(this.state.responseStatus)}

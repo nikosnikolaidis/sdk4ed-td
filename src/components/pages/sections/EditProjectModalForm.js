@@ -29,7 +29,7 @@ class EditProjectModalForm extends Component {
             // decisionValue: '',
             // dependabilityValue: '',
             // energyValue: '',
-            // commonValue: '',
+            commonValue: '',
             sdk4edUser: '',
             sdk4edRoles: [],
             access: 'Public',
@@ -77,7 +77,7 @@ class EditProjectModalForm extends Component {
                             // dependabilityValue: resp.dependability,
                             // energyValue: resp.energy,
                             // atdValue: resp.archtechdebt,
-                            // commonValue: resp.common,
+                            commonValue: resp.common,
                             private: resp.private,
                         });
 
@@ -148,9 +148,9 @@ class EditProjectModalForm extends Component {
             // case 'ENERGY':
             //     this.setState({ energyValue: event.target.value });
             //     break;
-            // case 'COMMON':
-            //     this.setState({ commonValue: event.target.value });
-            //     break;
+            case 'COMMON':
+                this.setState({ commonValue: event.target.value });
+                break;
             default:
                 break;
         }
@@ -167,9 +167,15 @@ class EditProjectModalForm extends Component {
         this.setState({ access: event.target.value });
     }
 
+    changeLanguage = (event) => {
+        this.setState({ commonValue: event.target.value });
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
         let isPrivateSet = this.state.access.includes('Private') ? true : false;
+
+        console.log("this.state.commonValue: " + this.state.commonValue);
         const updatedProject = {
             id: this.props.id,
             name: this.state.nameValue,
@@ -184,7 +190,7 @@ class EditProjectModalForm extends Component {
             // decisionsupport: this.state.decisionValue,
             // dependability: this.state.dependabilityValue,
             // energy: this.state.energyValue,
-            // common: this.state.commonValue,
+            common: this.state.commonValue,
             private: isPrivateSet,
             sdk4edUser: this.state.sdk4edUser,
             sdk4edRoles: this.state.access.includes('company') ? this.state.sdk4edRoles : []
@@ -304,12 +310,17 @@ class EditProjectModalForm extends Component {
 
                                 <textarea style={{ display: this.state.toolbox === 'Energy' ? 'block' : 'none' }} className="form-control" id="energyInput" rows="3"
                                     value={this.state.energyValue} onChange={(e) => { this.handleChange(e, "ENERGY") }} readOnly={this.state.buttonText != 'Edit'}></textarea>
-                            </div>
+                            </div>*/}
                             <div className="form-group">
                                 <label htmlFor="descriptionInput">Extra info common (for all toolboxes)</label>
-                                <textarea className="form-control" id="commonInput" rows="3"
-                                    value={this.state.commonValue} onChange={(e) => { this.handleChange(e, "COMMON") }} readOnly={this.state.buttonText != 'Edit'}></textarea>
-                            </div> */}
+                                <div>
+                                    <label htmlFor="selectLanguageSelect" style={{ paddingRight: '15px' }}>Language: </label>
+                                    <select id="selectLanguage" onChange={this.changeLanguage} value={this.state.commonValue} readOnly={this.state.buttonText != 'Edit'}>
+                                        <option value= {'{"language":"Java"}'}>Java</option>
+                                        <option value={'{"language":"C"}'}>C</option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <p style={{ fontSize: '8pt' }}>Last modified: {this.state.timestampValue ? new Date(this.state.timestampValue).toLocaleString() : null}</p>
                         </form>

@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 
 let endpoint = process.env.REACT_APP_PROJECT_MANAGEMENT_SERVER_IP // 'http://160.40.52.130:3001/SDK4ED/'; // 'https://ioswagger20200221094142.azurewebsites.net/MAAXCNET/'; // 
-let tdendpoint = process.env.REACT_APP_TD_TOOL_ENDPOINT
+let tdendpoint = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT
 
 export const createProject = (newProject) => {
     var url = endpoint + 'ProjectManagement/1.0.0/projects';
