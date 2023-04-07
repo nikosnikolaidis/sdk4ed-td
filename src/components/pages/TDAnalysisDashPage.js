@@ -126,26 +126,26 @@ const AllFileMetricsAndInterestPanel = props => {
       <Alert color="info">
         Please choose a commit from the dropdown below. (First option is the latest analyzed commit)
         <MDBRow className="mb-12">
-            <MDBBtn outline className='mx-2' color='info' onClick={() => {
-              handleSelect('');
-              setData({});
-            }}>Clear</MDBBtn>
+          <MDBBtn outline className='mx-2' color='info' onClick={() => {
+            handleSelect('');
+            setData({});
+          }}>Clear</MDBBtn>
 
-            <MDBDropdown dropright>
-              <MDBDropdownToggle caret color="primary" >
-                {selectedValue ? selectedValue : 'Select an option'}
-              </MDBDropdownToggle>
-              <MDBDropdownMenu>
-                {options.map((option) => (
-                  <MDBDropdownItem key={option.value}
-                    onClick={() => {
-                      handleSelect(option.value)
-                    }}>
-                    {option.text}
-                  </MDBDropdownItem>
-                ))}
-              </MDBDropdownMenu>
-            </MDBDropdown>
+          <MDBDropdown dropright>
+            <MDBDropdownToggle caret color="primary" >
+              {selectedValue ? selectedValue : 'Select an option'}
+            </MDBDropdownToggle>
+            <MDBDropdownMenu>
+              {options.map((option) => (
+                <MDBDropdownItem key={option.value}
+                  onClick={() => {
+                    handleSelect(option.value)
+                  }}>
+                  {option.text}
+                </MDBDropdownItem>
+              ))}
+            </MDBDropdownMenu>
+          </MDBDropdown>
 
         </MDBRow>
       </Alert>
@@ -454,7 +454,7 @@ const TDAnalysisPanel = props => {
     },
     series: [{
       name: 'Interest €',
-      data: props.myinterestLineChart.values,
+      data: props.myInterestLineChart.map(x => x.interestEu),
       pointPlacement: 'on',
       color: "#C70039",
     }, {
@@ -608,7 +608,7 @@ class TDAnalysisDashPage extends React.Component {
     this.state = {
       isLoading: true,
       name: "Dummy Project Title",
-      // language: 'C',
+      language: 'Java',
       interestIndicatorsSummary: {},
       interestIndicators: {},
       interestLineChart: {},
@@ -628,7 +628,8 @@ class TDAnalysisDashPage extends React.Component {
       highInterestFiles: [],
       fileInterestChange: [],
       analyzedCommits: [],
-      allFileMetricsAndInterest: []
+      allFileMetricsAndInterest: [],
+      interest: []
     }
   }
 
@@ -637,7 +638,7 @@ class TDAnalysisDashPage extends React.Component {
 
     let projectTitle = "Dummy Project Title";
     // This should be change in integration
-    // let lag = 'c';
+    let lag = 'Java';
 
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
@@ -645,19 +646,19 @@ class TDAnalysisDashPage extends React.Component {
     projectTitle = storedProjectJson.name;
 
     // Fetch TD info from session storage
-    // if (storedProjectJson['technicaldebt'] !== '') {
-    //   let tdInfo = JSON.parse(storedProjectJson['technicaldebt']);
-    //   if ('language' in tdInfo) {
-    //     lag = tdInfo['language']
-    //   }
-    // }
+    if (storedProjectJson['common'] !== '') {
+      let common = JSON.parse(storedProjectJson['common']);
+      if ('language' in common) {
+        lag = common['language']
+      }
+    }
 
-    // lag = lag.toLowerCase();
+    lag = lag.toLowerCase();
 
     this.setState({
       isLoading: true,
       name: projectTitle,
-      // language: lag
+      language: lag
     });
 
     let url = "";
@@ -787,6 +788,19 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
+    url = urlPrefix + "interest?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          interest: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+
     urlPrefix = TD_TOOLBOX_ENDPOINT + "api/project/"
     url = urlPrefix + "state?url=" + projectName.toString();
     fetch(url, requestOptions)
@@ -842,6 +856,7 @@ class TDAnalysisDashPage extends React.Component {
       fileInterestChange,
       analyzedCommits,
       allFileMetricsAndInterest,
+      interest,
       projectState
     } = this.state
 
@@ -878,6 +893,7 @@ class TDAnalysisDashPage extends React.Component {
             myprincipalLineChart={principalLineChart}
             mybreakingpointLineChart={breakingPointLineChart}
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
+            myInterestLineChart={interest}
             myAllFileMetricsAndInterest={allFileMetricsAndInterest}
             radarChartVal={radarChartvalues}
             interestProbabilityRank={interestProbabilityRank}

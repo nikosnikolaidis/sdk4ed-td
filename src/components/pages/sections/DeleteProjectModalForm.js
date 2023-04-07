@@ -119,7 +119,6 @@ class DeleteProjectModalForm extends React.Component {
     render() {
         return (
             <span>
-                {console.log("render delete modal state = " + this.state.modal)}
                 <MDBBtn className="white-text" size="sm" color="red darken-4" onClick={() => this.toggle()} disabled={!this.state.deleteAccess}>
                     Delete
                 </MDBBtn>
