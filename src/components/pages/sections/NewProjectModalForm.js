@@ -22,7 +22,7 @@ class NewProjectModalForm extends Component {
             // decisionValue: '',
             // dependabilityValue: '',
             // energyValue: '',
-            commonValue: '',
+            commonValue: '{"language":"Java"}',
             sdk4edUser: '',
             sdk4edRoles: [],
             access: 'Public'
@@ -176,7 +176,7 @@ class NewProjectModalForm extends Component {
             // dependabilityValue: '',
             // atdValue: '',
             // energyValue: '',
-            commonValue: ''
+            commonValue: '{"language":"Java"}'
         })
     }
 

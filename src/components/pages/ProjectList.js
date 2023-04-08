@@ -20,7 +20,7 @@ import Loader from './sections/Loading'
 const DEPENDABILITY_SERVER_IP = process.env.REACT_APP_DEPENDABILITY_TOOL_SERVER_IP // Update inside .env file
 const ENERGY_SERVER_IP = process.env.REACT_APP_ENERGY_TOOLBOX_ENDPOINT
 const TD_SERVER_IP = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT
-const TD_NEW_CODE_SERVER_IP = 'http://195.251.210.147:8989'
+const TD_NEW_CODE_SERVER_IP = 'http://195.251.210.147:8989' //process.env.REACT_APP_TD_TOOL_PRINCIPAL_ENDPOINT
 const ARCHITECTURE_REFACTORING_SERVER_IP = process.env.REACT_APP_ATD_TOOL_SERVER_IP
 
 // The Projects Panel
@@ -508,6 +508,38 @@ class ProjectList extends React.Component {
         this.checkAnalysisFinished()
     }
 
+    intervalTdAnalysisStatus = () => {
+        let analysis_project = JSON.parse(sessionStorage.getItem('analysis_project'));
+        let storedProject = sessionStorage.getItem('selected_project');
+        let storedProjectJson = JSON.parse(storedProject);
+        let urlInfo = storedProjectJson['endpoint'];
+        var intervalHandler = setInterval(() => {
+            let urlPrefix = TD_SERVER_IP + "api/project/"
+            let url = urlPrefix + "state?url=" + urlInfo.toString();
+            fetch(url, {
+                method: 'GET',
+                redirect: 'follow'
+            })
+                .then(resp => resp.text())
+                .then(resp => {
+                    console.log(resp.toString())
+                    if (resp.toString() === 'RUNNING') {
+                        this.updateStateAnalysis('running', 'tdState', 'iconTD', analysis_project)
+                    } else if (resp.toString() === 'COMPLETED') {
+                        this.updateStateAnalysis('finished', 'tdState', 'iconTD', analysis_project)
+                        clearInterval(intervalHandler);
+                    } else {
+                        this.updateStateAnalysis('failed', 'tdState', 'iconTD', analysis_project)
+                        clearInterval(intervalHandler);
+                    }
+                })
+                .catch(error => {
+                    console.log('error', error);
+                    clearInterval(intervalHandler);
+                });
+        }, 5000);
+    }
+
     // Run central analysis
     runCentralAnalysis = () => {
         // Fetch general info from session storage
@@ -525,12 +557,12 @@ class ProjectList extends React.Component {
             base64Header = { 'Authorization': 'Basic ' + btoa(usernameInfo + ':' + passwordInfo) }
         }
         let languageInfo = ''
-        // if (storedProjectJson['common'] !== '') {
-        //     let commonInfo = JSON.parse(storedProjectJson['common']);
-        //     if ('language' in commonInfo) {
-        //         languageInfo = commonInfo['language']
-        //     }
-        // }
+        if (storedProjectJson['common'] !== '') {
+            let commonInfo = JSON.parse(storedProjectJson['common']);
+            if ('language' in commonInfo) {
+                languageInfo = commonInfo['language']
+            }
+        }
         // Fetch TD info from session storage
         // let tdLanguageInfo = ''
         // let tdTypeAnalysisInfo = ''
@@ -731,6 +763,9 @@ class ProjectList extends React.Component {
                         this.updateStateAnalysis('failed', 'designRefactoringState', 'iconDesignRefactoring', analysis_project)
                     }
                 })
+
+            this.intervalTdAnalysisStatus();
+
         }
 
         // Code for fetching TD New Code Analysis data from API
