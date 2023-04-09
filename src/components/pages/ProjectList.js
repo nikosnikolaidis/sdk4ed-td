@@ -357,14 +357,14 @@ class ProjectList extends React.Component {
                     analysisMessage: ''
                 })
             }
-        } else {
+        } /* else {
             this.resetStateAnalysis(project.id, project.name)
             this.setState({
                 disabledButton: false,
                 analysisFinished: true,
                 analysisMessage: ''
             })
-        }
+        } */
 
         sessionStorage.setItem("selected_project", JSON.stringify(project));
         this.setState({
@@ -478,6 +478,8 @@ class ProjectList extends React.Component {
             'optimalCheckpointState': 'pending',
         }
         this.handleAnalysis(analysis_project)
+
+        this.intervalTdAnalysisStatus(analysis_project);
     }
 
     // Update state with analysis results
@@ -508,12 +510,18 @@ class ProjectList extends React.Component {
         this.checkAnalysisFinished()
     }
 
-    intervalTdAnalysisStatus = () => {
-        let analysis_project = JSON.parse(sessionStorage.getItem('analysis_project'));
-        let storedProject = sessionStorage.getItem('selected_project');
-        let storedProjectJson = JSON.parse(storedProject);
-        let urlInfo = storedProjectJson['endpoint'];
-        var intervalHandler = setInterval(() => {
+    intervalTdAnalysisStatus = (analysis_project) => {
+        setTimeout(() => {
+            // console.log("wait 0.3sec")
+            if (!analysis_project) {
+                // console.log("Entered in IF")
+                analysis_project = JSON.parse(sessionStorage.getItem('analysis_project'));
+            }
+
+            let storedProject = sessionStorage.getItem('selected_project');
+            let storedProjectJson = JSON.parse(storedProject);
+            let urlInfo = storedProjectJson['endpoint'];
+
             let urlPrefix = TD_SERVER_IP + "api/project/"
             let url = urlPrefix + "state?url=" + urlInfo.toString();
             fetch(url, {
@@ -527,17 +535,18 @@ class ProjectList extends React.Component {
                         this.updateStateAnalysis('running', 'tdState', 'iconTD', analysis_project)
                     } else if (resp.toString() === 'COMPLETED') {
                         this.updateStateAnalysis('finished', 'tdState', 'iconTD', analysis_project)
-                        clearInterval(intervalHandler);
-                    } else {
+                    } else if (resp.toString() === 'ABORTED') {
                         this.updateStateAnalysis('failed', 'tdState', 'iconTD', analysis_project)
-                        clearInterval(intervalHandler);
+                    } else {
+                        this.updateStateAnalysis('pending', 'tdState', 'iconTD', analysis_project)
                     }
                 })
                 .catch(error => {
-                    console.log('error', error);
-                    clearInterval(intervalHandler);
+                    this.updateStateAnalysis('pending', 'tdState', 'iconTD', analysis_project)
+                    // console.log('error', error);
                 });
-        }, 5000);
+        }, 300);
+
     }
 
     // Run central analysis
@@ -653,7 +662,7 @@ class ProjectList extends React.Component {
                 this.updateStateAnalysis('finished', 'vulnerabilityState', 'iconVulnerability', analysis_project)
             })
         }
-
+    
         // Code for fetching Optimal Checkpoint data from API
         if(this.state.isOptimalCheckpointAnalysisChecked){
             this.updateStateAnalysis('running', 'optimalCheckpointState', 'iconOptimalCheckpoint', analysis_project)
@@ -689,7 +698,7 @@ class ProjectList extends React.Component {
                 this.updateStateAnalysis('failed', 'energyHotspotState', 'iconHotspotEnergy', analysis_project)
             })
         }
-
+    
         // Code for fetching Static Energy Analysis data from API
         if(this.state.isEnergyStaticAnalysisChecked){
             this.updateStateAnalysis('running', 'energyStaticState', 'iconStaticEnergy', analysis_project)
@@ -707,7 +716,7 @@ class ProjectList extends React.Component {
                 this.updateStateAnalysis('failed', 'energyStaticState', 'iconStaticEnergy', analysis_project)
             })
         }
-
+    
         // Code for fetching Acceleration Energy Analysis data from API
         if(this.state.isEnergyAccelerationAnalysisChecked){
             this.updateStateAnalysis('running', 'energyAccelerationState', 'iconAccelerationEnergy', analysis_project)
@@ -764,7 +773,7 @@ class ProjectList extends React.Component {
                     }
                 })
 
-            this.intervalTdAnalysisStatus();
+            this.intervalTdAnalysisStatus(analysis_project);
 
         }
 

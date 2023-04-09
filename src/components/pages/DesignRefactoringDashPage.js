@@ -19,7 +19,7 @@ import { Alert } from 'reactstrap';
 heatmap(Highcharts);
 treemap(Highcharts);
 
-const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT
+const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_PRINCIPAL_ENDPOINT
 
 // The Project Panel
 const ProjectPanel = props => {

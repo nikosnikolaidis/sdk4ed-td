@@ -24,12 +24,12 @@ class EditProjectModalForm extends Component {
             descriptionValue: '',
             timestampValue: null,
             responseStatus: null,
-            technicaldebtValue: '',
+            technicaldebtValue: '{}',
             // forecastValue: '',
             // decisionValue: '',
             // dependabilityValue: '',
             // energyValue: '',
-            commonValue: '',
+            commonValue: '{}',
             sdk4edUser: '',
             sdk4edRoles: [],
             access: 'Public',
@@ -71,7 +71,8 @@ class EditProjectModalForm extends Component {
                             descriptionValue: resp.description,
                             endpointValue: resp.endpoint,
                             timestampValue: resp.timestamp,
-                            technicaldebtValue: resp.technicaldebt,
+                            technicaldebtValue: '{}',
+                            // technicaldebtValue: resp.technicaldebt,
                             // forecastValue: resp.forecaster,
                             // decisionValue: resp.decisionsupport,
                             // dependabilityValue: resp.dependability,
@@ -131,7 +132,7 @@ class EditProjectModalForm extends Component {
                 this.setState({ descriptionValue: event.target.value });
                 break;
             case 'TECHNICALDEBT':
-                this.setState({ technicaldebtValue: event.target.value });
+                this.setState({ technicaldebtValue: '{}' });
                 break;
             // case 'ARCHTECHNICALDEBT':
             //     this.setState({ atdValue: event.target.value });
