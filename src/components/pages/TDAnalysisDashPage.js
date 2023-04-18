@@ -11,7 +11,8 @@ import { CountCard } from './sections/StatusCards';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const TD_TOOLBOX_ENDPOINT = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT;
+const INTEREST_ENDPOINT = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT + "api/";
+const PRINCIPAL_ENDPOINT = process.env.REACT_APP_TD_TOOL_PRINCIPAL_ENDPOINT + "api/sdk4ed/";
 
 // This the value we multiple td in minutes to get td in currency, is the hour wage of software engineering
 const wage = 37.50
@@ -97,7 +98,7 @@ const AllFileMetricsAndInterestPanel = props => {
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
     let url = "";
-    let urlPrefix = TD_TOOLBOX_ENDPOINT + "api/analysis/"
+    let urlPrefix = INTEREST_ENDPOINT + "api/analysis/"
     url = urlPrefix + "allFileMetricsAndInterest?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
     setSelectedValue(value);
     const response = await fetch(url).then(resp => {
@@ -287,7 +288,7 @@ const InterestChangePanel = props => {
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
     let url = "";
-    let urlPrefix = TD_TOOLBOX_ENDPOINT + "api/analysis/"
+    let urlPrefix = INTEREST_ENDPOINT + "api/analysis/"
     url = urlPrefix + "interestChange?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
     setSelectedValue(value);
     const response = await fetch(url).then(resp => {
@@ -458,8 +459,13 @@ const TDAnalysisPanel = props => {
       pointPlacement: 'on',
       color: "#C70039",
     }, {
+      name: 'Principal €',
+      data: props.myprincipalLineChart.map(x => x[1]),
+      pointPlacement: 'on',
+      color: "#3AC5E7",
+    }, {
       name: 'Breaking Point',
-      data: props.myAnalyzedCommits,
+      data: props.myprincipalLineChart.map((x,i) => ((x[1] / 60) / props.myInterestLineChart[i].interestHours)),
       pointPlacement: 'on',
       color: "#278649",
     }, {
@@ -490,6 +496,17 @@ const TDAnalysisPanel = props => {
 
 
   //=========================================//
+  const totalInterestInEuros = parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestEu)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
+
+  const totalInterestInMinutes = parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestHours * 60)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
+
+  const lastPrincipalInMinutes = props.myprincipalLineChart.map(x => x[1])[props.myprincipalLineChart.length - 1];
+
+  const lastPrincipalInEuros = parseFloat((props.myprincipalLineChart.map(x => x[1])[props.myprincipalLineChart.length - 1] / 60) * 39.44).toFixed(2);
+
+  const totalBreakingPoint = (lastPrincipalInMinutes / totalInterestInMinutes);
 
 
   return (
@@ -513,22 +530,53 @@ const TDAnalysisPanel = props => {
           <MDBCardHeader className="sdk4ed-color">Interest Project Summary</MDBCardHeader>
           <MDBRow className="mb-3">
             <MDBCol>
-              <CountCard title="BREAKING POINT (version)" color="#33691e light-green darken-4" value={parseFloat(Math.round(props.interest.breakingPoint)).toFixed(2)} icon="hat-wizard" />
+              <CountCard title="BREAKING POINT (version)" color="#33691e light-green darken-4" value={parseFloat(Math.round(totalBreakingPoint)).toFixed(2)} icon="hat-wizard" />
             </MDBCol>
             <MDBCol>
-              <CountCard title="TOTAL INTEREST (€)" color="#33691e light-green darken-4" value={parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestEu)
-                .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2)} icon="euro-sign" />
+              <CountCard title="TOTAL INTEREST (€)" color="#33691e light-green darken-4" value={totalInterestInEuros} icon="euro-sign" />
             </MDBCol>
             <MDBCol>
-              <CountCard title="INTEREST PROBABILITY (%)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interest.interestProbability).toFixed(2)} icon="percent" />
+              <CountCard title="TOTAL INTEREST IN MINUTES" color="#33691e light-green darken-4" value={totalInterestInMinutes} icon="clock" />
             </MDBCol>
           </MDBRow>
           <MDBRow className="mb-3">
-            <MDBCol>
+            {/* <MDBCol>
               <CountCard title="MAINTAINABILITY RANKING (TOP %)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interestRank).toFixed(2)} icon="trophy" />
+            </MDBCol> */}
+            <MDBCol>
+              <CountCard title="INTEREST PROBABILITY (%)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interest.interestProbability).toFixed(2)} icon="percent" />
             </MDBCol>
             <MDBCol>
-              <CountCard title="INTEREST PROBABILITY RANKING (TOP %)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interestProbabilityRank).toFixed(2)} icon="trophy" />
+              <CountCard title="INTEREST RANKING (TOP %)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interestProbabilityRank).toFixed(2)} icon="trophy" />
+            </MDBCol>
+          </MDBRow>
+        </MDBCol>
+      </MDBRow>
+
+      <MDBRow className="mb-3">
+        <MDBCol size="12">
+          <MDBCardHeader className="sdk4ed-color">Principal Project Summary</MDBCardHeader>
+          <MDBRow className="mb-3">
+            <MDBCol>
+              <CountCard title="TD IN MINUTES" value={lastPrincipalInMinutes} icon="clock" />
+            </MDBCol>
+            <MDBCol>
+              <CountCard title="TD IN CURRENCY (€)" color="#33691e light-green darken-4" value={lastPrincipalInEuros} icon="euro-sign" />
+            </MDBCol>
+            <MDBCol>
+              <CountCard title="BUGS" color="#33691e light-green darken-4" value={props.myBugs} icon="bug" />
+            </MDBCol>
+          </MDBRow>
+
+          <MDBRow className="mb-3">
+            <MDBCol>
+              <CountCard title="VULNERABILITIES" color="#33691e light-green darken-4" value={props.myVulnerabilities} icon="lock-open" />
+            </MDBCol>
+            <MDBCol>
+              <CountCard title="CODE SMELLS" color="#33691e light-green darken-4" value={props.myCodeSmells} icon="compress-arrows-alt" />
+            </MDBCol>
+            <MDBCol>
+              <CountCard title="DUPLICATIONS " color="#33691e light-green darken-4" value={props.principal.duplCode} icon="copy" />
             </MDBCol>
           </MDBRow>
         </MDBCol>
@@ -629,7 +677,8 @@ class TDAnalysisDashPage extends React.Component {
       fileInterestChange: [],
       analyzedCommits: [],
       allFileMetricsAndInterest: [],
-      interest: []
+      interest: [],
+      principalList: []
     }
   }
 
@@ -642,6 +691,8 @@ class TDAnalysisDashPage extends React.Component {
 
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
+
+
 
     projectTitle = storedProjectJson.name;
 
@@ -662,7 +713,7 @@ class TDAnalysisDashPage extends React.Component {
     });
 
     let url = "";
-    let urlPrefix = TD_TOOLBOX_ENDPOINT + "api/analysis/"
+    let urlPrefix = INTEREST_ENDPOINT + "analysis/"
 
     var requestOptions = {
       method: 'GET',
@@ -801,7 +852,7 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
-    urlPrefix = TD_TOOLBOX_ENDPOINT + "api/project/"
+    urlPrefix = INTEREST_ENDPOINT + "project/"
     url = urlPrefix + "state?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.text())
@@ -809,6 +860,65 @@ class TDAnalysisDashPage extends React.Component {
         this.setState({
           isLoading: false,
           projectState: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+    //eg http://195.251.210.147:8989/api/sdk4ed/metric-evolution/TasosTilsi:ServicedMetricsCalculator?metric=code_smells
+    const username = projectName.toString().split('/')[3];
+    const reponame = projectName.toString().split('/')[4];
+    urlPrefix = PRINCIPAL_ENDPOINT + "metric-evolution/";
+    url = urlPrefix + username + ":" + reponame + "?metric=code_smells";
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          codeSmells: resp[resp.length - 1][1],
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+    //eg http://195.251.210.147:8989/api/sdk4ed/metric-evolution/TasosTilsi:ServicedMetricsCalculator?metric=vulnerabilities
+    urlPrefix = PRINCIPAL_ENDPOINT + "metric-evolution/";
+    url = urlPrefix + username + ":" + reponame + "?metric=vulnerabilities";
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          vulnerabilities: resp[resp.length - 1][1],
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+    //eg http://195.251.210.147:8989/api/sdk4ed/metric-evolution/TasosTilsi:ServicedMetricsCalculator?metric=bugs
+    urlPrefix = PRINCIPAL_ENDPOINT + "metric-evolution/";
+    url = urlPrefix + username + ":" + reponame + "?metric=bugs";
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          bugs: resp[resp.length - 1][1],
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+    //eg http://195.251.210.147:8989/api/sdk4ed/metric-evolution/TasosTilsi:ServicedMetricsCalculator?metric=sqale_index
+    urlPrefix = PRINCIPAL_ENDPOINT + "metric-evolution/";
+    url = urlPrefix + username + ":" + reponame + "?metric=sqale_index";
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        console.log(resp)
+        this.setState({
+          isLoading: false,
+          principalList: resp,
         })
       })
       .catch(error => console.log('error', error));
@@ -857,7 +967,11 @@ class TDAnalysisDashPage extends React.Component {
       analyzedCommits,
       allFileMetricsAndInterest,
       interest,
-      projectState
+      projectState,
+      codeSmells,
+      vulnerabilities,
+      bugs,
+      principalList
     } = this.state
 
     if (error) {
@@ -889,12 +1003,14 @@ class TDAnalysisDashPage extends React.Component {
             updateProjectData={this.updateProjectData}
             interest={interestIndicatorsSummary}
             interestArtifacts={interestIndicators}
-            myinterestLineChart={interestLineChart}
-            myprincipalLineChart={principalLineChart}
+            myprincipalLineChart={principalList}
             mybreakingpointLineChart={breakingPointLineChart}
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
             myInterestLineChart={interest}
             myAllFileMetricsAndInterest={allFileMetricsAndInterest}
+            myCodeSmells={codeSmells}
+            myVulnerabilities={vulnerabilities}
+            myBugs={bugs}
             radarChartVal={radarChartvalues}
             interestProbabilityRank={interestProbabilityRank}
             interestRank={interestRank}
