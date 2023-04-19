@@ -357,14 +357,15 @@ class ProjectList extends React.Component {
                     analysisMessage: ''
                 })
             }
-        } /* else {
+        } else {
             this.resetStateAnalysis(project.id, project.name)
-            this.setState({
-                disabledButton: false,
-                analysisFinished: true,
-                analysisMessage: ''
-            })
-        } */
+            // this.setState({
+            //     disabledButton: false,
+            //     analysisFinished: true,
+            //     analysisMessage: ''
+            // })
+            // this.intervalTdAnalysisStatus(sessionStorage.getItem('analysis_project'));
+        }
 
         sessionStorage.setItem("selected_project", JSON.stringify(project));
         this.setState({

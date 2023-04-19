@@ -98,7 +98,7 @@ const AllFileMetricsAndInterestPanel = props => {
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
     let url = "";
-    let urlPrefix = INTEREST_ENDPOINT + "api/analysis/"
+    let urlPrefix = INTEREST_ENDPOINT + "analysis/"
     url = urlPrefix + "allFileMetricsAndInterest?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
     setSelectedValue(value);
     const response = await fetch(url).then(resp => {
@@ -288,7 +288,7 @@ const InterestChangePanel = props => {
     let storedProject = sessionStorage.getItem('selected_project');
     let storedProjectJson = JSON.parse(storedProject);
     let url = "";
-    let urlPrefix = INTEREST_ENDPOINT + "api/analysis/"
+    let urlPrefix = INTEREST_ENDPOINT + "analysis/"
     url = urlPrefix + "interestChange?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
     setSelectedValue(value);
     const response = await fetch(url).then(resp => {
@@ -317,22 +317,29 @@ const InterestChangePanel = props => {
   return (
     <>
       <Alert color="info">Please choose a commit sha from the dropdown below. (First option is the latest analyzed commit)
-        <MDBDropdown dropright>
-          <MDBDropdownToggle caret color="primary">
-            {selectedValue ? selectedValue : 'Select an option'}
-          </MDBDropdownToggle>
+        <MDBRow className="mb-12">
+          <MDBBtn outline className='mx-2' color='info' onClick={() => {
+            setSelectedValue('Select an option');
+            setData([]);
+          }}>Clear</MDBBtn>
 
-          <MDBDropdownMenu>
-            {options.map((option) => (
-              <MDBDropdownItem key={option.value}
-                onClick={() => {
-                  handleSelect(option.value)
-                }}>
-                {option.text}
-              </MDBDropdownItem>
-            ))}
-          </MDBDropdownMenu>
-        </MDBDropdown>
+          <MDBDropdown dropright>
+            <MDBDropdownToggle caret color="primary">
+              {selectedValue ? selectedValue : 'Select an option'}
+            </MDBDropdownToggle>
+
+            <MDBDropdownMenu>
+              {options.map((option) => (
+                <MDBDropdownItem key={option.value}
+                  onClick={() => {
+                    handleSelect(option.value)
+                  }}>
+                  {option.text}
+                </MDBDropdownItem>
+              ))}
+            </MDBDropdownMenu>
+          </MDBDropdown>
+        </MDBRow>
       </Alert>
 
       {data.length > 0 &&
@@ -346,9 +353,13 @@ const InterestChangePanel = props => {
       }
 
       {data.length === 0 &&
-        <Alert color="warning">
-          Nothing returned, there is no interest change for this commit!
-        </Alert>
+        <PagePanel header="Interest Change Indicators" linkTo="tdanalysis">
+          <MDBRow className="mb-12">
+            <MDBCol md="12" lg="12" className="mb-12">
+              <BasicTable nesting title="Interest Change Indicators" data={props.myInterestChange} hover responsiveSm />
+            </MDBCol>
+          </MDBRow>
+        </PagePanel>
       }
 
       {errorReturned &&
@@ -465,7 +476,7 @@ const TDAnalysisPanel = props => {
       color: "#3AC5E7",
     }, {
       name: 'Breaking Point',
-      data: props.myprincipalLineChart.map((x,i) => ((x[1] / 60) / props.myInterestLineChart[i].interestHours)),
+      data: props.myprincipalLineChart.map((x, i) => ((x[1] / 60) / props.myInterestLineChart[i].interestHours)),
       pointPlacement: 'on',
       color: "#278649",
     }, {
@@ -496,6 +507,11 @@ const TDAnalysisPanel = props => {
 
 
   //=========================================//
+  let interestProbability = parseFloat(props.myInterestChange.map(x => x.changePercentage)
+    .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
+
+  interestProbability = interestProbability / props.myInterestChange.length;
+
   const totalInterestInEuros = parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestEu)
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
 
@@ -544,7 +560,7 @@ const TDAnalysisPanel = props => {
               <CountCard title="MAINTAINABILITY RANKING (TOP %)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interestRank).toFixed(2)} icon="trophy" />
             </MDBCol> */}
             <MDBCol>
-              <CountCard title="INTEREST PROBABILITY (%)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interest.interestProbability).toFixed(2)} icon="percent" />
+              <CountCard title="INTEREST PROBABILITY (%)" color="#33691e light-green darken-4" value={parseFloat(100 * interestProbability).toFixed(2)} icon="percent" />
             </MDBCol>
             <MDBCol>
               <CountCard title="INTEREST RANKING (TOP %)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interestProbabilityRank).toFixed(2)} icon="trophy" />
@@ -678,6 +694,7 @@ class TDAnalysisDashPage extends React.Component {
       analyzedCommits: [],
       allFileMetricsAndInterest: [],
       interest: [],
+      interestChange: [],
       principalList: []
     }
   }
@@ -852,6 +869,19 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
+    url = urlPrefix + "interestChange?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.json())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          interestChange: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+
     urlPrefix = INTEREST_ENDPOINT + "project/"
     url = urlPrefix + "state?url=" + projectName.toString();
     fetch(url, requestOptions)
@@ -964,6 +994,7 @@ class TDAnalysisDashPage extends React.Component {
       interestPerCommit,
       highInterestFiles,
       fileInterestChange,
+      interestChange,
       analyzedCommits,
       allFileMetricsAndInterest,
       interest,
@@ -1007,6 +1038,7 @@ class TDAnalysisDashPage extends React.Component {
             mybreakingpointLineChart={breakingPointLineChart}
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
             myInterestLineChart={interest}
+            myInterestChange={interestChange}
             myAllFileMetricsAndInterest={allFileMetricsAndInterest}
             myCodeSmells={codeSmells}
             myVulnerabilities={vulnerabilities}
@@ -1048,17 +1080,18 @@ class TDAnalysisDashPage extends React.Component {
             myNormalizedInterest={normalizedInterest}
           />
 
+          <InterestChangePanel
+            myAnalyzedCommits={analyzedCommits}
+            myprojectName={name}
+            myInterestChange={interestChange}
+          />
+
           <FileInterestChangePanel
             myFileInterestChange={fileInterestChange}
           />
 
           <AnalyzedCommitsPanel
             myAnalyzedCommits={analyzedCommits}
-          />
-
-          <InterestChangePanel
-            myAnalyzedCommits={analyzedCommits}
-            myprojectName={name}
           />
 
         </React.Fragment>
