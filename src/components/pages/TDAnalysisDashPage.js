@@ -427,6 +427,19 @@ const TDAnalysisPanel = props => {
     ]
   }
 
+
+  const breakingPointLineChart = () => {
+    const result = props.myprincipalLineChart.map((x, i) => {
+      try {
+        return (x[1] / 60) / props.myInterestLineChart[i].interestHours;
+      } catch (error) {
+        console.warn("Probably Analysis is not finished, please refresh the page");
+        return null; // or any other value to indicate an error occurred
+      }
+    });
+    return result;
+  };
+
   const options = {
     chart: {
       polar: true,
@@ -476,7 +489,7 @@ const TDAnalysisPanel = props => {
       color: "#3AC5E7",
     }, {
       name: 'Breaking Point',
-      data: props.myprincipalLineChart.map((x, i) => ((x[1] / 60) / props.myInterestLineChart[i].interestHours)),
+      data: breakingPointLineChart(),
       pointPlacement: 'on',
       color: "#278649",
     }, {
@@ -563,7 +576,7 @@ const TDAnalysisPanel = props => {
               <CountCard title="INTEREST PROBABILITY (%)" color="#33691e light-green darken-4" value={parseFloat(100 * interestProbability).toFixed(2)} icon="percent" />
             </MDBCol>
             <MDBCol>
-              <CountCard title="INTEREST RANKING (TOP %)" color="#33691e light-green darken-4" value={parseFloat(100 * props.interestProbabilityRank).toFixed(2)} icon="trophy" />
+              <CountCard title="INTEREST RANKING (TOP %)" color="#33691e light-green darken-4" value={parseFloat(props.myInterestRanking).toFixed(2)} icon="trophy" />
             </MDBCol>
           </MDBRow>
         </MDBCol>
@@ -695,6 +708,7 @@ class TDAnalysisDashPage extends React.Component {
       allFileMetricsAndInterest: [],
       interest: [],
       interestChange: [],
+      interestRanking: [],
       principalList: []
     }
   }
@@ -882,6 +896,19 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
+    url = urlPrefix + "interest/ranking?url=" + projectName.toString();
+    fetch(url, requestOptions)
+      .then(resp => resp.text())
+      .then(resp => {
+        this.setState({
+          isLoading: false,
+          interestRanking: resp,
+        })
+      })
+      .catch(error => console.log('error', error));
+
+    // ---------------------------------------------------------------------------------------------------------- //
+
     urlPrefix = INTEREST_ENDPOINT + "project/"
     url = urlPrefix + "state?url=" + projectName.toString();
     fetch(url, requestOptions)
@@ -998,6 +1025,7 @@ class TDAnalysisDashPage extends React.Component {
       analyzedCommits,
       allFileMetricsAndInterest,
       interest,
+      interestRanking,
       projectState,
       codeSmells,
       vulnerabilities,
@@ -1039,6 +1067,7 @@ class TDAnalysisDashPage extends React.Component {
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
             myInterestLineChart={interest}
             myInterestChange={interestChange}
+            myInterestRanking={interestRanking}
             myAllFileMetricsAndInterest={allFileMetricsAndInterest}
             myCodeSmells={codeSmells}
             myVulnerabilities={vulnerabilities}
