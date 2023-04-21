@@ -520,10 +520,16 @@ const TDAnalysisPanel = props => {
 
 
   //=========================================//
-  let interestProbability = parseFloat(props.myInterestChange.map(x => x.changePercentage)
-    .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
+  let interestProbability;
+  try {
+    interestProbability = parseFloat(props.myInterestChange.map(x => x.changePercentage)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
 
-  interestProbability = interestProbability / props.myInterestChange.length;
+    interestProbability = interestProbability / props.myInterestChange.length;
+  } catch (error) {
+    console.warn("Could not calculate interestProbability: " + error);
+    interestProbability = 0;
+  }
 
   const totalInterestInEuros = parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestEu)
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
