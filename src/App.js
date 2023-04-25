@@ -4,7 +4,7 @@ import TopNavigation from './components/topNavigation';
 import SideNavigation from './components/sideNavigation';
 import Footer from './components/Footer';
 import './index.css';
-/* 
+ 
 import * as Keycloak from 'keycloak-js';
 
 //keycloak init options
@@ -43,7 +43,7 @@ keycloak.init({ onLoad: initOptions.onLoad, "checkLoginIframe" : false }).succes
 
 }).error(() => {
     console.error("Authenticated Failed");
-}); */
+}); 
 
 class App extends Component {
     render() {
