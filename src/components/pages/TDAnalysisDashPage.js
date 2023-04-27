@@ -123,7 +123,7 @@ const AllFileMetricsAndInterestPanel = props => {
   }
 
   return (
-    <PagePanel header="All File Metrics And Interest Indicators" linkTo="tdanalysis">
+    <PagePanel header="File Metrics" linkTo="tdanalysis">
       <Alert color="info">
         Please choose a commit from the dropdown below. (First option is the latest analyzed commit)
         <MDBRow className="mb-12">
@@ -155,7 +155,7 @@ const AllFileMetricsAndInterestPanel = props => {
       {data.length == 0 &&
         <MDBRow className="mb-12">
           <MDBCol md="12" lg="12" className="mb-12">
-            <BasicTable title="All File Metrics And Interest Indicators" data={props.myAllFileMetricsAndInterest} />
+            <BasicTable title="File Metrics" data={props.myAllFileMetricsAndInterest} />
           </MDBCol>
         </MDBRow>
       }
@@ -163,7 +163,7 @@ const AllFileMetricsAndInterestPanel = props => {
       {data.length > 0 &&
         <MDBRow className="mb-12">
           <MDBCol md="12" lg="12" className="mb-12">
-            <BasicTable title="All File Metrics And Interest Indicators" data={data} />
+            <BasicTable title="File Metrics" data={data} />
           </MDBCol>
         </MDBRow>
       }
@@ -175,12 +175,15 @@ const AllFileMetricsAndInterestPanel = props => {
 
 const CumulativeInterestPanel = props => {
 
+  let dataList = Array.from(props.mycumulativeInterestLineChart);
+  dataList.reverse();
+
   return (
-    <PagePanel header="Cumulative Interest Indicators" linkTo="tdanalysis">
+    <PagePanel header="Total Interest per Version" linkTo="tdanalysis">
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Cumulative Interest Indicators" data={props.mycumulativeInterestLineChart} />
+          <BasicTable title="Total Interest per Version" data={dataList} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -191,11 +194,11 @@ const CumulativeInterestPanel = props => {
 const ProjectReusabillityMetricsPanel = props => {
 
   return (
-    <PagePanel header="Project Reusabillity Metrics Indicators" linkTo="tdanalysis">
+    <PagePanel header="Total Quality Metrics per Version" linkTo="tdanalysis">
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Project Reusabillity Metrics Indicators" data={props.myProjectReusabillityMetrics} />
+          <BasicTable title="Total Quality Metrics per Version" data={props.myProjectReusabillityMetrics} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -251,11 +254,11 @@ const HighInterestFilesPanel = props => {
 const InterestPerCommitPanel = props => {
 
   return (
-    <PagePanel header="Interest Per Commit Indicators" linkTo="tdanalysis">
+    <PagePanel header="Interest Addition Per Commit" linkTo="tdanalysis">
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title="Interest Per Commit Indicators" data={props.myInterestPerCommit} />
+          <BasicTable title="Interest Addition Per Commit" data={props.myInterestPerCommit} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -598,20 +601,17 @@ const TDAnalysisPanel = props => {
             <MDBCol>
               <CountCard title="TD IN CURRENCY (€)" color="#33691e light-green darken-4" value={lastPrincipalInEuros} icon="euro-sign" />
             </MDBCol>
-            <MDBCol>
-              <CountCard title="BUGS" color="#33691e light-green darken-4" value={props.myBugs} icon="bug" />
-            </MDBCol>
           </MDBRow>
 
           <MDBRow className="mb-3">
+            <MDBCol>
+              <CountCard title="BUGS" color="#33691e light-green darken-4" value={props.myBugs} icon="bug" />
+            </MDBCol>
             <MDBCol>
               <CountCard title="VULNERABILITIES" color="#33691e light-green darken-4" value={props.myVulnerabilities} icon="lock-open" />
             </MDBCol>
             <MDBCol>
               <CountCard title="CODE SMELLS" color="#33691e light-green darken-4" value={props.myCodeSmells} icon="compress-arrows-alt" />
-            </MDBCol>
-            <MDBCol>
-              <CountCard title="DUPLICATIONS " color="#33691e light-green darken-4" value={props.principal.duplCode} icon="copy" />
             </MDBCol>
           </MDBRow>
         </MDBCol>
@@ -670,14 +670,6 @@ class BasicTable extends React.Component {
       <MDBDataTable striped small bordered responsive hover data={tableData} />
     )
   }
-}
-
-const FileExplorerPanel = () => {
-  return (
-    <ContentPanel title="Project explorer">
-      <FileExplorer></FileExplorer>
-    </ContentPanel>
-  )
 }
 
 /**
