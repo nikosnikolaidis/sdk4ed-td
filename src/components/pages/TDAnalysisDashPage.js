@@ -16,6 +16,8 @@ heatmap(Highcharts);
 const INTEREST_ENDPOINT = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT + "api/";
 const PRINCIPAL_ENDPOINT = process.env.REACT_APP_TD_TOOL_PRINCIPAL_ENDPOINT + "api/sdk4ed/";
 
+const SELECT_AN_OPTION_TITLE = "Select Revision";
+
 // This the value we multiple td in minutes to get td in currency, is the hour wage of software engineering
 const wage = 37.50
 // Styling options for RadarChart - Edit only for styling modifications
@@ -126,7 +128,7 @@ const AllFileMetricsAndInterestPanel = props => {
   var panelTitle = "Interest per File"
   return (
     // <PagePanel header="File Metrics" linkTo="tdanalysis">
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
       <Alert color="info">
         Please choose a commit from the dropdown below. (First option is the latest analyzed commit)
         <MDBRow className="mb-12">
@@ -137,7 +139,7 @@ const AllFileMetricsAndInterestPanel = props => {
 
           <MDBDropdown dropright>
             <MDBDropdownToggle caret color="primary" >
-              {selectedValue ? selectedValue : 'Select an option'}
+              {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
             </MDBDropdownToggle>
             <MDBDropdownMenu>
               {options.map((option) => (
@@ -182,7 +184,7 @@ var panelTitle = "Total Interest per Version"
   dataList.reverse();
 
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
@@ -197,7 +199,7 @@ var panelTitle = "Total Interest per Version"
 const ProjectReusabillityMetricsPanel = props => {
   var panelTitle = "Total Quality Metrics per Version" 
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
@@ -212,7 +214,7 @@ const ProjectReusabillityMetricsPanel = props => {
 /* const FileReusabillityMetricsPanel = props => {
 var panelTitle = "File Reusabillity Metrics Indicators"
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
@@ -227,7 +229,7 @@ var panelTitle = "File Reusabillity Metrics Indicators"
 const NormalizedInterestPanel = props => {
   var panelTitle = "Normalized Interest Indicators"
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
@@ -242,7 +244,7 @@ const NormalizedInterestPanel = props => {
 const HighInterestFilesPanel = props => {
   var panelTitle = "High Interest Design Hotspots"
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
@@ -257,7 +259,7 @@ const HighInterestFilesPanel = props => {
 const InterestPerCommitPanel = props => {
   var panelTitle = "Interest Evolutions as Diff"
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
@@ -272,7 +274,7 @@ const InterestPerCommitPanel = props => {
 const FileInterestChangePanel = props => {
   var panelTitle = "File Interest Change Indicators"
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
@@ -322,17 +324,17 @@ const InterestChangePanel = props => {
   var panelTitle = "Interest Change Indicators"
   return (
     <>
-      <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+      <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
         <Alert color="info">Please choose a commit sha from the dropdown below. (First option is the latest analyzed commit)
           <MDBRow className="mb-12">
             <MDBBtn outline className='mx-2' color='info' onClick={() => {
-              setSelectedValue('Select an option');
+              setSelectedValue(SELECT_AN_OPTION_TITLE);
               setData([]);
             }}>Clear</MDBBtn>
 
             <MDBDropdown dropright>
               <MDBDropdownToggle caret color="primary">
-                {selectedValue ? selectedValue : 'Select an option'}
+                {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
               </MDBDropdownToggle>
 
               <MDBDropdownMenu>
@@ -381,7 +383,7 @@ const InterestChangePanel = props => {
 /* const AnalyzedCommitsPanel = props => {
 var panelTitle="Analyzed Commits Indicators"
   return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed="true">
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
