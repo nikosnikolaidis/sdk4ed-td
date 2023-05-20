@@ -1,4 +1,4 @@
-import { MDBCollapse, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBBtn } from "mdbreact";
+import { MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDataTable, MDBFormInline, MDBRow, Alert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBBtn } from "mdbreact";
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import 'whatwg-fetch';
@@ -19,7 +19,7 @@ const PRINCIPAL_ENDPOINT = process.env.REACT_APP_TD_TOOL_PRINCIPAL_ENDPOINT + "a
 const SELECT_AN_OPTION_TITLE = "Select Revision";
 
 // This the value we multiple td in minutes to get td in currency, is the hour wage of software engineering
-const wage = 37.50
+const wage = 39.44
 // Styling options for RadarChart - Edit only for styling modifications
 const radarChartOptions = {
   scale: {
@@ -179,7 +179,7 @@ const AllFileMetricsAndInterestPanel = props => {
 }
 
 /* const CumulativeInterestPanel = props => {
-var panelTitle = "Total Interest per Version" 
+  var panelTitle = "Total Interest per Version"
   let dataList = Array.from(props.mycumulativeInterestLineChart);
   dataList.reverse();
 
@@ -197,7 +197,7 @@ var panelTitle = "Total Interest per Version"
 } */
 
 const ProjectReusabillityMetricsPanel = props => {
-  var panelTitle = "Total Quality Metrics per Version" 
+  var panelTitle = "Total Quality Metrics per Version"
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
@@ -260,7 +260,7 @@ const InterestPerCommitPanel = props => {
   var panelTitle = "Interest Evolutions as Diff"
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
-
+      
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <BasicTable title={panelTitle} data={props.myInterestPerCommit} />
@@ -439,7 +439,7 @@ const TDAnalysisPanel = props => {
   const breakingPointLineChart = () => {
     const result = props.myprincipalLineChart.map((x, i) => {
       try {
-        return (x[1] / 60) / props.myInterestLineChart[i].interestHours;
+        return (x[1] / 60) / props.myInterestLineChart[i]["Interest (In Hours)"];
       } catch (error) {
         console.warn("Probably Analysis is not finished, please refresh the page");
         return null; // or any other value to indicate an error occurred
@@ -487,7 +487,7 @@ const TDAnalysisPanel = props => {
     },
     series: [{
       name: 'Interest €',
-      data: props.myInterestLineChart.map(x => x.interestEu),
+      data: props.myInterestLineChart.map(x => x["Interest (In €)"]),
       pointPlacement: 'on',
       color: "#C70039",
     }, {
@@ -502,7 +502,7 @@ const TDAnalysisPanel = props => {
       color: "#278649",
     }, {
       name: 'Cumulative Interest €',
-      data: props.mycumulativeInterestLineChart.map(x => x.interestEu),
+      data: props.mycumulativeInterestLineChart.map(x => x["Interest (In €)"]),
       pointPlacement: 'on',
       color: "#F65E17",
     }],
@@ -530,7 +530,7 @@ const TDAnalysisPanel = props => {
   //=========================================//
   let interestProbability;
   try {
-    interestProbability = parseFloat(props.myInterestChange.map(x => x.changePercentage)
+    interestProbability = parseFloat(props.myInterestChange.map(x => x["Change Between Revisions (In %)"])
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
 
     interestProbability = interestProbability / props.myInterestChange.length;
@@ -539,15 +539,15 @@ const TDAnalysisPanel = props => {
     interestProbability = 0;
   }
 
-  const totalInterestInEuros = parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestEu)
+  const totalInterestInEuros = parseFloat(props.myAllFileMetricsAndInterest.map(x => x["Interest (In €)"])
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
 
-  const totalInterestInMinutes = parseFloat(props.myAllFileMetricsAndInterest.map(x => x.interestHours * 60)
+  const totalInterestInMinutes = parseFloat(props.myAllFileMetricsAndInterest.map(x => x["Interest (In Hours)"] * 60)
     .reduce((accumulator, currentValue) => accumulator + currentValue, 0)).toFixed(2);
 
   const lastPrincipalInMinutes = props.myprincipalLineChart.map(x => x[1])[props.myprincipalLineChart.length - 1];
 
-  const lastPrincipalInEuros = parseFloat((props.myprincipalLineChart.map(x => x[1])[props.myprincipalLineChart.length - 1] / 60) * 39.44).toFixed(2);
+  const lastPrincipalInEuros = parseFloat((props.myprincipalLineChart.map(x => x[1])[props.myprincipalLineChart.length - 1] / 60) * wage).toFixed(2);
 
   const totalBreakingPoint = (lastPrincipalInMinutes / totalInterestInMinutes);
 
@@ -703,7 +703,7 @@ class TDAnalysisDashPage extends React.Component {
       principalIndicatorsSummary: {},
       principalIndicators: {},
       projectReusabillityMetrics: [],
-      fileReusabillityMetrics: [],
+      // fileReusabillityMetrics: [],
       normalizedInterest: [],
       interestPerCommit: [],
       highInterestFiles: [],
