@@ -7,11 +7,15 @@ import FileExplorer from './sections/FileExplorer';
 import Loader from './sections/Loading';
 import { PagePanel } from './sections/PagePanel';
 import { CountCard } from './sections/StatusCards';
+import BarChart from './sections/BarChart';
+import TreeMap from './sections/TreeMap';
 //============== Import Highcharts ==============//
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import heatmap from 'highcharts/modules/heatmap.js';
-heatmap(Highcharts);
+import HCExporting from 'highcharts/modules/exporting';
+import HCCSVExporting from 'highcharts/modules/export-data';
+HCExporting(Highcharts);
+HCCSVExporting(Highcharts);
 
 const INTEREST_ENDPOINT = process.env.REACT_APP_TD_TOOL_INTEREST_ENDPOINT + "api/";
 const PRINCIPAL_ENDPOINT = process.env.REACT_APP_TD_TOOL_PRINCIPAL_ENDPOINT + "api/sdk4ed/";
@@ -243,12 +247,21 @@ const NormalizedInterestPanel = props => {
 
 const HighInterestFilesPanel = props => {
   var panelTitle = "High Interest Design Hotspots"
+
+  const data = props.myHighInterestFiles.map(item => ({
+    name: item['File Path'],
+    value: item['Interest (In €)'],
+    colorValue: item['Interest (In €)'],
+  }));
+
+  const seriesNames = ['Interest (In €)', 'Interest (In Hours)'];
+
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
-
+      <TreeMap title={panelTitle} data={data} />
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title={panelTitle} data={props.myHighInterestFiles} />
+          <BasicTable title={panelTitle} data={props.myHighInterestFiles} seriesNames={seriesNames} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -257,10 +270,28 @@ const HighInterestFilesPanel = props => {
 }
 
 const InterestPerCommitPanel = props => {
-  var panelTitle = "Interest Evolutions as Diff"
+
+  console.log(props.myInterestPerCommit);
+
+  var panelTitle = "Interest Evolutions as Diff";
+
+  let filePaths = props.myInterestPerCommit.map(x => x["File Path"]);
+
+  const series = [];
+  let data;
+
+  for (const key of ["Interest (In €)", "Interest (In Hours)"]) {
+    data = {
+      'name': key,
+      'data': props.myInterestPerCommit.map(item => item[key])
+    }
+    series.push(data);
+  }
+
+
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
-      
+      <BarChart title={panelTitle} xAxisArray={filePaths} series={series} />
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <BasicTable title={panelTitle} data={props.myInterestPerCommit} />
@@ -450,14 +481,29 @@ const TDAnalysisPanel = props => {
 
   const options = {
     chart: {
-      polar: true,
       type: 'line'
     },
 
     title: {
       text: 'Evolution of TD Aspects throught Software Versions',
-      x: -80,
       align: 'center'
+    },
+
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: [
+            'downloadCSV',
+            'downloadXLS',
+            'separator',
+            'downloadPNG',
+            'downloadJPEG',
+            'downloadSVG',
+            'separator',
+            'printChart',
+          ],
+        },
+      },
     },
 
     pane: {
