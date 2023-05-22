@@ -7,13 +7,16 @@ import HCCSVExporting from 'highcharts/modules/export-data';
 HCExporting(Highcharts);
 HCCSVExporting(Highcharts);
 
-const options = (title, xAxisArray, seriesObjectArray) => {
+const options = (title, xAxisArray, seriesObjectArray, subtitle) => {
     const options = {
         chart: {
-            type: 'bar',
+            type: 'column',
         },
         title: {
             text: title,
+        },
+        subtitle: {
+            text: subtitle
         },
         exporting: {
             buttons: {
@@ -58,7 +61,8 @@ export default class BarChart extends React.Component {
     static propTypes = {
         title: PropTypes.string,
         xAxisArray: PropTypes.object,
-        series: PropTypes.object
+        series: PropTypes.object,
+        subtitle:PropTypes.string
     }
 
     render() {
@@ -67,7 +71,7 @@ export default class BarChart extends React.Component {
             <div>
                 <HighchartsReact
                     highcharts={Highcharts}
-                    options={options(this.props.title, this.props.xAxisArray, this.props.series)}
+                    options={options(this.props.title, this.props.xAxisArray, this.props.series, this.props.subtitle)}
                 />
             </div>
         )

@@ -252,16 +252,16 @@ const HighInterestFilesPanel = props => {
     name: item['File Path'],
     value: item['Interest (In €)'],
     colorValue: item['Interest (In €)'],
-  }));
+  })).slice(0,30);
 
   const seriesNames = ['Interest (In €)', 'Interest (In Hours)'];
 
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
-      <TreeMap title={panelTitle} data={data} />
+      <TreeMap title={panelTitle} subtitle="Top 30 Java classes with the highest interest" data={data} seriesNames={seriesNames}/>
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title={panelTitle} data={props.myHighInterestFiles} seriesNames={seriesNames} />
+          <BasicTable title={panelTitle} data={props.myHighInterestFiles}/>
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -271,19 +271,24 @@ const HighInterestFilesPanel = props => {
 
 const InterestPerCommitPanel = props => {
 
-  console.log(props.myInterestPerCommit);
-
   var panelTitle = "Interest Evolutions as Diff";
 
-  let filePaths = props.myInterestPerCommit.map(x => x["File Path"]);
+  let sortedData = [...props.myInterestPerCommit].sort((a, b) => b["Interest (In €)"] - a["Interest (In €)"]);
+
+  let filePaths = sortedData.map(x => x["File Path"]);
 
   const series = [];
   let data;
 
   for (const key of ["Interest (In €)", "Interest (In Hours)"]) {
+    sortedData = [...props.myInterestPerCommit].sort((a, b) => b[key] - a[key]).map(value => {
+      return value[key] ; 
+    });
+    const firstMaxValues = sortedData.slice(0, 40);
+
     data = {
       'name': key,
-      'data': props.myInterestPerCommit.map(item => item[key])
+      'data': firstMaxValues
     }
     series.push(data);
   }
@@ -291,7 +296,7 @@ const InterestPerCommitPanel = props => {
 
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
-      <BarChart title={panelTitle} xAxisArray={filePaths} series={series} />
+      <BarChart title={panelTitle} xAxisArray={filePaths} series={series} subtitle="Top 40 Java classes with the highest interest"/>
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <BasicTable title={panelTitle} data={props.myInterestPerCommit} />
@@ -1147,9 +1152,9 @@ class TDAnalysisDashPage extends React.Component {
             mycumulativeInterestLineChart={cumulativeInterestLineChart}
           /> */}
 
-          <ProjectReusabillityMetricsPanel
+          {/* <ProjectReusabillityMetricsPanel
             myProjectReusabillityMetrics={projectReusabillityMetrics}
-          />
+          /> */}
 
           {/* <FileReusabillityMetricsPanel
             myFileReusabillityMetrics={fileReusabillityMetrics}

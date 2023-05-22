@@ -15,7 +15,7 @@ highchartsTreemap(Highcharts);
 
 export default class MyTreemapChart extends React.Component {
     render() {
-        const { title, data, seriesNames } = this.props;
+        const { title, data, seriesNames,subtitle } = this.props;
 
         const chartOptions = {
             chart: {
@@ -40,6 +40,9 @@ export default class MyTreemapChart extends React.Component {
             title: {
                 text: title,
             },
+            subtitle: {
+                text: subtitle
+            },
             colorAxis: {
                 minColor: '#FFFFFF',
                 maxColor: 'rgba(84,130,53,1)'
@@ -47,7 +50,9 @@ export default class MyTreemapChart extends React.Component {
             series: [
                 {
                     type: 'treemap',
-                    layoutAlgorithm: 'squarified',
+                    layoutAlgorithm: "squarified",
+                    aspectRatio: 1,
+                    layoutStartingDirection: "horizontal",
                     data: data,
                 },
             ],
