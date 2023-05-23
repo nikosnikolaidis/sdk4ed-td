@@ -7,10 +7,10 @@ import HCCSVExporting from 'highcharts/modules/export-data';
 HCExporting(Highcharts);
 HCCSVExporting(Highcharts);
 
-const options = (title, xAxisArray, seriesObjectArray, subtitle) => {
+const options = (title, positiveFilePaths, negativeFilePaths, seriesObjectArray, subtitle) => {
     const options = {
         chart: {
-            type: 'column',
+            type: 'bar',
         },
         title: {
             text: title,
@@ -34,9 +34,21 @@ const options = (title, xAxisArray, seriesObjectArray, subtitle) => {
                 },
             },
         },
-        xAxis: {
-            categories: xAxisArray || ['Label 1', 'Label 2', 'Label 3'],
-        },
+        xAxis: [{
+            categories: positiveFilePaths,
+            reversed: true,
+            labels: {
+                step: 1
+            },
+        }, {
+            categories: negativeFilePaths,
+            reversed: false,
+            opposite: true,
+            linkedTo: 0,
+            labels: {
+                step: 1
+            },
+        }],
         yAxis: {
             title: {
                 text: 'Value',
@@ -57,10 +69,11 @@ const options = (title, xAxisArray, seriesObjectArray, subtitle) => {
     return options;
 };
 
-export default class BarChart extends React.Component {
+export default class NegativeLineChart extends React.Component {
     static propTypes = {
         title: PropTypes.string,
-        xAxisArray: PropTypes.object,
+        positiveFilePaths: PropTypes.object,
+        negativeFilePaths: PropTypes.object,
         series: PropTypes.object,
         subtitle: PropTypes.string
     }
@@ -71,7 +84,7 @@ export default class BarChart extends React.Component {
             <div>
                 <HighchartsReact
                     highcharts={Highcharts}
-                    options={options(this.props.title, this.props.xAxisArray, this.props.series, this.props.subtitle)}
+                    options={options(this.props.title, this.props.positiveFilePaths, this.props.negativeFilePaths, this.props.series, this.props.subtitle)}
                 />
             </div>
         )

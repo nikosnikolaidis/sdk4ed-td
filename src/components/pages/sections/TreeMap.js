@@ -15,7 +15,7 @@ highchartsTreemap(Highcharts);
 
 export default class MyTreemapChart extends React.Component {
     render() {
-        const { title, data, seriesNames,subtitle } = this.props;
+        const { title, data, seriesNames, subtitle } = this.props;
 
         const chartOptions = {
             chart: {

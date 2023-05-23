@@ -7,17 +7,17 @@ import HCCSVExporting from 'highcharts/modules/export-data';
 HCExporting(Highcharts);
 HCCSVExporting(Highcharts);
 
-const options = (title, xAxisArray, seriesObjectArray, subtitle) => {
+const options = (chartTitle, series) => {
     const options = {
         chart: {
-            type: 'column',
+            type: 'line'
         },
+
         title: {
-            text: title,
+            text: chartTitle,
+            align: 'center'
         },
-        subtitle: {
-            text: subtitle
-        },
+
         exporting: {
             buttons: {
                 contextButton: {
@@ -34,35 +34,59 @@ const options = (title, xAxisArray, seriesObjectArray, subtitle) => {
                 },
             },
         },
+
+        pane: {
+            size: '80%'
+        },
+
         xAxis: {
-            categories: xAxisArray || ['Label 1', 'Label 2', 'Label 3'],
+
+            tickmarkPlacement: 'on',
+            allowDecimals: false,
+            lineWidth: 0
         },
+
         yAxis: {
-            title: {
-                text: 'Value',
-            },
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
         },
-        series: seriesObjectArray || [
-            {
-                name: 'Data',
-                data: [1, 1, 1, 1, 1, 1],
-            },
-            {
-                name: 'Data2',
-                data: [2, 2, 2, 2, 2, 2],
-            },
-        ],
-    };
+
+        tooltip: {
+            shared: true,
+            pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>'
+        },
+
+        legend: {
+            align: 'right'
+        },
+        series: series,
+
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    },
+                    pane: {
+                        size: '70%'
+                    }
+                }
+            }]
+        }
+    }
 
     return options;
 };
 
-export default class BarChart extends React.Component {
+export default class LineChart extends React.Component {
     static propTypes = {
         title: PropTypes.string,
-        xAxisArray: PropTypes.object,
-        series: PropTypes.object,
-        subtitle: PropTypes.string
+        series: PropTypes.object
     }
 
     render() {
@@ -71,7 +95,7 @@ export default class BarChart extends React.Component {
             <div>
                 <HighchartsReact
                     highcharts={Highcharts}
-                    options={options(this.props.title, this.props.xAxisArray, this.props.series, this.props.subtitle)}
+                    options={options(this.props.title, this.props.series)}
                 />
             </div>
         )

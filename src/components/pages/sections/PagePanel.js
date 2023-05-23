@@ -9,7 +9,7 @@ function CollapsibleCard({ linkTo, header, children, isCollapsed }) {
   const handleToggleCollapse = () => {
     setCollapsed(!collapsed);
   };
-  
+
   return (
     <MDBCard className="card-body pt-0 pl-0 pr-0 mb-4" style={{ boxShadow: "0px 0px" }}>
       <MDBCardHeader className="sdk4ed-color" tag="h3" onClick={handleToggleCollapse} style={{ cursor: 'pointer' }}>
