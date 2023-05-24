@@ -42,7 +42,7 @@ function calculateMax(rows, aggregatedDataColumns) {
 function formatAggregatedData(columns, rows) {
     const _ = require('lodash');
     let aggregatedData = {};
-    if (columns != undefined) {
+    if (columns != undefined && columns.length>0) {
         const aggregatedDataColumns = _.cloneDeep(columns);
         aggregatedDataColumns[0].label = 'Aggregation';
         aggregatedDataColumns[0].field = 'Aggregation';
@@ -118,8 +118,8 @@ export default class BasicTable extends React.Component {
 
         return (
             <>
-                <MDBDataTable striped small bordered responsive hover data={tableData} />
                 {aggregatedData > 0 || <Table data={aggregatedData} title="Aggregated Metrics" />}
+                <MDBDataTable striped small bordered responsive hover data={tableData} />
             </>
         )
     }
