@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types'
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import HCExporting from 'highcharts/modules/exporting';
 import HCCSVExporting from 'highcharts/modules/export-data';
+import HCExporting from 'highcharts/modules/exporting';
+import PropTypes from 'prop-types';
+import React from 'react';
 HCExporting(Highcharts);
 HCCSVExporting(Highcharts);
 
@@ -17,6 +17,19 @@ const options = (title, positiveFilePaths, negativeFilePaths, seriesObjectArray,
         },
         subtitle: {
             text: subtitle
+        },
+        tooltip: {
+            enabled: true,
+            formatter: function () {
+                // return `<b>${this.point.category}</b><br/>Category: ${this.series.name}<br/>Value: ${this.point.y}`;
+                // Check which xAxis is linked to the current series
+        // Customize tooltip content based on the selected category
+        let tooltipContent = `<b>${this.series.name}</b><br/>`;
+       
+        tooltipContent += `Value: ${this.point.y}`;
+
+        return tooltipContent;
+            }
         },
         exporting: {
             buttons: {
@@ -40,7 +53,8 @@ const options = (title, positiveFilePaths, negativeFilePaths, seriesObjectArray,
             labels: {
                 step: 1
             },
-        }, {
+        },
+        {
             categories: negativeFilePaths,
             reversed: false,
             opposite: true,
@@ -49,6 +63,7 @@ const options = (title, positiveFilePaths, negativeFilePaths, seriesObjectArray,
                 step: 1
             },
         }],
+
         yAxis: {
             title: {
                 text: 'Value',

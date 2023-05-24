@@ -1,4 +1,5 @@
-import { Alert, MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBRow } from "mdbreact";
+import { isNumber } from "lodash";
+import { Alert, MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBRow, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
 import React, { useState } from 'react';
 import 'whatwg-fetch';
 import BarChart from './sections/BarChart';
@@ -312,11 +313,11 @@ const InterestPerCommitPanel = props => {
 
   for (const key of ["Interest (In €)", "Interest (In Hours)", "Contribution to Project Interest"]) {
     sortedData = [...props.myInterestPerCommit].sort((a, b) => b[key] - a[key]).map(value => {
-      if (value[key] !== 0) {
+      if ((value[key] !== null || value[key] !== undefined) && isNumber(value[key])) {
         return value[key];
       }
     });
-    const firstMaxValues = sortedData.slice(0, 40);
+    const firstMaxValues = sortedData.slice(0, 30);
 
     data = {
       'name': key,
@@ -329,7 +330,7 @@ const InterestPerCommitPanel = props => {
   // TreeMap configurations
   //--------------------------------------------------------------------------------------//
   const treeMapData = props.myHighInterestFiles.map(item => {
-    if (item['Interest (In €)'] !== 0) {
+    if (item['Interest (In €)'] !== 0 && isNumber(item['Interest (In €)'])) {
       return ({
         name: item['File Path'].split("\/")[item["File Path"].split("\/").length - 1],
         value: item['Interest (In €)'],
@@ -354,8 +355,10 @@ const InterestPerCommitPanel = props => {
 
   for (const key of ["Changed Interest (In €)", "Changed Interest (In Hours)", "Change Between Revisions (In %)"]) {
     sortedData = [...props.myInterestPerCommit].sort((a, b) => b[key] - a[key]).map(value => {
-      if (value[key] !== 0) {
+      if ((value[key] !== null || value[key] !== undefined) && isNumber(value[key])) {
         return value[key];
+      } else {
+        return 0;
       }
     });
     const firstMaxValues = sortedData.slice(0, 10);
@@ -374,8 +377,10 @@ const InterestPerCommitPanel = props => {
   let negativeData;
   for (const key of ["Changed Interest (In €)", "Changed Interest (In Hours)", "Change Between Revisions (In %)"]) {
     sortedData = [...props.myInterestPerCommit].sort((a, b) => a[key] - b[key]).map(value => {
-      if (value[key] !== 0) {
+      if ((value[key] !== null || value[key] !== undefined) && isNumber(value[key])) {
         return value[key];
+      } else {
+        return 0;
       }
     });
     const firstMinValues = sortedData.slice(0, 10);
