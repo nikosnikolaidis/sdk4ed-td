@@ -19,6 +19,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.7.0",
     "react-animated-tree": "^1.0.10",
+    "react-csv": "^2.2.2",
     "react-dom": "16.8.6",
     "react-icons": "^3.7.0",
     "react-iframe": "1.8.0",

@@ -42,7 +42,7 @@ function calculateMax(rows, aggregatedDataColumns) {
 function formatAggregatedData(columns, rows) {
     const _ = require('lodash');
     let aggregatedData = {};
-    if (columns != undefined && columns.length>0) {
+    if (columns != undefined && columns.length > 0) {
         const aggregatedDataColumns = _.cloneDeep(columns);
         aggregatedDataColumns[0].label = 'Aggregation';
         aggregatedDataColumns[0].field = 'Aggregation';
@@ -57,7 +57,6 @@ function formatAggregatedData(columns, rows) {
             'rows': aggregatedDataRows
         };
 
-        console.log("aggregatedDataRows:", aggregatedDataRows);
     }
     return aggregatedData;
 }
@@ -105,13 +104,11 @@ export default class BasicTable extends React.Component {
             'rows': rows[0]
         };
 
-
         console.log(columns);
         return { columns, rows, tableData };
     }
 
     render() {
-
         const { columns, rows, tableData } = this.formatTableData();
 
         let aggregatedData = formatAggregatedData(columns, rows);

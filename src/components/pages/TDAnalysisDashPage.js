@@ -1,9 +1,10 @@
 import { isNumber } from "lodash";
-import { Alert, MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBRow, MDBTable, MDBTableBody, MDBTableHead } from "mdbreact";
+import { Alert, MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBRow } from "mdbreact";
 import React, { useState } from 'react';
 import 'whatwg-fetch';
 import BarChart from './sections/BarChart';
 import BasicTable from './sections/BasicTable';
+import DownloadCSVButton from './sections/DownloadCSVButton';
 import LineChart from './sections/LineChart';
 import Loader from './sections/Loading';
 import NegativeColumnChart from './sections/NegativeColumnChart';
@@ -271,6 +272,7 @@ const AllFileMetricsAndInterestPanel = props => {
             </MDBDropdownMenu>
           </MDBDropdown>
 
+          <DownloadCSVButton tableData={[]} aggregatedData={[]} filename={panelTitle+"_version_"+"LATEST"} />
         </MDBRow>
       </Alert>
       {/* // ---------------------------------------------------------------------------------------------------------- // */}
@@ -399,13 +401,13 @@ const InterestPerCommitPanel = props => {
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
       <MDBRow className="mb-12">
         <MDBCol >
-          <BarChart title={panelTitle} xAxisArray={filePaths} series={series} subtitle={subtitle} />
+          <TreeMap title={"High Interest Design Hotspots"} subtitle={subtitle} data={treeMapData} seriesNames={seriesNames} />
         </MDBCol>
         <MDBCol>
           <NegativeColumnChart title={"File Interest Change Indicators"} subtitle={"Most Changed Java Classes"} positiveFilePaths={positiveFilePaths} negativeFilePaths={negativeFilePaths} series={columnSeries} />
         </MDBCol>
       </MDBRow>
-      <TreeMap title={"High Interest Design Hotspots"} subtitle={subtitle} data={treeMapData} seriesNames={seriesNames} />
+      <BarChart title={panelTitle} xAxisArray={filePaths} series={series} subtitle={subtitle} />
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <BasicTable title={panelTitle} data={props.myInterestPerCommit} />
