@@ -1,3 +1,4 @@
+import lodash, { isEmpty } from 'lodash';
 import { MDBDataTable } from "mdbreact";
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -8,8 +9,8 @@ function calculateAverage(rows, aggregatedDataColumns) {
     averageRow[aggregatedDataColumns[0].label] = "AVG";
 
     for (let i = 1; i < aggregatedDataColumns.length; i++) {
-        const sum = rows[0].map((x) => x[aggregatedDataColumns[i].label]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-        averageRow[aggregatedDataColumns[i].label] = parseFloat(sum / rows[0].length).toFixed(2);
+        const sum = rows.map((x) => x[aggregatedDataColumns[i].label]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        averageRow[aggregatedDataColumns[i].label] = parseFloat(sum / rows.length).toFixed(2);
     }
 
     return averageRow;
@@ -20,7 +21,7 @@ function calculateSum(rows, aggregatedDataColumns) {
     sumRow[aggregatedDataColumns[0].label] = "SUM";
 
     for (let i = 1; i < aggregatedDataColumns.length; i++) {
-        const sum = rows[0].reduce((accumulator, currentValue) => accumulator + currentValue[aggregatedDataColumns[i].label], 0);
+        const sum = rows.reduce((accumulator, currentValue) => accumulator + currentValue[aggregatedDataColumns[i].label], 0);
         sumRow[aggregatedDataColumns[i].label] = parseFloat(sum).toFixed(2);
     }
 
@@ -32,25 +33,26 @@ function calculateMax(rows, aggregatedDataColumns) {
     maxRow[aggregatedDataColumns[0].label] = "MAX";
 
     for (let i = 1; i < aggregatedDataColumns.length; i++) {
-        const max = Math.max(...rows[0].map((item) => item[aggregatedDataColumns[i].label]));
+        const max = Math.max(...rows.map((item) => item[aggregatedDataColumns[i].label]));
         maxRow[aggregatedDataColumns[i].label] = parseFloat(max).toFixed(2);
     }
 
     return maxRow;
 }
 
-function formatAggregatedData(columns, rows) {
-    const _ = require('lodash');
-    let aggregatedData = {};
-    if (columns != undefined && columns.length > 0) {
-        const aggregatedDataColumns = _.cloneDeep(columns);
+export function formatAggregatedData(tableData) {
+    let aggregatedData = [];
+    if (typeof tableData !== undefined && !isEmpty(tableData.columns)) {
+        const aggregatedDataColumns = lodash.cloneDeep(tableData.columns);
         aggregatedDataColumns[0].label = 'Aggregation';
         aggregatedDataColumns[0].field = 'Aggregation';
 
         const aggregatedDataRows = [];
-        aggregatedDataRows.push(calculateAverage(rows, aggregatedDataColumns));
-        aggregatedDataRows.push(calculateSum(rows, aggregatedDataColumns));
-        aggregatedDataRows.push(calculateMax(rows, aggregatedDataColumns));
+        // console.log("BASIC TABLE tableData.rows: " + JSON.stringify(tableData.rows));
+
+        aggregatedDataRows.push(calculateAverage(tableData.rows, aggregatedDataColumns));
+        aggregatedDataRows.push(calculateSum(tableData.rows, aggregatedDataColumns));
+        aggregatedDataRows.push(calculateMax(tableData.rows, aggregatedDataColumns));
 
         aggregatedData = {
             'columns': aggregatedDataColumns,
@@ -61,24 +63,9 @@ function formatAggregatedData(columns, rows) {
     return aggregatedData;
 }
 
-export default class BasicTable extends React.Component {
-
-    static propTypes = {
-        /**
-         * An object that respects as defined here https://mdbootstrap.com/docs/react/tables/additional/
-         * It contains the data that will be visualized in the table
-         */
-        data: PropTypes.any,
-
-        /**
-         * The title of the table.
-         */
-        title: PropTypes.string
-    }
-
-    formatTableData() {
-        var data = JSON.parse(JSON.stringify(this.props.data));
-        console.log(this.props.title + " : " + JSON.stringify(data));
+export function formatTableData(arr) {
+    if (typeof arr !== undefined && !isEmpty(arr)) {
+        var data = JSON.parse(JSON.stringify(arr));
 
         const keys = [];
         const columns = [];
@@ -103,15 +90,31 @@ export default class BasicTable extends React.Component {
             'columns': columns,
             'rows': rows[0]
         };
+        return tableData;
+    }
 
-        console.log(columns);
-        return { columns, rows, tableData };
+    return {}
+}
+
+export default class BasicTable extends React.Component {
+
+    static propTypes = {
+        /**
+         * An object that respects as defined here https://mdbootstrap.com/docs/react/tables/additional/
+         * It contains the data that will be visualized in the table
+         */
+        data: PropTypes.any,
+
+        /**
+         * The title of the table.
+         */
+        title: PropTypes.string
     }
 
     render() {
-        const { columns, rows, tableData } = this.formatTableData();
+        const tableData = formatTableData(this.props.data);
 
-        let aggregatedData = formatAggregatedData(columns, rows);
+        let aggregatedData = formatAggregatedData(tableData);
 
         return (
             <>

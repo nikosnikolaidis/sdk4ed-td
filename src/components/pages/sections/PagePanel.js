@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types'
 import { MDBCard, MDBCardBody, MDBCardHeader } from "mdbreact";
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function CollapsibleCard({ linkTo, header, children, isCollapsed }) {
@@ -44,7 +44,7 @@ export class PagePanel extends React.Component {
      */
     children: PropTypes.element,
 
-    isCollapsed: PropTypes.bool
+    isCollapsed: PropTypes.bool,
   }
 
   render() {

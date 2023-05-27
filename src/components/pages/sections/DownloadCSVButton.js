@@ -1,27 +1,33 @@
+import { isEmpty } from 'lodash';
+import { MDBBtn } from "mdbreact";
 import PropTypes from 'prop-types';
 import React from 'react';
 import { CSVLink } from 'react-csv';
-import { Alert, MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBRow } from "mdbreact";
+import { formatAggregatedData, formatTableData } from './BasicTable';
 
+// Function to extract data from JSON into table
 function extractDataFromJsonIntoTable(data) {
     const allDataCSV = [];
-
-    for (let i = 0; i < data.length; i++) {
-        allDataCSV.push(Object.values(data[i]));
-    }
-
+    // Loop through each entry in the JSON data object
+    data.forEach((entry) => {
+        // Push rows from tableData
+        allDataCSV.push(Object.values(entry));
+    });
     return allDataCSV;
 }
 
+// Function to generate CSV data from tableData and aggregatedData
 function generateCSVData(tableData, aggregatedData) {
+    // console.log("CSV Button tableData: " + JSON.stringify(tableData));
+    // console.log("CSV Button aggregatedData: " + JSON.stringify(aggregatedData));
     const allDataCSV = [];
-
-    if (tableData.columns != undefined) {
+    // Check if tableData has columns
+    if (!isEmpty(tableData.columns)) {
         // Push column labels from tableData
         allDataCSV.push([...tableData.columns.map(x => x.label)]);
     }
-
-    if (tableData.rows != undefined && tableData.rows.length > 0) {
+    // Check if tableData has rows
+    if (!isEmpty(tableData.rows)) {
         // Push rows from tableData
         for (let i = 0; i < tableData.rows.length; i++) {
             allDataCSV.push(extractDataFromJsonIntoTable(tableData.rows)[i]);
@@ -30,40 +36,40 @@ function generateCSVData(tableData, aggregatedData) {
 
     // Push an empty row
     allDataCSV.push([]);
-
-    if (aggregatedData.columns != undefined) {
+    // Check if aggregatedData has columns
+    if (!isEmpty(aggregatedData.columns)) {
         // Push column labels from aggregatedData
         allDataCSV.push([...aggregatedData.columns.map(x => x.label)]);
     }
-
-    if (aggregatedData.rows != undefined && aggregatedData.rows.length > 0) {
+    // Check if aggregatedData has rows
+    if (!isEmpty(aggregatedData.rows)) {
         // Push rows from aggregatedData
         for (let i = 0; i < aggregatedData.rows.length; i++) {
             allDataCSV.push(extractDataFromJsonIntoTable(aggregatedData.rows)[i]);
         }
     }
 
+    console.log("allDataCSV: " + JSON.stringify(allDataCSV));
     return allDataCSV;
 }
 
+// Define propTypes for component
 DownloadCSVButton.propTypes = {
-    data: PropTypes.array,
-    aggregatedData: PropTypes.array,
+    tableData: PropTypes.array,
     filename: PropTypes.string,
 };
 
-function DownloadCSVButton({ tableData, aggregatedData, filename }) {
+// DownloadCSVButton component
+function DownloadCSVButton({ tableData, filename }) {
     return (
         <>
-            <MDBBtn>
-                <CSVLink data={generateCSVData(tableData, aggregatedData)} filename={filename + '.csv'}>
+            <CSVLink data={generateCSVData(formatTableData(tableData), formatAggregatedData(formatTableData(tableData)))} filename={`${filename}.csv`}>
+                <MDBBtn>
                     Download CSV
-                </CSVLink>
-            </MDBBtn>
+                </MDBBtn>
+            </CSVLink>
         </>
     );
 }
-
-
-
+// Export DownloadCSVButton component
 export default DownloadCSVButton;

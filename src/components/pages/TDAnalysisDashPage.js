@@ -235,63 +235,59 @@ const AllFileMetricsAndInterestPanel = props => {
     }
   };
 
-  const options = [];
-  let option;
-  for (let i = 0; i < props.myAnalyzedCommits.length; i++) {
-    option = {
-      'text': props.myAnalyzedCommits[i].revisionCount,
-      'value': props.myAnalyzedCommits[i].sha
+  const options = getOptionsForDropdownInAlert(props.myAnalyzedCommits);
+
+  const getTableData = () => {
+    if (data.length === 0) {
+      return [...props.myAllFileMetricsAndInterest];
+    } else {
+      return data;
     }
-    options.push(option);
   }
-  var panelTitle = "Interest per File"
+
+  const panelTitle = "Interest per File"
+
+  const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue, props.myAnalyzedCommits);
+
   return (
-    // <PagePanel header="File Metrics" linkTo="tdanalysis">
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
       <Alert color="info">
         Please choose a commit from the dropdown below. (First option is the latest analyzed commit)
         <MDBRow className="mb-12">
-          <MDBBtn outline className='mx-2' color='info' onClick={() => {
-            handleSelect('');
-            setData({});
-          }}>Clear</MDBBtn>
+          <MDBCol size="8" className="text-left mb-12 d-flex justify-content">
+            <MDBBtn outline className='mx-2' color='info' onClick={() => {
+              handleSelect('');
+              setData({});
+            }}>Clear</MDBBtn>
 
-          <MDBDropdown dropright>
-            <MDBDropdownToggle caret color="primary" >
-              {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
-            </MDBDropdownToggle>
-            <MDBDropdownMenu>
-              {options.map((option) => (
-                <MDBDropdownItem key={option.value}
-                  onClick={() => {
-                    handleSelect(option.value)
-                  }}>
-                  {option.text}
-                </MDBDropdownItem>
-              ))}
-            </MDBDropdownMenu>
-          </MDBDropdown>
-
-          <DownloadCSVButton tableData={[]} aggregatedData={[]} filename={panelTitle+"_version_"+"LATEST"} />
+            <MDBDropdown dropright >
+              <MDBDropdownToggle caret color="primary" >
+                {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
+              </MDBDropdownToggle>
+              <MDBDropdownMenu>
+                {options.map((option) => (
+                  <MDBDropdownItem key={option.value}
+                    onClick={() => {
+                      handleSelect(option.value)
+                    }}>
+                    {option.text}
+                  </MDBDropdownItem>
+                ))}
+              </MDBDropdownMenu>
+            </MDBDropdown>
+          </MDBCol>
+          <MDBCol className="text-right">
+            <DownloadCSVButton tableData={getTableData()} filename={filename} />
+          </MDBCol>
         </MDBRow>
       </Alert>
       {/* // ---------------------------------------------------------------------------------------------------------- // */}
 
-      {data.length == 0 &&
-        <MDBRow className="mb-12">
-          <MDBCol md="12" lg="12" className="mb-12">
-            <BasicTable title={panelTitle} data={props.myAllFileMetricsAndInterest} />
-          </MDBCol>
-        </MDBRow>
-      }
-
-      {data.length > 0 &&
-        <MDBRow className="mb-12">
-          <MDBCol md="12" lg="12" className="mb-12">
-            <BasicTable title={panelTitle} data={data} />
-          </MDBCol>
-        </MDBRow>
-      }
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title={panelTitle} data={getTableData()} />
+        </MDBCol>
+      </MDBRow>
 
     </PagePanel>
   )
@@ -299,7 +295,7 @@ const AllFileMetricsAndInterestPanel = props => {
 
 const InterestPerCommitPanel = props => {
 
-  var panelTitle = "Interest Evolutions as Diff";
+  const panelTitle = "Interest Evolutions as Diff";
 
   //--------------------------------------------------------------------------------------//
   // Bar Chart configurations
@@ -418,7 +414,7 @@ const InterestPerCommitPanel = props => {
 }
 
 const NormalizedInterestPanel = props => {
-  var panelTitle = "Normalized Interest Indicators"
+  const panelTitle = "Normalized Interest Indicators"
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
@@ -455,18 +451,24 @@ const InterestChangePanel = props => {
     }
   };
 
-  const options = [];
-  let option;
-  for (let i = 0; i < props.myAnalyzedCommits.length; i++) {
-    if (props.myAnalyzedCommits[i].revisionCount > 3) {
-      option = {
-        'text': props.myAnalyzedCommits[i].sha,
-        'value': props.myAnalyzedCommits[i].sha
-      }
-      options.push(option);
+  const options = getOptionsForDropdownInAlert(props.myAnalyzedCommits);
+
+  const getSelectedValue = (selectedValue) => {
+    return selectedValue ? options.find(option => option.value === selectedValue).text : "LATEST";
+  }
+
+  const getTableData = () => {
+    if (data.length === 0) {
+      return [...props.myInterestChange];
+    } else {
+      return data;
     }
   }
-  var panelTitle = "Interest Change Indicators"
+
+  const panelTitle = "Interest Change Indicators"
+
+  const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue);
+
   return (
     <>
       <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
@@ -493,26 +495,20 @@ const InterestChangePanel = props => {
                 ))}
               </MDBDropdownMenu>
             </MDBDropdown>
+
+            <MDBCol className="text-right">
+              <DownloadCSVButton tableData={getTableData} filename={filename} />
+            </MDBCol>
           </MDBRow>
         </Alert>
 
-        {data.length > 0 &&
 
-          <MDBRow className="mb-12">
-            <MDBCol md="12" lg="12" className="mb-12">
-              <BasicTable nesting title={panelTitle} data={data} hover responsiveSm />
-            </MDBCol>
-          </MDBRow>
+        <MDBRow className="mb-12">
+          <MDBCol md="12" lg="12" className="mb-12">
+            <BasicTable nesting title={panelTitle} data={getTableData()} hover responsiveSm />
+          </MDBCol>
+        </MDBRow>
 
-        }
-
-        {data.length === 0 &&
-          <MDBRow className="mb-12">
-            <MDBCol md="12" lg="12" className="mb-12">
-              <BasicTable nesting title={panelTitle} data={props.myInterestChange} hover responsiveSm />
-            </MDBCol>
-          </MDBRow>
-        }
 
         {errorReturned &&
           <Alert color="danger">
@@ -526,7 +522,7 @@ const InterestChangePanel = props => {
 }
 
 const CumulativeInterestPanel = props => {
-  var panelTitle = "Total Interest per Version"
+  const panelTitle = "Total Interest per Version"
   let dataList = Array.from(props.mycumulativeInterestLineChart);
   dataList.reverse();
 
@@ -543,7 +539,7 @@ const CumulativeInterestPanel = props => {
 }
 
 const ProjectReusabillityMetricsPanel = props => {
-  var panelTitle = "Total Quality Metrics per Version"
+  const panelTitle = "Total Quality Metrics per Version"
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
@@ -557,7 +553,7 @@ const ProjectReusabillityMetricsPanel = props => {
 }
 
 const FileReusabillityMetricsPanel = props => {
-  var panelTitle = "File Reusabillity Metrics Indicators"
+  const panelTitle = "File Reusabillity Metrics Indicators"
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
@@ -571,7 +567,7 @@ const FileReusabillityMetricsPanel = props => {
 }
 
 const HighInterestFilesPanel = props => {
-  var panelTitle = "High Interest Design Hotspots"
+  const panelTitle = "High Interest Design Hotspots"
 
   const data = props.myHighInterestFiles.map(item => ({
     name: item['File Path'],
@@ -594,7 +590,7 @@ const HighInterestFilesPanel = props => {
 }
 
 const FileInterestChangePanel = props => {
-  var panelTitle = "File Interest Change Indicators"
+  const panelTitle = "File Interest Change Indicators"
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
@@ -608,7 +604,7 @@ const FileInterestChangePanel = props => {
 }
 
 const AnalyzedCommitsPanel = props => {
-  var panelTitle = "Analyzed Commits Indicators"
+  const panelTitle = "Analyzed Commits Indicators"
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
@@ -621,6 +617,24 @@ const AnalyzedCommitsPanel = props => {
   )
 }
 
+function getOptionsForDropdownInAlert(myAnalyzedCommits) {
+  const options = [];
+  let option;
+  for (let i = 0; i < myAnalyzedCommits.length; i++) {
+    if (myAnalyzedCommits[i].revisionCount > 3) {
+      option = {
+        'text': myAnalyzedCommits[i].revisionCount,
+        'value': myAnalyzedCommits[i].sha
+      };
+      options.push(option);
+    }
+  }
+  return options;
+}
+
+const getSelectedValue = (selectedValue, myAnalyzedCommits) => {
+  return selectedValue ? getOptionsForDropdownInAlert(myAnalyzedCommits).find(option => option.value === selectedValue).text : "LATEST";
+}
 
 /**
  * The technical debt dashboard page. The page is assembled using multiple panels.
@@ -1025,6 +1039,7 @@ class TDAnalysisDashPage extends React.Component {
           />
 
           <AllFileMetricsAndInterestPanel
+            myprojectName={name}
             myAnalyzedCommits={analyzedCommits}
             myAllFileMetricsAndInterest={allFileMetricsAndInterest}
           />
