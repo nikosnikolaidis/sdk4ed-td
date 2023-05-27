@@ -453,10 +453,6 @@ const InterestChangePanel = props => {
 
   const options = getOptionsForDropdownInAlert(props.myAnalyzedCommits);
 
-  const getSelectedValue = (selectedValue) => {
-    return selectedValue ? options.find(option => option.value === selectedValue).text : "LATEST";
-  }
-
   const getTableData = () => {
     if (data.length === 0) {
       return [...props.myInterestChange];
@@ -467,7 +463,7 @@ const InterestChangePanel = props => {
 
   const panelTitle = "Interest Change Indicators"
 
-  const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue);
+  const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue, props.myAnalyzedCommits);
 
   return (
     <>
@@ -475,7 +471,7 @@ const InterestChangePanel = props => {
         <Alert color="info">Please choose a commit sha from the dropdown below. (First option is the latest analyzed commit)
           <MDBRow className="mb-12">
             <MDBBtn outline className='mx-2' color='info' onClick={() => {
-              setSelectedValue(SELECT_AN_OPTION_TITLE);
+              setSelectedValue('');
               setData([]);
             }}>Clear</MDBBtn>
 
@@ -497,7 +493,7 @@ const InterestChangePanel = props => {
             </MDBDropdown>
 
             <MDBCol className="text-right">
-              <DownloadCSVButton tableData={getTableData} filename={filename} />
+              <DownloadCSVButton tableData={getTableData()} filename={filename} />
             </MDBCol>
           </MDBRow>
         </Alert>
@@ -621,13 +617,11 @@ function getOptionsForDropdownInAlert(myAnalyzedCommits) {
   const options = [];
   let option;
   for (let i = 0; i < myAnalyzedCommits.length; i++) {
-    if (myAnalyzedCommits[i].revisionCount > 3) {
-      option = {
-        'text': myAnalyzedCommits[i].revisionCount,
-        'value': myAnalyzedCommits[i].sha
-      };
-      options.push(option);
-    }
+    option = {
+      'text': myAnalyzedCommits[i].revisionCount,
+      'value': myAnalyzedCommits[i].sha
+    };
+    options.push(option);
   }
   return options;
 }
