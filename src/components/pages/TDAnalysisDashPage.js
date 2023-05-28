@@ -184,7 +184,7 @@ const TDAnalysisPanel = props => {
 
         <MDBCol >
           <MDBCardHeader className="sdk4ed-color">Principal Project Summary</MDBCardHeader>
-          <MDBRow className='mb-2'>
+          <MDBRow className='mb-3'>
             <MDBCol>
               <CountCard title="TD IN MINUTES" value={lastPrincipalInMinutes} icon="clock" />
             </MDBCol>
@@ -193,7 +193,7 @@ const TDAnalysisPanel = props => {
             </MDBCol>
           </MDBRow>
 
-          <MDBRow className='mb-3'>
+          <MDBRow className='mb-2'>
             <MDBCol>
               <CountCard title="BUGS" color="#33691e light-green darken-4" value={props.myBugs} icon="bug" />
             </MDBCol>
@@ -438,7 +438,7 @@ const InterestChangePanel = props => {
     let storedProjectJson = JSON.parse(storedProject);
     let url = "";
     let urlPrefix = INTEREST_ENDPOINT + "analysis/"
-    url = urlPrefix + "interestChange?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
+    url = urlPrefix + "normalizedAndInterestChanges?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
     setSelectedValue(value);
     const response = await fetch(url).then(resp => {
       return resp;
@@ -461,7 +461,7 @@ const InterestChangePanel = props => {
     }
   }
 
-  const panelTitle = "Interest Change Indicators"
+  const panelTitle = "Historical Interest Changes Per Commit";
 
   const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue, props.myAnalyzedCommits);
 
@@ -837,7 +837,7 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
-    url = urlPrefix + "interestChange?url=" + projectName.toString();
+    url = urlPrefix + "normalizedAndInterestChanges?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.json())
       .then(resp => {
@@ -1059,9 +1059,9 @@ class TDAnalysisDashPage extends React.Component {
             myFileReusabillityMetrics={fileReusabillityMetrics}
           /> */}
 
-          <NormalizedInterestPanel
+          {/* <NormalizedInterestPanel
             myNormalizedInterest={normalizedInterest}
-          />
+          /> */}
 
           <InterestChangePanel
             myAnalyzedCommits={analyzedCommits}
