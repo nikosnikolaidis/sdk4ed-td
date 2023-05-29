@@ -512,6 +512,7 @@ const InterestChangePanel = props => {
 
   const getTableData = () => {
     if (data.length === 0) {
+      console.log(props.myInterestChange)
       return [...props.myInterestChange];
     } else {
       return data;
@@ -789,7 +790,7 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
-    url = urlPrefix + "projectReusabilityMetrics?url=" + projectName.toString();
+    /* url = urlPrefix + "projectReusabilityMetrics?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(response => response.json())
       .then(result => {
@@ -799,7 +800,7 @@ class TDAnalysisDashPage extends React.Component {
           projectReusabillityMetrics: data,
         })
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error)); */
 
     // ---------------------------------------------------------------------------------------------------------- //
     //removed panel
@@ -830,7 +831,7 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
-    url = urlPrefix + "normalizedInterest?url=" + projectName.toString();
+    /* url = urlPrefix + "normalizedInterest?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.json())
       .then(resp => {
@@ -839,7 +840,7 @@ class TDAnalysisDashPage extends React.Component {
           normalizedInterest: resp,
         })
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error)); */
 
     // ---------------------------------------------------------------------------------------------------------- //
 
@@ -856,7 +857,7 @@ class TDAnalysisDashPage extends React.Component {
 
     // ---------------------------------------------------------------------------------------------------------- //
 
-    url = urlPrefix + "highInterestFiles?url=" + projectName.toString();
+    /* url = urlPrefix + "highInterestFiles?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.json())
       .then(resp => {
@@ -865,11 +866,11 @@ class TDAnalysisDashPage extends React.Component {
           highInterestFiles: resp,
         })
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error)); */
 
     // ---------------------------------------------------------------------------------------------------------- //
 
-    url = urlPrefix + "fileInterestChange?url=" + projectName.toString();
+    /* url = urlPrefix + "fileInterestChange?url=" + projectName.toString();
     fetch(url, requestOptions)
       .then(resp => resp.json())
       .then(resp => {
@@ -878,7 +879,7 @@ class TDAnalysisDashPage extends React.Component {
           fileInterestChange: resp,
         })
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('error', error)); */
 
     // ---------------------------------------------------------------------------------------------------------- //
 
@@ -1115,6 +1116,12 @@ class TDAnalysisDashPage extends React.Component {
             myInterestPerCommit={interestPerCommit}
           />
 
+          <InterestChangePanel
+            myAnalyzedCommits={analyzedCommits}
+            myprojectName={name}
+            myInterestChange={interestChange}
+          />
+
           {/* <HighInterestFilesPanel
             myHighInterestFiles={highInterestFiles}
           /> */}
@@ -1134,12 +1141,6 @@ class TDAnalysisDashPage extends React.Component {
           {/* <NormalizedInterestPanel
             myNormalizedInterest={normalizedInterest}
           /> */}
-
-          <InterestChangePanel
-            myAnalyzedCommits={analyzedCommits}
-            myprojectName={name}
-            myInterestChange={interestChange}
-          />
 
           {/* <FileInterestChangePanel
             myFileInterestChange={fileInterestChange}
