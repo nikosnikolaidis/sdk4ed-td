@@ -249,6 +249,25 @@ const AllFileMetricsAndInterestPanel = props => {
 
   const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue, props.myAnalyzedCommits);
 
+  //--------------------------------------------------------------------------------------//
+  // TreeMap configurations
+  //--------------------------------------------------------------------------------------//
+  const treeMapData = getTableData().map(item => {
+    if (item['Interest (In €)'] !== 0 && isNumber(item['Interest (In €)'])) {
+      return ({
+        name: item['File Path'].split("\/")[item["File Path"].split("\/").length - 1],
+        value: item['Interest (In €)'],
+        colorValue: item['Interest (In €)'],
+      })
+    }
+  }).slice(0, 30);
+
+  const seriesNames = ['Interest (In €)', 'Interest (In Hours)'];
+
+  let subtitle = "Top Java classes with the highest interest";
+
+  //--------------------------------------------------------------------------------------//
+
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
       <Alert color="info">
@@ -257,7 +276,7 @@ const AllFileMetricsAndInterestPanel = props => {
           <MDBCol size="8" className="text-left mb-12 d-flex justify-content">
             <MDBBtn outline className='mx-2' color='info' onClick={() => {
               handleSelect('');
-              setData({});
+              setData([]);
             }}>Clear</MDBBtn>
 
             <MDBDropdown dropright >
@@ -285,6 +304,7 @@ const AllFileMetricsAndInterestPanel = props => {
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
+          <TreeMap title={"High Interest Design Hotspots"} subtitle={subtitle} data={treeMapData} seriesNames={seriesNames} />
           <BasicTable title={panelTitle} data={getTableData()} />
         </MDBCol>
       </MDBRow>
@@ -295,55 +315,75 @@ const AllFileMetricsAndInterestPanel = props => {
 
 const InterestPerCommitPanel = props => {
 
+
+  const [selectedValue, setSelectedValue] = useState('');
+  const [data, setData] = useState([]);
+  var errorReturned = false;
+
+  const handleSelect = async (value) => {
+    let storedProject = sessionStorage.getItem('selected_project');
+    let storedProjectJson = JSON.parse(storedProject);
+    let url = "";
+    let urlPrefix = INTEREST_ENDPOINT + "analysis/"
+    url = urlPrefix + "interestPerCommitFile?url=" + storedProjectJson.endpoint.toString() + "&sha=" + value;
+    setSelectedValue(value);
+    const response = await fetch(url).then(resp => {
+      return resp;
+    }).catch(e => console.error("error: " + e));
+    if (response) {
+      const json = await response.json();
+      setData(json);
+    } else {
+      errorReturned = true;
+    }
+  };
+
+  const options = getOptionsForDropdownInAlert(props.myAnalyzedCommits);
+
+  const getTableData = () => {
+    if (data.length === 0) {
+      return [...props.myInterestPerCommit];
+    } else {
+      return data;
+    }
+  }
+
   const panelTitle = "Interest Evolutions as Diff";
+
+  const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue, props.myAnalyzedCommits);
 
   //--------------------------------------------------------------------------------------//
   // Bar Chart configurations
   //--------------------------------------------------------------------------------------//
-  let sortedData = [...props.myInterestPerCommit].sort((a, b) => b["Interest (In €)"] - a["Interest (In €)"]);
+  let sortedData = [...getTableData()].sort((a, b) => b["Interest (In €)"] - a["Interest (In €)"]);
 
   let filePaths = sortedData.map(x => {
     return x["File Path"].split("\/")[x["File Path"].split("\/").length - 1];
   });
 
   const series = [];
-  let data;
+  let barChartData;
 
   for (const key of ["Interest (In €)", "Interest (In Hours)", "Contribution to Project Interest"]) {
-    sortedData = [...props.myInterestPerCommit].sort((a, b) => b[key] - a[key]).map(value => {
+    sortedData = [...getTableData()].sort((a, b) => b[key] - a[key]).map(value => {
       if ((value[key] !== null || value[key] !== undefined) && isNumber(value[key])) {
         return value[key];
       }
     });
     const firstMaxValues = sortedData.slice(0, 30);
 
-    data = {
+    barChartData = {
       'name': key,
       'data': firstMaxValues
     }
-    series.push(data);
+    series.push(barChartData);
   }
-
-  //--------------------------------------------------------------------------------------//
-  // TreeMap configurations
-  //--------------------------------------------------------------------------------------//
-  const treeMapData = props.myHighInterestFiles.map(item => {
-    if (item['Interest (In €)'] !== 0 && isNumber(item['Interest (In €)'])) {
-      return ({
-        name: item['File Path'].split("\/")[item["File Path"].split("\/").length - 1],
-        value: item['Interest (In €)'],
-        colorValue: item['Interest (In €)'],
-      })
-    }
-  }).slice(0, 30);
-
-  const seriesNames = ['Interest (In €)', 'Interest (In Hours)'];
 
   //--------------------------------------------------------------------------------------//
   // Negative Column Chart configurations
   //--------------------------------------------------------------------------------------//
 
-  sortedData = [...props.myInterestPerCommit].sort((a, b) => b["Changed Interest (In €)"] - a["Changed Interest (In €)"]);
+  sortedData = [...getTableData()].sort((a, b) => b["Changed Interest (In €)"] - a["Changed Interest (In €)"]);
 
   let positiveFilePaths = sortedData.map(x => {
     return x["File Path"].split("\/")[x["File Path"].split("\/").length - 1];
@@ -352,7 +392,7 @@ const InterestPerCommitPanel = props => {
   let positiveData;
 
   for (const key of ["Changed Interest (In €)", "Changed Interest (In Hours)", "Change Between Revisions (In %)"]) {
-    sortedData = [...props.myInterestPerCommit].sort((a, b) => b[key] - a[key]).map(value => {
+    sortedData = [...getTableData()].sort((a, b) => b[key] - a[key]).map(value => {
       if ((value[key] !== null || value[key] !== undefined) && isNumber(value[key])) {
         return value[key];
       } else {
@@ -368,13 +408,13 @@ const InterestPerCommitPanel = props => {
     columnSeries.push(positiveData);
   }
 
-  sortedData = [...props.myInterestPerCommit].sort((a, b) => a["Changed Interest (In €)"] - b["Changed Interest (In €)"]);
+  sortedData = [...getTableData()].sort((a, b) => a["Changed Interest (In €)"] - b["Changed Interest (In €)"]);
   let negativeFilePaths = sortedData.map(x => {
     return x["File Path"].split("\/")[x["File Path"].split("\/").length - 1];
   });
   let negativeData;
   for (const key of ["Changed Interest (In €)", "Changed Interest (In Hours)", "Change Between Revisions (In %)"]) {
-    sortedData = [...props.myInterestPerCommit].sort((a, b) => a[key] - b[key]).map(value => {
+    sortedData = [...getTableData()].sort((a, b) => a[key] - b[key]).map(value => {
       if ((value[key] !== null || value[key] !== undefined) && isNumber(value[key])) {
         return value[key];
       } else {
@@ -395,32 +435,49 @@ const InterestPerCommitPanel = props => {
   let subtitle = "Top Java classes with the highest interest";
   return (
     <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
+
+      <Alert color="info">Please choose a commit sha from the dropdown below. (First option is the latest analyzed commit)
+        <MDBRow className="mb-12">
+          <MDBBtn outline className='mx-2' color='info' onClick={() => {
+            setSelectedValue('');
+            setData([]);
+          }}>Clear</MDBBtn>
+
+          <MDBDropdown dropright>
+            <MDBDropdownToggle caret color="primary">
+              {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
+            </MDBDropdownToggle>
+
+            <MDBDropdownMenu>
+              {options.map((option) => (
+                <MDBDropdownItem key={option.value}
+                  onClick={() => {
+                    handleSelect(option.value)
+                  }}>
+                  {option.text}
+                </MDBDropdownItem>
+              ))}
+            </MDBDropdownMenu>
+          </MDBDropdown>
+
+          <MDBCol className="text-right">
+            <DownloadCSVButton tableData={getTableData()} filename={filename} />
+          </MDBCol>
+        </MDBRow>
+      </Alert>
+
       <MDBRow className="mb-12">
         <MDBCol >
-          <TreeMap title={"High Interest Design Hotspots"} subtitle={subtitle} data={treeMapData} seriesNames={seriesNames} />
+          <BarChart title={panelTitle} xAxisArray={filePaths} series={series} subtitle={subtitle} />
         </MDBCol>
         <MDBCol>
           <NegativeColumnChart title={"File Interest Change Indicators"} subtitle={"Most Changed Java Classes"} positiveFilePaths={positiveFilePaths} negativeFilePaths={negativeFilePaths} series={columnSeries} />
         </MDBCol>
       </MDBRow>
-      <BarChart title={panelTitle} xAxisArray={filePaths} series={series} subtitle={subtitle} />
-      <MDBRow className="mb-12">
-        <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title={panelTitle} data={props.myInterestPerCommit} />
-        </MDBCol>
-      </MDBRow>
-    </PagePanel>
-  )
-}
-
-const NormalizedInterestPanel = props => {
-  const panelTitle = "Normalized Interest Indicators"
-  return (
-    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title={panelTitle} data={props.myNormalizedInterest} />
+          <BasicTable title={panelTitle} data={getTableData()} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -593,6 +650,20 @@ const FileInterestChangePanel = props => {
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <BasicTable title={panelTitle} data={props.myFileInterestChange} />
+        </MDBCol>
+      </MDBRow>
+    </PagePanel>
+  )
+}
+
+const NormalizedInterestPanel = props => {
+  const panelTitle = "Normalized Interest Indicators"
+  return (
+    <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
+
+      <MDBRow className="mb-12">
+        <MDBCol md="12" lg="12" className="mb-12">
+          <BasicTable title={panelTitle} data={props.myNormalizedInterest} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -1039,8 +1110,9 @@ class TDAnalysisDashPage extends React.Component {
           />
 
           <InterestPerCommitPanel
+            myprojectName={name}
+            myAnalyzedCommits={analyzedCommits}
             myInterestPerCommit={interestPerCommit}
-            myHighInterestFiles={highInterestFiles}
           />
 
           {/* <HighInterestFilesPanel
