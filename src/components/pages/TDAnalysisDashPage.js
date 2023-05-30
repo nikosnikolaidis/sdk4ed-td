@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import 'whatwg-fetch';
 import BarChart from './sections/BarChart';
 import BasicTable from './sections/BasicTable';
+import CustomSearchableDropdown from "./sections/CustomSearchableDropdown";
 import DownloadCSVButton from './sections/DownloadCSVButton';
 import LineChart from './sections/LineChart';
 import Loader from './sections/Loading';
@@ -235,6 +236,11 @@ const AllFileMetricsAndInterestPanel = props => {
     }
   };
 
+  const handleClear = () => {
+    setSelectedValue('');
+    setData([]);
+  };
+
   const options = getOptionsForDropdownInAlert(props.myAnalyzedCommits);
 
   const getTableData = () => {
@@ -273,28 +279,7 @@ const AllFileMetricsAndInterestPanel = props => {
       <Alert color="info">
         Please choose a commit from the dropdown below. (First option is the latest analyzed commit)
         <MDBRow className="mb-12">
-          <MDBCol size="8" className="text-left mb-12 d-flex justify-content">
-            <MDBBtn outline className='mx-2' color='info' onClick={() => {
-              handleSelect('');
-              setData([]);
-            }}>Clear</MDBBtn>
-
-            <MDBDropdown dropright >
-              <MDBDropdownToggle caret color="primary" >
-                {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
-              </MDBDropdownToggle>
-              <MDBDropdownMenu>
-                {options.map((option) => (
-                  <MDBDropdownItem key={option.value}
-                    onClick={() => {
-                      handleSelect(option.value)
-                    }}>
-                    {option.text}
-                  </MDBDropdownItem>
-                ))}
-              </MDBDropdownMenu>
-            </MDBDropdown>
-          </MDBCol>
+          <CustomSearchableDropdown options={options} onSelect={handleSelect} onClear={handleClear} />
           <MDBCol className="text-right">
             <DownloadCSVButton tableData={getTableData()} filename={filename} />
           </MDBCol>
@@ -314,7 +299,6 @@ const AllFileMetricsAndInterestPanel = props => {
 }
 
 const InterestPerCommitPanel = props => {
-
 
   const [selectedValue, setSelectedValue] = useState('');
   const [data, setData] = useState([]);
@@ -339,6 +323,11 @@ const InterestPerCommitPanel = props => {
   };
 
   const options = getOptionsForDropdownInAlert(props.myAnalyzedCommits);
+
+  const handleClear = () => {
+    setSelectedValue('');
+    setData([]);
+  };
 
   const getTableData = () => {
     if (data.length === 0) {
@@ -438,28 +427,7 @@ const InterestPerCommitPanel = props => {
 
       <Alert color="info">Please choose a commit sha from the dropdown below. (First option is the latest analyzed commit)
         <MDBRow className="mb-12">
-          <MDBBtn outline className='mx-2' color='info' onClick={() => {
-            setSelectedValue('');
-            setData([]);
-          }}>Clear</MDBBtn>
-
-          <MDBDropdown dropright>
-            <MDBDropdownToggle caret color="primary">
-              {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
-            </MDBDropdownToggle>
-
-            <MDBDropdownMenu>
-              {options.map((option) => (
-                <MDBDropdownItem key={option.value}
-                  onClick={() => {
-                    handleSelect(option.value)
-                  }}>
-                  {option.text}
-                </MDBDropdownItem>
-              ))}
-            </MDBDropdownMenu>
-          </MDBDropdown>
-
+          <CustomSearchableDropdown options={options} onSelect={handleSelect} onClear={handleClear} />
           <MDBCol className="text-right">
             <DownloadCSVButton tableData={getTableData()} filename={filename} />
           </MDBCol>
@@ -508,6 +476,11 @@ const InterestChangePanel = props => {
     }
   };
 
+  const handleClear = () => {
+    setSelectedValue('');
+    setData([]);
+  };
+
   const options = getOptionsForDropdownInAlert(props.myAnalyzedCommits);
 
   const getTableData = () => {
@@ -528,34 +501,14 @@ const InterestChangePanel = props => {
       <PagePanel header={panelTitle} linkTo="tdanalysis" isCollapsed={true}>
         <Alert color="info">Please choose a commit sha from the dropdown below. (First option is the latest analyzed commit)
           <MDBRow className="mb-12">
-            <MDBBtn outline className='mx-2' color='info' onClick={() => {
-              setSelectedValue('');
-              setData([]);
-            }}>Clear</MDBBtn>
 
-            <MDBDropdown dropright>
-              <MDBDropdownToggle caret color="primary">
-                {selectedValue ? selectedValue : SELECT_AN_OPTION_TITLE}
-              </MDBDropdownToggle>
-
-              <MDBDropdownMenu>
-                {options.map((option) => (
-                  <MDBDropdownItem key={option.value}
-                    onClick={() => {
-                      handleSelect(option.value)
-                    }}>
-                    {option.text}
-                  </MDBDropdownItem>
-                ))}
-              </MDBDropdownMenu>
-            </MDBDropdown>
+            <CustomSearchableDropdown options={options} onSelect={handleSelect} onClear={handleClear} />
 
             <MDBCol className="text-right">
               <DownloadCSVButton tableData={getTableData()} filename={filename} />
             </MDBCol>
           </MDBRow>
         </Alert>
-
 
         <MDBRow className="mb-12">
           <MDBCol md="12" lg="12" className="mb-12">
