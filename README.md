@@ -4,7 +4,7 @@ Welcome to the SDK4ED Dashboard repository. The dashboard is currently based on 
 
 The dashboard relies on [React](https://reactjs.org/) for building dynamic web pages with shareable elements among different pages.
 
-Charts and plots will be visualized with [Plot.ly](https://plot.ly/plotly-js-scientific-d3-charting-library/) which provides support for React and a series of other programming languages, including Python and R.
+Charts and plots will be visualized with [HighCharts](https://www.npmjs.com/package/highcharts-react-official) which provides support for React and a series of other programming languages, including Python and R.
 
 Documentation for these frameworks can be found directly on their site. The components defined in the project are documented through JSDoc.
 
