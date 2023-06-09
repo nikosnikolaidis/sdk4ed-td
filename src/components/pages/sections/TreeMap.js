@@ -45,7 +45,7 @@ export default class MyTreemapChart extends React.Component {
             },
             colorAxis: {
                 minColor: '#FFFFFF',
-                maxColor: 'rgba(84,130,53,1)'
+                maxColor: '#bf0000'
             },
             series: [
                 {

@@ -1,5 +1,5 @@
 import { isNumber } from "lodash";
-import { Alert, MDBBtn, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBFormInline, MDBRow } from "mdbreact";
+import { Alert, MDBCard, MDBCardBody, MDBCardHeader, MDBCol, MDBFormInline, MDBRow } from "mdbreact";
 import React, { useState } from 'react';
 import 'whatwg-fetch';
 import BarChart from './sections/BarChart';
@@ -251,7 +251,8 @@ const AllFileMetricsAndInterestPanel = props => {
     }
   }
 
-  const panelTitle = "Interest per File"
+  const panelTitle = "Interest per File";
+  const tableTitle = "Class-Level Analysis";
 
   const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue, props.myAnalyzedCommits);
 
@@ -290,7 +291,7 @@ const AllFileMetricsAndInterestPanel = props => {
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
           <TreeMap title={"High Interest Design Hotspots"} subtitle={subtitle} data={treeMapData} seriesNames={seriesNames} />
-          <BasicTable title={panelTitle} data={getTableData()} />
+          <BasicTable title={tableTitle} data={getTableData()} showAggregatedData={true} />
         </MDBCol>
       </MDBRow>
 
@@ -437,15 +438,15 @@ const InterestPerCommitPanel = props => {
       <MDBRow className="mb-12">
         <MDBCol >
           <BarChart title={panelTitle} xAxisArray={filePaths} series={series} subtitle={subtitle} />
-        </MDBCol>
-        <MDBCol>
+          {/* </MDBCol>
+        <MDBCol> */}
           <NegativeColumnChart title={"File Interest Change Indicators"} subtitle={"Most Changed Java Classes"} positiveFilePaths={positiveFilePaths} negativeFilePaths={negativeFilePaths} series={columnSeries} />
         </MDBCol>
       </MDBRow>
 
       <MDBRow className="mb-12">
         <MDBCol md="12" lg="12" className="mb-12">
-          <BasicTable title={panelTitle} data={getTableData()} />
+          <BasicTable title={panelTitle} data={getTableData()} showAggregatedData={true} />
         </MDBCol>
       </MDBRow>
     </PagePanel>
@@ -492,7 +493,7 @@ const InterestChangePanel = props => {
     }
   }
 
-  const panelTitle = "Historical Interest Changes Per Commit";
+  const panelTitle = "System-Level Interest Evolution Analysis";
 
   const filename = props.myprojectName + "_" + panelTitle + "_version_" + getSelectedValue(selectedValue, props.myAnalyzedCommits);
 
@@ -512,7 +513,7 @@ const InterestChangePanel = props => {
 
         <MDBRow className="mb-12">
           <MDBCol md="12" lg="12" className="mb-12">
-            <BasicTable nesting title={panelTitle} data={getTableData()} hover responsiveSm />
+            <BasicTable nesting title={panelTitle} data={getTableData()} hover responsiveSm showAggregatedData={false} />
           </MDBCol>
         </MDBRow>
 

@@ -1,5 +1,5 @@
 import lodash, { isEmpty } from 'lodash';
-import { MDBDataTable } from "mdbreact";
+import { MDBDataTable, Alert } from "mdbreact";
 import PropTypes from 'prop-types';
 import React from 'react';
 import Table from './Table';
@@ -108,7 +108,9 @@ export default class BasicTable extends React.Component {
         /**
          * The title of the table.
          */
-        title: PropTypes.string
+        title: PropTypes.string,
+
+        showAggregatedData: PropTypes.bool,
     }
 
     render() {
@@ -116,9 +118,21 @@ export default class BasicTable extends React.Component {
 
         let aggregatedData = formatAggregatedData(tableData);
 
+        console.log("this.props.showAggregatedData: " + this.props.showAggregatedData);
+
+        let alertInnerText;
+        if (this.props.showAggregatedData) {
+            alertInnerText = "Class-Level Analysis"
+        } else {
+            alertInnerText = "System-Level Analysis"
+        }
         return (
             <>
-                {aggregatedData > 0 || <Table data={aggregatedData} title="Aggregated Metrics" />}
+                {this.props.showAggregatedData && (aggregatedData > 0 || <Table cardHeaderColor="blue-grey" data={aggregatedData} title="System-Level Analysis" />)}
+                <br/>
+                <Alert className="blue-grey white-text" color="blue-grey" title="State Alert">
+                    {alertInnerText}
+                </Alert>
                 <MDBDataTable striped small bordered responsive hover data={tableData} />
             </>
         )

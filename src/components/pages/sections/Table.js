@@ -1,7 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
-import ContentPanel from './ContentPanel'
+import PropTypes from 'prop-types';
+import React from 'react';
+import ContentPanel from './ContentPanel';
 
 /**
  * A simple table to show some simple tabular data.
@@ -20,29 +20,31 @@ class BasicTable extends React.Component {
         /**
          * The title of the table.
          */
-        title: PropTypes.string
+        title: PropTypes.string,
+
+        cardHeaderColor: PropTypes.string,
     }
 
-    render(){
+    render() {
         var data = this.props.data
         var rows = []
         var uniqueId = 0
-        for(var i in data.rows){
+        for (var i in data.rows) {
             var row = data.rows[i]
             var r = []
-            for(var j in data.columns){
+            for (var j in data.columns) {
                 var field = data.columns[j]['field']
                 r.push(<td key={uniqueId++}>{row[field]}</td>)
             }
             rows.push(<tr key={uniqueId++}>{r}</tr>)
         }
         var header = []
-        for(var h in data.columns)
+        for (var h in data.columns)
             header.push(<th key={uniqueId++}>{data.columns[h]['label']}</th>)
 
 
-        return(
-            <ContentPanel title={this.props.title} isCollapsed={true}>
+        return (
+            <ContentPanel cardHeaderColor={this.props.cardHeaderColor} title={this.props.title} isCollapsed={true}>
                 <MDBTable small responsive bordered hover striped>
                     <MDBTableHead><tr>{header}</tr></MDBTableHead>
                     <MDBTableBody>{rows}</MDBTableBody>

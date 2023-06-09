@@ -1,27 +1,27 @@
+import { MDBCard, MDBCardBody, MDBCardHeader, MDBContainer } from 'mdbreact';
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import PropTypes from 'prop-types'
-import { MDBCard, MDBCardBody, MDBCardHeader, MDBContainer } from 'mdbreact'
 
 
-function CollapsibleTable({ title, children, className, isCollapsed }) {
+function CollapsibleTable({ title, children, className, isCollapsed, cardHeaderColor }) {
     const [collapsed, setCollapsed] = useState(isCollapsed || false);
-  
+
     const handleToggleCollapse = () => {
-      setCollapsed(!collapsed);
+        setCollapsed(!collapsed);
     };
-  
+
     return (
-        <MDBContainer>
+        //<MDBContainer>
             <MDBCard>
-                <MDBCardHeader className="sdk4ed-color" onClick={handleToggleCollapse} style={{ cursor: 'pointer' }}>{title}</MDBCardHeader>
+                <MDBCardHeader color={cardHeaderColor} className="sdk4ed-color" onClick={handleToggleCollapse} style={{ cursor: 'pointer' }}>{title}</MDBCardHeader>
                 {!collapsed && (<MDBCardBody className={className}>
                     {children}
                 </MDBCardBody>
                 )}
             </MDBCard>
-        </MDBContainer>
+        //</MDBContainer>
     );
-  }
+}
 
 /**
  * Generic component to render a panel used to display generic content.
@@ -43,13 +43,16 @@ class ContentPanel extends React.Component {
          */
         children: PropTypes.element,
 
-        isCollapsed: PropTypes.bool
+        isCollapsed: PropTypes.bool,
+
+        cardHeaderColor: PropTypes.string
     }
 
     render() {
+        const color = this.props.cardHeaderColor ? this.props.cardHeaderColor : "sdk4ed-color";
+
         return (
-            
-            <CollapsibleTable title={this.props.title} className={this.props.className} children={this.props.children} isCollapsed={this.props.isCollapsed}/>
+            <CollapsibleTable title={this.props.title} className={this.props.className} children={this.props.children} isCollapsed={this.props.isCollapsed} cardHeaderColor={color} />
         )
     }
 }
