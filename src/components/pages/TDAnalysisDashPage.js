@@ -91,6 +91,19 @@ const TDAnalysisPanel = props => {
     return result;
   };
 
+  const principalLineChart = () => {
+    try {
+      if (props.myprincipalLineChart.length === 0) {
+        return [];
+      } else {
+        return props.myprincipalLineChart.map(x => x[1])
+      }
+    } catch (error) {
+      console.warn("Something went wrong with Principal Calculation Analysis");
+      return [];
+    }
+  }
+
   const chartTitle = 'Evolution of TD Aspects throught Software Versions';
 
   const series = [{
@@ -100,7 +113,7 @@ const TDAnalysisPanel = props => {
     color: "#C70039",
   }, {
     name: 'Principal €',
-    data: props.myprincipalLineChart.map(x => x[1]),
+    data: principalLineChart(),
     pointPlacement: 'on',
     color: "#3AC5E7",
   }, {
