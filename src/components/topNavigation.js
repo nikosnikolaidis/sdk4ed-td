@@ -1,7 +1,7 @@
+import { MDBCol, MDBCollapse, MDBContainer, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBIcon, MDBListGroupItem, MDBNavbar, MDBNavbarNav, MDBNavbarToggler, MDBNavItem, MDBNavLink, MDBRow } from 'mdbreact';
 import React, { Component } from 'react';
-import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavbarToggler, MDBCollapse, MDBNavItem, MDBNavLink, MDBIcon, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBListGroupItem, MDBContainer, MDBRow, MDBCol } from 'mdbreact';
 import { NavLink, withRouter } from 'react-router-dom';
-import logo from "../assets/logo.png"
+import logo from "../assets/logo.png";
 
 class TopNavigation extends Component {
     state = {
@@ -20,7 +20,7 @@ class TopNavigation extends Component {
         });
     }
 
-    componentDidMount(){
+    componentDidMount() {
     }
 
     render() {
@@ -28,7 +28,7 @@ class TopNavigation extends Component {
             <React.Fragment>
                 <MDBNavbar className="flexible-navbar" light expand="md" scrolling>
                     <a href="#!" className="navbar-left logo-wrapper waves-effect">
-                        <img alt="SDK4ED logo" className="mr-3 ml-4" src={logo} style={{height:40}}/>
+                        <img alt="SDK4ED logo" className="mr-3 ml-4" src={logo} style={{ height: 40 }} />
                     </a>
                     <MDBNavbarToggler onClick={this.onClick} />
                     <MDBCollapse isOpen={this.state.collapse} navbar>
@@ -40,12 +40,12 @@ class TopNavigation extends Component {
                                 <MDBNavLink to="/">Projects</MDBNavLink>
                             </MDBNavItem> */}
                             <MDBNavItem>
-                                {/* <a class="nav-link Ripple-parent" href="https://13.69.242.34/keycloak/auth/realms/SDK4ED/account" target="_blank">Settings</a> */}
-                                {/* <a class="nav-link Ripple-parent" href="https://gitlab.seis.iti.gr:2443/keycloak/auth/realms/SDK4ED/account" target="_blank">Settings</a> */}
-                                <a class="nav-link Ripple-parent" href={process.env.REACT_APP_USER_MANAGEMENT_SERVER_IP + "/realms/SDK4ED/account"} target="_blank">Settings</a>
+                                {/* <a className="nav-link Ripple-parent" href="https://13.69.242.34/keycloak/auth/realms/SDK4ED/account" target="_blank">Settings</a> */}
+                                {/* <a className="nav-link Ripple-parent" href="https://gitlab.seis.iti.gr:2443/keycloak/auth/realms/SDK4ED/account" target="_blank">Settings</a> */}
+                                <a className="nav-link Ripple-parent" href={process.env.REACT_APP_USER_MANAGEMENT_SERVER_IP + "/realms/SDK4ED/account"} target="_blank">Settings</a>
                             </MDBNavItem>
                             <MDBNavItem>
-                                <a class="nav-link Ripple-parent" href={"https://gitlab.seis.iti.gr/sdk4ed-wiki/wiki-home/wikis/home"} target="_blank">Documentation</a>
+                                <a className="nav-link Ripple-parent" href={"https://gitlab.seis.iti.gr/sdk4ed-wiki/wiki-home/wikis/home"} target="_blank">Documentation</a>
                             </MDBNavItem>
                         </MDBNavbarNav>
                         <MDBNavbarNav right>
@@ -60,9 +60,9 @@ class TopNavigation extends Component {
                             </MDBNavItem> */}
                             <MDBNavItem>
                                 {/* TODO!!! Change redirect_url from localhost!!! */}
-                                {/* <a class="border border-success rounded mr-1 nav-link Ripple-parent" href="https://13.69.242.34/keycloak/auth/realms/SDK4ED/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F">Logout</a> */}
-                                {/* <a class="border border-success rounded mr-1 nav-link Ripple-parent" href="https://gitlab.seis.iti.gr:2443/keycloak/auth/realms/SDK4ED/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F">Logout</a> */}
-                                <a class="border border-success rounded mr-1 nav-link Ripple-parent" href={process.env.REACT_APP_USER_MANAGEMENT_SERVER_IP + "/realms/SDK4ED/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2F195.251.210.147%3A3000"}>Logout</a>
+                                {/* <a className="border border-success rounded mr-1 nav-link Ripple-parent" href="https://13.69.242.34/keycloak/auth/realms/SDK4ED/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F">Logout</a> */}
+                                {/* <a className="border border-success rounded mr-1 nav-link Ripple-parent" href="https://gitlab.seis.iti.gr:2443/keycloak/auth/realms/SDK4ED/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F">Logout</a> */}
+                                <a className="border border-success rounded mr-1 nav-link Ripple-parent" href={process.env.REACT_APP_USER_MANAGEMENT_SERVER_IP + "/realms/SDK4ED/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2F195.251.210.147%3A3000"}>Logout</a>
                             </MDBNavItem>
                         </MDBNavbarNav>
                     </MDBCollapse>
@@ -72,48 +72,51 @@ class TopNavigation extends Component {
                     <MDBNavbarToggler onClick={this.onClick} />
                     <MDBCollapse isOpen={this.state.collapse} navbar>
                         <MDBNavbarNav left>
-                            <MDBContainer><MDBRow><MDBCol md="3" className="my-1 mx-0">
-                                <MDBNavItem active>
-                                    <NavLink exact={true} to="/" activeClassName="activeClass">
-                                        <MDBListGroupItem>
-                                            <MDBIcon icon="home" className="mr-3" />
-                                            Projects
-                                    </MDBListGroupItem>
-                                    </NavLink>
-                                </MDBNavItem></MDBCol>
-                                
-                                <MDBCol md="3" className="my-1 mx-0">
-                                    <MDBNavItem  activeClassName="activeClass">
-                                        <MDBDropdown activeClassName="activeClass">
-                                            <MDBListGroupItem activeClassName="activeClass">
-                                                <MDBDropdownToggle className="pb-0 pr-0 pl-0 pt-0" nav caret activeClassName="activeClass">
-                                                    <MDBIcon icon="chart-area" className="mr-3" />
-                                                    <span className="mr-2">Technical Debt</span>
-                                                </MDBDropdownToggle>
-                                                <MDBDropdownMenu>
-                                                    <MDBDropdownItem>
-                                                        <NavLink to="/tdanalysis" activeClassName="activeClass">
-                                                            TD Analysis
-                                        </NavLink>
-                                                    </MDBDropdownItem>
-                                                    <MDBDropdownItem>
-                                                        <NavLink to="/tdnewcode" activeClassName="activeClass">
-                                                            TD New Code
-                                       </NavLink>
-                                                    </MDBDropdownItem>
-                                                    <MDBDropdownItem>
-                                                        <NavLink to="/tdclassifier" activeClassName="activeClass">
-                                                            TD Classifier
-                                       </NavLink>
-                                                    </MDBDropdownItem>
-                                                </MDBDropdownMenu>
-                                            </MDBListGroupItem>
-                                        </MDBDropdown>
+                            <MDBContainer>
+                                <MDBRow>
+                                    <MDBCol md="3" className="my-1 mx-0">
+                                        <MDBNavItem active>
+                                            <NavLink exact={true} to="/" activeClassName="activeClass">
+                                                <MDBListGroupItem>
+                                                    <MDBIcon icon="home" className="mr-3" />
+                                                    Projects
+                                                </MDBListGroupItem>
+                                            </NavLink>
+                                        </MDBNavItem>
+                                    </MDBCol>
 
-                                    </MDBNavItem>
-                                 </MDBCol>
+                                    <MDBCol md="3" className="my-1 mx-0">
+                                        <MDBNavItem activeClassName="activeClass">
+                                            <MDBDropdown activeClassName="activeClass">
+                                                <MDBListGroupItem activeClassName="activeClass">
+                                                    <MDBDropdownToggle className="pb-0 pr-0 pl-0 pt-0" nav caret activeClassName="activeClass">
+                                                        <MDBIcon icon="chart-area" className="mr-3" />
+                                                        <span className="mr-2">Technical Debt</span>
+                                                    </MDBDropdownToggle>
+                                                    <MDBDropdownMenu>
+                                                        <MDBDropdownItem>
+                                                            <NavLink to="/tdanalysis" activeClassName="activeClass">
+                                                                TD Analysis
+                                                            </NavLink>
+                                                        </MDBDropdownItem>
+                                                        <MDBDropdownItem>
+                                                            <NavLink to="/tdnewcode" activeClassName="activeClass">
+                                                                TD New Code
+                                                            </NavLink>
+                                                        </MDBDropdownItem>
+                                                        <MDBDropdownItem>
+                                                            <NavLink to="/tdclassifier" activeClassName="activeClass">
+                                                                TD Classifier
+                                                            </NavLink>
+                                                        </MDBDropdownItem>
+                                                    </MDBDropdownMenu>
+                                                </MDBListGroupItem>
+                                            </MDBDropdown>
 
-                                {/*<MDBCol md="3" className="my-1 mx-0"><MDBNavItem >
+                                        </MDBNavItem>
+                                    </MDBCol>
+
+                                    {/*<MDBCol md="3" className="my-1 mx-0"><MDBNavItem >
                                     <NavLink to="/energy" activeClassName="activeClass">
                                         <MDBListGroupItem className="h-100">
                                             <MDBIcon icon="bolt" className="mr-3" />
@@ -157,39 +160,39 @@ class TopNavigation extends Component {
                                 <MDBCol md="3" className="my-1 mx-0"><MDBNavItem >
 
                                 </MDBNavItem></MDBCol>*/}
-                                     
-                                <MDBCol md="3" className="my-1 mx-0">
-                                    <MDBNavItem  activeClassName="activeClass">
-                                        <MDBDropdown activeClassName="activeClass">
-                                            <MDBListGroupItem activeClassName="activeClass">
-                                                <MDBDropdownToggle className="pb-0 pr-0 pl-0 pt-0" nav caret activeClassName="activeClass">
-                                                    <MDBIcon icon="wrench" className="mr-3" />
-                                                    <span className="mr-2">Refactorings</span>
-                                                </MDBDropdownToggle>
-                                                <MDBDropdownMenu>
-                                                    <MDBDropdownItem>
-                                                        <NavLink to="/refactoring" activeClassName="activeClass">
-                                                            Code Refactoring
-                                        </NavLink>
-                                                    </MDBDropdownItem>
-                                                    <MDBDropdownItem>
-                                                        <NavLink to="/designrefactoring" activeClassName="activeClass">
-                                                            Design Refactoring
-                                       </NavLink>
-                                                    </MDBDropdownItem>
-                                                    {/*<MDBDropdownItem>
+
+                                    <MDBCol md="3" className="my-1 mx-0">
+                                        <MDBNavItem activeClassName="activeClass">
+                                            <MDBDropdown activeClassName="activeClass">
+                                                <MDBListGroupItem activeClassName="activeClass">
+                                                    <MDBDropdownToggle className="pb-0 pr-0 pl-0 pt-0" nav caret activeClassName="activeClass">
+                                                        <MDBIcon icon="wrench" className="mr-3" />
+                                                        <span className="mr-2">Refactorings</span>
+                                                    </MDBDropdownToggle>
+                                                    <MDBDropdownMenu>
+                                                        <MDBDropdownItem>
+                                                            <NavLink to="/refactoring" activeClassName="activeClass">
+                                                                Code Refactoring
+                                                            </NavLink>
+                                                        </MDBDropdownItem>
+                                                        <MDBDropdownItem>
+                                                            <NavLink to="/designrefactoring" activeClassName="activeClass">
+                                                                Design Refactoring
+                                                            </NavLink>
+                                                        </MDBDropdownItem>
+                                                        {/*<MDBDropdownItem>
                                                         <NavLink to="/atdanalysis" activeClassName="activeClass">
                                                             Architecture Refactoring
                                        </NavLink>
                                                     </MDBDropdownItem>*/}
-                                                </MDBDropdownMenu>
-                                            </MDBListGroupItem>
-                                        </MDBDropdown>
+                                                    </MDBDropdownMenu>
+                                                </MDBListGroupItem>
+                                            </MDBDropdown>
 
-                                    </MDBNavItem>
-                                 </MDBCol>
+                                        </MDBNavItem>
+                                    </MDBCol>
 
-                                {/*<MDBCol md="3" className="my-1 mx-0">
+                                    {/*<MDBCol md="3" className="my-1 mx-0">
                                     <MDBNavItem  activeClassName="activeClass">
                                         <MDBDropdown activeClassName="activeClass">
                                             <MDBListGroupItem activeClassName="activeClass">
@@ -221,7 +224,7 @@ class TopNavigation extends Component {
 
                                      </MDBCol>*/}
 
-                                {/* <MDBCol md="3" className="my-1 mx-0">                            
+                                    {/* <MDBCol md="3" className="my-1 mx-0">                            
                                 <MDBNavItem >
                                     <NavLink to="/decsupp" activeClassName="activeClass">
                                         <MDBListGroupItem>
@@ -232,21 +235,21 @@ class TopNavigation extends Component {
                                 </MDBNavItem>   
                                 </MDBCol> */}
 
-                  <MDBCol md="3" className="my-1 mx-0">
-                    <MDBNavItem activeClassName="activeClass">
-                      <MDBDropdown activeClassName="activeClass">
-                        <MDBListGroupItem activeClassName="activeClass">
-                          <MDBDropdownToggle
-                            className="pb-0 pr-0 pl-0 pt-0"
-                            nav
-                            caret
-                            activeClassName="activeClass"
-                          >
-                            <MDBIcon icon="compass" className="mr-3" />
-                            <span className="mr-2">Decision Support</span>
-                          </MDBDropdownToggle>
-                          <MDBDropdownMenu>
-                            {/*<MDBDropdownItem>
+                                    <MDBCol md="3" className="my-1 mx-0">
+                                        <MDBNavItem activeClassName="activeClass">
+                                            <MDBDropdown activeClassName="activeClass">
+                                                <MDBListGroupItem activeClassName="activeClass">
+                                                    <MDBDropdownToggle
+                                                        className="pb-0 pr-0 pl-0 pt-0"
+                                                        nav
+                                                        caret
+                                                        activeClassName="activeClass"
+                                                    >
+                                                        <MDBIcon icon="compass" className="mr-3" />
+                                                        <span className="mr-2">Decision Support</span>
+                                                    </MDBDropdownToggle>
+                                                    <MDBDropdownMenu>
+                                                        {/*<MDBDropdownItem>
                               <NavLink
                                 to="/decsupp"
                                 activeClassName="activeClass"
@@ -254,25 +257,25 @@ class TopNavigation extends Component {
                                 Trade-off Manager
                               </NavLink>
                             </MDBDropdownItem>*/}
-                            <MDBDropdownItem>
-                              <NavLink
-                                to="/refactoringsFinancialInvestment"
-                                activeClassName="activeClass"
-                              >
-                                Refactorings as Financial Investment
-                              </NavLink>
-                            </MDBDropdownItem>
-                          </MDBDropdownMenu>
-                        </MDBListGroupItem>
-                      </MDBDropdown>
-                    </MDBNavItem>
-                  </MDBCol>
+                                                        <MDBDropdownItem>
+                                                            <NavLink
+                                                                to="/refactoringsFinancialInvestment"
+                                                                activeClassName="activeClass"
+                                                            >
+                                                                Refactorings as Financial Investment
+                                                            </NavLink>
+                                                        </MDBDropdownItem>
+                                                    </MDBDropdownMenu>
+                                                </MDBListGroupItem>
+                                            </MDBDropdown>
+                                        </MDBNavItem>
+                                    </MDBCol>
 
-                                
-                                
-                                
-                             
-                            </MDBRow></MDBContainer>
+
+
+
+
+                                </MDBRow></MDBContainer>
                         </MDBNavbarNav>
                     </MDBCollapse>
                 </MDBNavbar>

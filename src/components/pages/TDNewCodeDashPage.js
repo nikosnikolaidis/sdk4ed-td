@@ -52,7 +52,7 @@ class IssuesTracker extends Component {
       let storedProject = sessionStorage.getItem("selected_project");
       let storedProjectJson = JSON.parse(storedProject);
 
-      let rq = "";
+      /* let rq = "";
       if (storedProjectJson["technicaldebt"] !== "") {
         let tdInfo = JSON.parse(storedProjectJson["technicaldebt"]);
         if ("jiraURL" in tdInfo && "jiraKey" in tdInfo) {
@@ -128,7 +128,7 @@ class IssuesTracker extends Component {
         this.setState({
           isError: true,
         });
-      }
+      } */
     }
   }
 
@@ -1612,7 +1612,7 @@ class TDNewCodeDashPage extends Component {
 
                 <IntroducedNewIssues key={"ini"} project={this.state.project} />
 
-                <IssuesTracker key={"issuesTracker"} />
+                {/* <IssuesTracker key={"issuesTracker"} /> */}
 
                 {/* <CreateProjectForm /> */}
               </React.Fragment>
